@@ -8,16 +8,9 @@ project(rom_motor_msgs)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  actionlib
-  geometry_msgs
-  move_base_msgs
-  nav_msgs
-  robot_state_publisher
   roscpp
   rospy
-  sensor_msgs
   std_msgs
-  tf
   message_generation
 )
 
@@ -44,14 +37,14 @@ add_message_files(
 
 generate_messages(
   DEPENDENCIES
-  geometry_msgs#   sensor_msgs#   std_msgs
+  std_msgs
 )
 
 
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES chefbot
-  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs tf message_runtime
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
