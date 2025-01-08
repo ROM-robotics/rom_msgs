@@ -1,4 +1,6 @@
-int16 which_maps_do_you_has
+string map_request
+string requested_map_name
 ---
 int16 total_maps
 string[] map_names
+string status
