@@ -1,5 +1,6 @@
 /home/mr_robot/qt_ros_ws/src/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/UVLADIE3JM/moc_mainwindow.cpp: /home/mr_robot/qt_ros_ws/src/rom_dynamics_portable/src/mainwindow.h \
   /home/mr_robot/qt_ros_ws/src/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/moc_predefs.h \
+  /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ui_mainwindow.h \
   /home/mr_robot/qt_ros_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/msg/rosidl_generator_cpp__visibility_control.hpp \
   /home/mr_robot/qt_ros_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__builder.hpp \
   /home/mr_robot/qt_ros_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__struct.hpp \
@@ -25,12 +26,16 @@
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__struct.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__traits.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__type_support.hpp \
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_with_covariance__struct.hpp \
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_with_covariance__traits.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/quaternion__struct.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/quaternion__traits.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/twist__builder.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/twist__struct.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/twist__traits.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/twist__type_support.hpp \
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/twist_with_covariance__struct.hpp \
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/twist_with_covariance__traits.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/vector3__struct.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/vector3__traits.hpp \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/pose_stamped.hpp \
@@ -52,7 +57,12 @@
   /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/occupancy_grid__struct.hpp \
   /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/occupancy_grid__traits.hpp \
   /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/occupancy_grid__type_support.hpp \
+  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__builder.hpp \
+  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__struct.hpp \
+  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__traits.hpp \
+  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__type_support.hpp \
   /opt/ros/humble/include/nav_msgs/nav_msgs/msg/occupancy_grid.hpp \
+  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/odometry.hpp \
   /opt/ros/humble/include/nav_msgs/nav_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
   /opt/ros/humble/include/rcl/rcl/allocator.h \
   /opt/ros/humble/include/rcl/rcl/arguments.h \
@@ -1026,6 +1036,7 @@
   /usr/include/x86_64-linux-gnu/qt5/QtGui/qvector4d.h \
   /usr/include/x86_64-linux-gnu/qt5/QtGui/qwindow.h \
   /usr/include/x86_64-linux-gnu/qt5/QtGui/qwindowdefs.h \
+  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QApplication \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QCommonStyle \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLayout \

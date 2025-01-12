@@ -247,6 +247,54 @@ ROM_DYNAMICS_autogen/mocs_compilation.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.s
 .PHONY : ROM_DYNAMICS_autogen/mocs_compilation.cpp.s
 
+ros2/source/cmd_publisher.o: ros2/source/cmd_publisher.cpp.o
+.PHONY : ros2/source/cmd_publisher.o
+
+# target to build an object file
+ros2/source/cmd_publisher.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.o
+.PHONY : ros2/source/cmd_publisher.cpp.o
+
+ros2/source/cmd_publisher.i: ros2/source/cmd_publisher.cpp.i
+.PHONY : ros2/source/cmd_publisher.i
+
+# target to preprocess a source file
+ros2/source/cmd_publisher.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.i
+.PHONY : ros2/source/cmd_publisher.cpp.i
+
+ros2/source/cmd_publisher.s: ros2/source/cmd_publisher.cpp.s
+.PHONY : ros2/source/cmd_publisher.s
+
+# target to generate assembly for a file
+ros2/source/cmd_publisher.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.s
+.PHONY : ros2/source/cmd_publisher.cpp.s
+
+ros2/source/pose_subscriber.o: ros2/source/pose_subscriber.cpp.o
+.PHONY : ros2/source/pose_subscriber.o
+
+# target to build an object file
+ros2/source/pose_subscriber.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/pose_subscriber.cpp.o
+.PHONY : ros2/source/pose_subscriber.cpp.o
+
+ros2/source/pose_subscriber.i: ros2/source/pose_subscriber.cpp.i
+.PHONY : ros2/source/pose_subscriber.i
+
+# target to preprocess a source file
+ros2/source/pose_subscriber.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/pose_subscriber.cpp.i
+.PHONY : ros2/source/pose_subscriber.cpp.i
+
+ros2/source/pose_subscriber.s: ros2/source/pose_subscriber.cpp.s
+.PHONY : ros2/source/pose_subscriber.s
+
+# target to generate assembly for a file
+ros2/source/pose_subscriber.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/pose_subscriber.cpp.s
+.PHONY : ros2/source/pose_subscriber.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -315,6 +363,12 @@ help:
 	@echo "... ROM_DYNAMICS_autogen/mocs_compilation.o"
 	@echo "... ROM_DYNAMICS_autogen/mocs_compilation.i"
 	@echo "... ROM_DYNAMICS_autogen/mocs_compilation.s"
+	@echo "... ros2/source/cmd_publisher.o"
+	@echo "... ros2/source/cmd_publisher.i"
+	@echo "... ros2/source/cmd_publisher.s"
+	@echo "... ros2/source/pose_subscriber.o"
+	@echo "... ros2/source/pose_subscriber.i"
+	@echo "... ros2/source/pose_subscriber.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

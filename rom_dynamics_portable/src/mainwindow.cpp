@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <cmath> // For atan2 and M_PI
+#include "rom_algorithm.h"
 
 extern void shutdown_thread();
 
@@ -92,6 +93,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     current_mode_ = "navi";
 
+    /* signal ပို့လို့ရတဲ့ meta object ဖြစ်အောင်လို့ */
+    qRegisterMetaType<nav_msgs::msg::Odometry::SharedPtr>("nav_msgs::msg::Odometry::SharedPtr");
+
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
 }
 
@@ -108,10 +112,16 @@ MainWindow::~MainWindow()
 }
 
 
-
-void MainWindow::DisplaySubscription(const QString &log)
+void MainWindow::displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg) 
 {
-    //statusLabelPtr_->setText("hello"); there is no publisher
+    double x = msg->pose.pose.position.x;
+    double y = msg->pose.pose.position.y;
+    double theta = quaternion_to_euler(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
+    double theta_degree = theta * radian_to_degree_constant;
+
+    ui->xValueLabel->setText(QString("%1").arg(x));
+    ui->yValueLabel->setText(QString("%1").arg(y));
+    ui->phiValueLabel->setText(QString("%1").arg(theta_degree));
 }
 
 
@@ -208,7 +218,7 @@ void MainWindow::onResponseReceived(int service_status) {
 
 
 ServiceClient::ServiceClient() {
-    rclcpp::init(0, nullptr);
+    //rclcpp::init(0, nullptr);
     node = rclcpp::Node::make_shared("qt_service_client");
     client = node->create_client<rom_interfaces::srv::WhichMaps>("/which_maps");
 
@@ -283,6 +293,26 @@ void MainWindow::selectMapClicked()
     statusLabelPtr_->setText("\nimplement မလုပ်ရသေးပါ။\n");
 }
 
+
+void MainWindow::labelEditForSetForward()
+{
+    statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nForward:\n     Linear velocity    : 0.4   m/s\n     Angular velocity : 0.0 rad/s\n");
+}
+
+void MainWindow::labelEditForSetRight()
+{
+    statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nRight:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : 0.4   rad/s\n");
+}
+
+void MainWindow::labelEditForSetLeft()
+{
+    statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nLeft:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : -0.4 rad/s\n");
+}
+
+void MainWindow::labelEditForSetStop()
+{
+    statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nStop:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : 0.0   rad/s\n");
+}
 
 // void ServiceClient::sendRequest(int a, int b) 
 // {

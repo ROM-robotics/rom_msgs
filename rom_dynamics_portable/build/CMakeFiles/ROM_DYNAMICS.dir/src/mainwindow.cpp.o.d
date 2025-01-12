@@ -1342,9 +1342,20 @@ CMakeFiles/ROM_DYNAMICS.dir/src/mainwindow.cpp.o: \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/map_meta_data__traits.hpp \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/occupancy_grid__type_support.hpp \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/odometry.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__struct.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_with_covariance__struct.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/twist_with_covariance__struct.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__builder.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__traits.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_with_covariance__traits.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/twist_with_covariance__traits.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__type_support.hpp \
  /home/mr_robot/qt_ros_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/which_maps.hpp \
  /home/mr_robot/qt_ros_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__struct.hpp \
  /home/mr_robot/qt_ros_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__builder.hpp \
  /home/mr_robot/qt_ros_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__traits.hpp \
  /home/mr_robot/qt_ros_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__type_support.hpp \
- /home/mr_robot/qt_ros_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/msg/rosidl_generator_cpp__visibility_control.hpp
+ /home/mr_robot/qt_ros_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/msg/rosidl_generator_cpp__visibility_control.hpp \
+ /home/mr_robot/qt_ros_ws/src/rom_dynamics_portable/ros2/header/rom_algorithm.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QObject

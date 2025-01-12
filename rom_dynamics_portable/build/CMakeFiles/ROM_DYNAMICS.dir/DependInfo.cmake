@@ -9,6 +9,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/mr_robot/qt_ros_ws/src/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/mocs_compilation.cpp" "CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o" "gcc" "CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o.d"
+  "/home/mr_robot/qt_ros_ws/src/rom_dynamics_portable/ros2/source/cmd_publisher.cpp" "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.o" "gcc" "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.o.d"
+  "/home/mr_robot/qt_ros_ws/src/rom_dynamics_portable/ros2/source/pose_subscriber.cpp" "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/pose_subscriber.cpp.o" "gcc" "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/pose_subscriber.cpp.o.d"
   "/home/mr_robot/qt_ros_ws/src/rom_dynamics_portable/src/main.cpp" "CMakeFiles/ROM_DYNAMICS.dir/src/main.cpp.o" "gcc" "CMakeFiles/ROM_DYNAMICS.dir/src/main.cpp.o.d"
   "/home/mr_robot/qt_ros_ws/src/rom_dynamics_portable/src/mainwindow.cpp" "CMakeFiles/ROM_DYNAMICS.dir/src/mainwindow.cpp.o" "gcc" "CMakeFiles/ROM_DYNAMICS.dir/src/mainwindow.cpp.o.d"
   )

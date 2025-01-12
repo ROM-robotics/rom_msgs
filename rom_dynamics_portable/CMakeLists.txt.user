@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 6.0.2, 2025-01-11T19:37:26. -->
+<!-- Written by QtCreator 6.0.2, 2025-01-13T00:34:40. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -302,7 +302,6 @@
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/mr_robot/qt_ros_ws/src/build-rom_dynamics_portable-Desktop-Debug</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

@@ -15,8 +15,8 @@
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 
-// #include <example_interfaces/srv/add_two_ints.hpp>
 #include <rom_interfaces/srv/which_maps.hpp>
 
 QT_BEGIN_NAMESPACE
@@ -40,7 +40,7 @@ signals:
 
 private:
     rclcpp::Node::SharedPtr node;
-    // rclcpp::Client<example_interfaces::srv::AddTwoInts>::SharedPtr client;
+    
     rclcpp::Client<rom_interfaces::srv::WhichMaps>::SharedPtr client;
     std::thread rosThread;
 
@@ -57,7 +57,7 @@ class MainWindow : public QMainWindow
         std::shared_ptr<Ui::MainWindow> getUi() { return ui; }
     
     public slots:
-        void DisplaySubscription(const QString &log);
+        void displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg);
         
         void sendMappingMode();
         void sendNavigationMode();
@@ -66,13 +66,17 @@ class MainWindow : public QMainWindow
         void saveMapClicked();
         void openMapClicked();
         void selectMapClicked();
+
+        void labelEditForSetForward();
+        void labelEditForSetRight();
+        void labelEditForSetLeft();
+        void labelEditForSetStop();
         
     private slots:
         void on_shutdownBtn_clicked();
         void on_btnEstop_clicked();
 
     private slots:
-        //void onSendRequest();
         void onResponseReceived(int sum);  
     
     private:
