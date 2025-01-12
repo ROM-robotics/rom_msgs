@@ -54,8 +54,8 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
     // map saver
     std::string map_name = request->map_name_to_save;
     
-    if (map_topic_exists) 
-    {
+    // if (map_topic_exists) 
+    // {
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "The /map topic exists.");
 
       // Save the map
@@ -76,13 +76,13 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
         response->status = -1; // not ok
         RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
       }    
-    } 
-    else 
-    {
-        RCLCPP_WARN(rclcpp::get_logger("which_maps_server"), "The /map topic does not exist.");
-        response->status = -1; // not ok
-        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
-    }
+    // } 
+    // else 
+    // {
+    //     RCLCPP_WARN(rclcpp::get_logger("which_maps_server"), "The /map topic does not exist.");
+    //     response->status = -1; // not ok
+    //     RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
+    // }
 
     
   }
