@@ -60,7 +60,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
       // Save the map
       // command စစ်ဆေးရန်။
-      std:: string cmd = "cd /home/mr_robot/Desktop/Git/rom_dynamics_robots/developer_packages/rom2109/rom2109_nav2/maps && ros2 run nav2_map_server map_saver_cli -f " + map_name;
+      std:: string cmd = "cd /home/mr_robot/Desktop/Git/rom_dynamics_robots/developer_packages/rom2109/rom2109_nav2/maps; rm -rf *; ros2 run nav2_map_server map_saver_cli -f " + map_name;
 
       int ret_code = std::system(cmd.c_str());
 
