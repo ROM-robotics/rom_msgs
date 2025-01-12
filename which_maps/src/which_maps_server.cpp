@@ -6,6 +6,7 @@
 #include <memory>
 
 std::string package_name = "which_maps";
+bool map_topic_exists = false;
 
 // TODO 1. GO TO HOME 'S MAP DIRECTORY OR NOT
 // INPUT ( which_map_do_you_have | save_map | select_map | mapping | navi | remapping )
@@ -52,22 +53,38 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   else if (request->request_string == "save_map"){
     // map saver
     std::string map_name = request->map_name_to_save;
+    
+    if (map_topic_exists) 
+    {
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "The /map topic exists.");
 
-    // lifecycle မ run ရသေးလို့ ပြသနာရှိနေသေးတယ်။
-    std:: string cmd = "ros2 run nav2_map_server map_saver_cli -f " + map_name;
+      // Save the map
+      // command စစ်ဆေးရန်။
+      std:: string cmd = "cd /home/mr_robot/Desktop/Git/rom_dynamics_robots/developer_packages/rom2109/rom2109_nav2/maps && ros2 run nav2_map_server map_saver_cli -f " + map_name;
 
-    int ret_code = std::system(cmd.c_str());
+      int ret_code = std::system(cmd.c_str());
 
-    if (ret_code == 0){
+      if (ret_code == 0)
+      {
         RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command executed successfully.");
         response->status = 1; // ok
         RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
-    } 
-    else {
+      } 
+      else 
+      {
         RCLCPP_ERROR(rclcpp::get_logger("which_map_server"), "Map saver command failed with return code: %d", ret_code);
         response->status = -1; // not ok
         RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
-    }    
+      }    
+    } 
+    else 
+    {
+        RCLCPP_WARN(rclcpp::get_logger("which_maps_server"), "The /map topic does not exist.");
+        response->status = -1; // not ok
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
+    }
+
+    
   }
 
   
@@ -126,10 +143,28 @@ int main(int argc, char **argv)
 
   std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("which_maps_server");
 
-  rclcpp::Service<rom_interfaces::srv::WhichMaps>::SharedPtr service =
-    node->create_service<rom_interfaces::srv::WhichMaps>("which_maps", &which_map_answer);
+  rclcpp::Service<rom_interfaces::srv::WhichMaps>::SharedPtr service = node->create_service<rom_interfaces::srv::WhichMaps>("which_maps", &which_map_answer);
 
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to answer maps.");
+
+  auto topics = node->get_topic_names_and_types();
+  for (const auto &topic : topics) 
+  {
+    if (topic.first == "/map") 
+    {
+      map_topic_exists = true;
+      break;
+    }
+  }
+
+  if (map_topic_exists) 
+  {
+    RCLCPP_INFO(node->get_logger(), "The /map topic exists.");
+  } 
+  else 
+  {
+    RCLCPP_WARN(node->get_logger(), "The /map topic does not exist.");
+  }
 
   rclcpp::spin(node);
   rclcpp::shutdown();

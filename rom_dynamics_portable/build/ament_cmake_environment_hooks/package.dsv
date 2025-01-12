@@ -1,0 +1,4 @@
+source;share/rom_dynamics_portable/local_setup.bash
+source;share/rom_dynamics_portable/local_setup.dsv
+source;share/rom_dynamics_portable/local_setup.sh
+source;share/rom_dynamics_portable/local_setup.zsh
