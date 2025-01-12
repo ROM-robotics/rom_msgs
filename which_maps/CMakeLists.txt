@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rom_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(example_interfaces REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -24,21 +25,29 @@ if(BUILD_TESTING)
 endif()
 
 
-add_executable(server src/which_maps_server.cpp)
-ament_target_dependencies(server rclcpp rom_interfaces)
+add_executable(which_maps_server src/which_maps_server.cpp)
+ament_target_dependencies(which_maps_server rclcpp rom_interfaces)
 
-add_executable(client src/which_maps_client.cpp)
-ament_target_dependencies(client rclcpp rom_interfaces)
+add_executable(which_maps_client src/which_maps_client.cpp)
+ament_target_dependencies(which_maps_client rclcpp rom_interfaces)
 
 install(
   DIRECTORY maps       # Source directory
   DESTINATION share/${PROJECT_NAME}  # Destination directory in install space
 )
 
-install(TARGETS
-  server
-  client
-  DESTINATION lib/${PROJECT_NAME})
+# install(TARGETS
+#   server
+#   client
+#   DESTINATION lib/${PROJECT_NAME})
 
+add_executable(add_two_ints_server src/add_two_ints_server.cpp)
+ament_target_dependencies(add_two_ints_server rclcpp example_interfaces)
+
+install(TARGETS
+  add_two_ints_server
+  which_maps_server
+  which_maps_client
+  DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
