@@ -51,7 +51,6 @@ install(TARGETS
   add_two_ints_server
   which_maps_server
   which_maps_client
-  ntmgr
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

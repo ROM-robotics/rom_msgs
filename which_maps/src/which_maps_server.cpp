@@ -21,8 +21,8 @@ bool map_topic_exists = false;
 
 
  // switch mode parameters
-    std::string current_mode_;
-    pid_t launch_pid_ = -1;
+    std::string current_mode = "navi";
+    pid_t launch_pid = -1;
 
     // Package and launch file names
     const std::string cartographer_pkg = "rom2109_carto";                 
@@ -36,34 +36,36 @@ bool map_topic_exists = false;
 
 // switch_mode functions
 
-void startLaunch(const std::string &package, const std::string &launch_file) {
+void startLaunch(const std::string &package, const std::string &launch_file) 
+{
         RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Starting launch file: %s/%s", package.c_str(), launch_file.c_str());
 
         // Fork a proce  to run the launch file
-        launch_pid_ = fork();
-        if (launch_pid_ == 0) {
+        launch_pid = fork();
+        if (launch_pid == 0) {
             // In child process
             execlp("ros2", "ros2", "launch", package.c_str(), launch_file.c_str(), (char *)NULL);
             perror("execlp failed");
             std::exit(EXIT_FAILURE);
         }
 
-        if (launch_pid_ < 0) {
+        if (launch_pid < 0) {
             perror("fork failed");
             throw std::runtime_error("Failed to start launch process");
         }
-    }
+}
 
-    void shutdownLaunch() {
-        if (launch_pid_ > 0) {
-            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Shutting down current launch process (PID: %d)...", launch_pid_);
-            kill(launch_pid_, SIGINT);
+void shutdownLaunch() 
+{
+        if (launch_pid > 0) {
+            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Shutting down current launch process (PID: %d)...", launch_pid);
+            kill(launch_pid, SIGINT);
             int status;
-            waitpid(launch_pid_, &status, 0);
-            launch_pid_ = -1;
+            waitpid(launch_pid, &status, 0);
+            launch_pid = -1;
             sleep(3); // Ensure the process has fully terminated
         }
-    }
+}
 
 
 
@@ -85,8 +87,10 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
     try 
     {
-        for (const auto& entry : std::filesystem::directory_iterator(package_directory)) {
-            if (entry.is_regular_file() && entry.path().extension() == ".yaml") {
+        for (const auto& entry : std::filesystem::directory_iterator(package_directory)) 
+        {
+            if (entry.is_regular_file() && entry.path().extension() == ".yaml") 
+            {
                 //std::cout << "YAML File: " << entry.path().filename() << std::endl;
                 response->map_names.push_back(entry.path().filename().c_str());
                 RCLCPP_INFO(rclcpp::get_logger("which_maps"), "%s", entry.path().filename().c_str());
@@ -110,7 +114,8 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
   
   /// ၂။ မြေပုံ save ပါ။
-  else if (request->request_string == "save_map"){
+  else if (request->request_string == "save_map")
+  {
     // map saver
     std::string map_name = request->map_name_to_save;
     
@@ -147,11 +152,10 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
     
   }
 
-  
-
 
   /// ၃။ မြေပုံရွေးပါ။
-  else if (request->request_string == "select_map"){   // Select map ထည့်၇န်
+  else if (request->request_string == "select_map") // Select map ထည့်၇န်
+  {   
     // map selector
 
     std::string map_name = request->map_name_to_select;
@@ -170,38 +174,67 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   
   
   
-  else if (request->request_string == current_mode_) {
-            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
-            return;
-        }
+  else 
 
 
-  shutdownLaunch();
+  
 
   /// ၄။ mapping mode change ပါ။
-  if (request->request_string == "mapping"){
-    startLaunch(cartographer_pkg, carto_mapping_launch );
-    response->status = 1; // ok
-    RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+  if (request->request_string == "mapping")
+  {
+    if (request->request_string == current_mode) 
+    {
+            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
+            
+            return;
+    }
+    else 
+    {
+      shutdownLaunch();
+      response->status = 1; // ok
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      startLaunch(cartographer_pkg, carto_mapping_launch );
+    }
   }
   
   /// ၅။ nav mode change ပါ။
-  else if (request->request_string == "navi"){
-
-    startLaunch(cartographer_pkg, carto_localization_launch);
-
-    response->status = 1; // ok
-    RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+  else if (request->request_string == "navi")
+  {
+    if (request->request_string == current_mode) 
+    {
+            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
+            
+            return;
+    }
+    else 
+    {
+      shutdownLaunch();
+      response->status = 1; // ok
+      startLaunch(cartographer_pkg, carto_localization_launch);
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+    }
   }
   
   
   /// 6။ remapping mode change ပါ။
-  else if (request->request_string == "remapping"){
-    startLaunch(cartographer_pkg, remapping_launch);
+  else if (request->request_string == "remapping")
+  {
+    if (request->request_string == current_mode) 
+    {
+            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
+            
+            return;
+    }
+    else 
+    {
+      shutdownLaunch();
+      startLaunch(cartographer_pkg, remapping_launch);
     response->status = 1; // ok
     RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+    }   
   }
-  else {
+  else 
+  {
 
     response->total_maps = 0;
     response->status = -1; // not ok
@@ -209,7 +242,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
     RCLCPP_WARN(rclcpp::get_logger("which_maps_server"), "Unknown mode '%s'.", request->request_string.c_str());
     return;
-        }
+  }
 
   /// ၇။ ဘာမှမဟုတ်။
 
@@ -228,24 +261,28 @@ int main(int argc, char **argv)
 
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to answer maps.");
 
-  auto topics = node->get_topic_names_and_types();
-  for (const auto &topic : topics) 
-  {
-    if (topic.first == "/map") 
-    {
-      map_topic_exists = true;
-      break;
-    }
-  }
+  // auto topics = node->get_topic_names_and_types();
+  // for (const auto &topic : topics) 
+  // {
+  //   if (topic.first == "/map") 
+  //   {
+  //     map_topic_exists = true;
+  //     break;
+  //   }
+  // }
 
-  if (map_topic_exists) 
-  {
-    RCLCPP_INFO(node->get_logger(), "The /map topic exists.");
-  } 
-  else 
-  {
-    RCLCPP_WARN(node->get_logger(), "The /map topic does not exist.");
-  }
+  // if (map_topic_exists) 
+  // {
+  //   RCLCPP_INFO(node->get_logger(), "The /map topic exists.");
+  // } 
+  // else 
+  // {
+  //   RCLCPP_WARN(node->get_logger(), "The /map topic does not exist.");
+  // }
+
+  RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Fist Time trigger to Nav mode");
+
+  startLaunch(cartographer_pkg, carto_localization_launch);
 
   rclcpp::spin(node);
   rclcpp::shutdown();
