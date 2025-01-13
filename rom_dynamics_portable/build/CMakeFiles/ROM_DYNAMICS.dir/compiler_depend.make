@@ -1406,6 +1406,7 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: ROM_DYN
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLineEdit \
   ui_mainwindow.h \
+  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QComboBox \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton \
   /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/pose_stamped.hpp \
@@ -3942,6 +3943,7 @@ CMakeFiles/ROM_DYNAMICS.dir/src/main.cpp.o: ../src/main.cpp \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLineEdit \
   ui_mainwindow.h \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QApplication \
+  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QComboBox \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton \
   /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp \
@@ -5371,6 +5373,7 @@ CMakeFiles/ROM_DYNAMICS.dir/src/mainwindow.cpp.o: ../src/mainwindow.cpp \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLineEdit \
   ui_mainwindow.h \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QApplication \
+  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QComboBox \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton \
   /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp \
@@ -5874,6 +5877,8 @@ CMakeFiles/ROM_DYNAMICS.dir/src/mainwindow.cpp.o: ../src/mainwindow.cpp \
 /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__struct.hpp:
 
 /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/pose_stamped.hpp:
+
+/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QComboBox:
 
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton:
 

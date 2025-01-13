@@ -899,6 +899,7 @@ CMakeFiles/ROM_DYNAMICS.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLineEdit \
  /home/mr_robot/qt_ros_ws/src/rom_dynamics_portable/build/ui_mainwindow.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QApplication \
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QComboBox \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton \
  /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp \

@@ -6,15 +6,20 @@
 
 extern void shutdown_thread();
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
 {
     setWindowTitle("ROM Dynamics Company's Robot Suite");
     ui = std::make_shared<Ui::MainWindow>();
     ui->setupUi(this);
 
+    setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+    ui->centralwidget->setStyleSheet("background-color: rgba(255, 255, 255, 230);"); // 50% opacity
+    setAttribute(Qt::WA_TranslucentBackground, true);
+
     statusLabelPtr_ = ui->statusLabel;
     statusLabelPtr_->setWordWrap(true); // Enable word wrapping
     statusLabelPtr_->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
     
     sendMappingBtnPtr_ = ui->mappingBtn;
     sendNavigationBtnPtr_ = ui->navigationBtn;
@@ -88,6 +93,34 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ui->selectMapBtn->setStyleSheet(
     "QPushButton:pressed {"
     "    background-color: rgb(200, 255, 200);"       
+    "}"
+    );
+
+
+    ui->shutdownBtn->setStyleSheet(
+    "QPushButton {"
+    "   border-radius: 25px;"
+    "   border: 1px solid gray;"
+    "   background-color: white;"
+    "   color: red;"
+    "   font-size: 36px;"
+    "}"
+     "QPushButton:hover {"
+     "   background-color: red;"
+     "   color: white;"
+     "}"
+    );
+    ui->goBtn->setStyleSheet(
+    "QPushButton {"
+    "   border-radius: 55px;"
+    "   border: 1px solid gray;"
+    "   background-color: white;"
+    "   color: green;"
+    "   font-size: 56px;"
+    "}"
+    "QPushButton:hover {"
+    "   background-color: green;"
+    "   color: white;"
     "}"
     );
 
@@ -313,6 +346,38 @@ void MainWindow::labelEditForSetStop()
 {
     statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nStop:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : 0.0   rad/s\n");
 }
+
+
+/// for dragging
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        // When the left mouse button is pressed, store the offset relative to the top-left corner
+        dragging = true;
+        dragPosition = event->globalPos() - frameGeometry().topLeft();
+        event->accept();
+    }
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    if (dragging && (event->buttons() & Qt::LeftButton)) {
+        // Move the window based on the offset calculated in mousePressEvent
+        move(event->globalPos() - dragPosition);
+        event->accept();
+    }
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        // Stop dragging when the left mouse button is released
+        dragging = false;
+        event->accept();
+    }
+}
+/// end dragging
+
 
 // void ServiceClient::sendRequest(int a, int b) 
 // {

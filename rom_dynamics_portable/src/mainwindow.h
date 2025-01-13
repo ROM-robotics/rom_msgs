@@ -78,6 +78,13 @@ class MainWindow : public QMainWindow
 
     private slots:
         void onResponseReceived(int sum);  
+
+    protected:
+        // for dragging
+        void mousePressEvent(QMouseEvent *event) override;
+        void mouseMoveEvent(QMouseEvent *event) override;
+        void mouseReleaseEvent(QMouseEvent *event) override;
+        // end for dragging
     
     private:
         std::shared_ptr<Ui::MainWindow> ui = nullptr;
@@ -95,6 +102,11 @@ class MainWindow : public QMainWindow
 
         ServiceClient *service_client_;
         QThread *rosThread;
+
+        // for dragging
+        bool dragging;
+        QPoint dragPosition;
+        // end for dragging
 };
 
 #endif // MAINWINDOW_H
