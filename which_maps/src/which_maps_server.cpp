@@ -76,8 +76,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
           std::shared_ptr<rom_interfaces::srv::WhichMaps::Response>      response)
 {
   /// ၁။ ဘယ်မြေပုံတွေရှိလဲ?။
-  if(request->request_string == "which_map_do_you_have")
-  {
+  if(request->request_string == "which_map_do_you_have"){
     // if(check existance of map directory)
     
     std::string package_directory = ament_index_cpp::get_package_share_directory(package_name) + "/maps/";
@@ -114,8 +113,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
   
   /// ၂။ မြေပုံ save ပါ။
-  else if (request->request_string == "save_map")
-  {
+  else if (request->request_string == "save_map"){
     // map saver
     std::string map_name = request->map_name_to_save;
     
@@ -163,7 +161,6 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
     {
       response->status = -1; // not ok
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
-      return;
     }
     else 
     {
@@ -171,40 +168,34 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
     }
   }
-  
-  
-  
-  else 
-
-
-  
 
   /// ၄။ mapping mode change ပါ။
-  if (request->request_string == "mapping")
+  else if (request->request_string == "mapping")
   {
-    if (request->request_string == current_mode) 
+    if (current_mode == "mapping" ) 
     {
             RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
-            
-            return;
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
     }
     else 
     {
       shutdownLaunch();
-      response->status = 1; // ok
+      
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      response->status = 1; // ok
       startLaunch(cartographer_pkg, carto_mapping_launch );
+      current_mode = "mapping";
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
     }
   }
   
   /// ၅။ nav mode change ပါ။
   else if (request->request_string == "navi")
   {
-    if (request->request_string == current_mode) 
+    if (current_mode == "navi" ) 
     {
-            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
-            
-            return;
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
     }
     else 
     {
@@ -212,6 +203,8 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       response->status = 1; // ok
       startLaunch(cartographer_pkg, carto_localization_launch);
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      current_mode = "navi";
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
     }
   }
   
@@ -219,29 +212,25 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   /// 6။ remapping mode change ပါ။
   else if (request->request_string == "remapping")
   {
-    if (request->request_string == current_mode) 
+    if (current_mode == "remapping") 
     {
-            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
-            
-            return;
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
     }
     else 
     {
       shutdownLaunch();
       startLaunch(cartographer_pkg, remapping_launch);
-    response->status = 1; // ok
-    RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      response->status = 1; // ok
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      current_mode = "remapping";
     }   
   }
   else 
   {
-
     response->total_maps = 0;
     response->status = -1; // not ok
     RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
-
     RCLCPP_WARN(rclcpp::get_logger("which_maps_server"), "Unknown mode '%s'.", request->request_string.c_str());
-    return;
   }
 
   /// ၇။ ဘာမှမဟုတ်။
@@ -283,6 +272,7 @@ int main(int argc, char **argv)
   RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Fist Time trigger to Nav mode");
 
   startLaunch(cartographer_pkg, carto_localization_launch);
+  
 
   rclcpp::spin(node);
   rclcpp::shutdown();
