@@ -18,41 +18,18 @@
 
 using namespace std::chrono_literals;
 
-//std::string package_name = "which_maps";
-//bool map_topic_exists = false;
+std::string package_name = "which_maps";
+bool map_topic_exists = true;
 
-std::shared_ptr<rom_interfaces::srv::WhichMaps>  client;
+std::shared_ptr<rclcpp::Client<rom_interfaces::srv::WhichMaps>> client;
+
 std::shared_ptr<rom_interfaces::srv::WhichMaps::Request> which_nav_request;
 
+std::shared_ptr<rclcpp::Node> node;
 
-void callNavigationService()
-{
-  // // Wait for "which_maps" service
-  while (!client->wait_for_service(1s)) {
-    if (!rclcpp::ok()) {
-      RCLCPP_ERROR(rclcpp::get_logger("which_maps_client"), "Interrupted while waiting for the service. Exiting.");
-      return;
-    }
-    RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "Service not available, waiting again...");
-  }
 
-  which_nav_request->request_string = current_mode;
 
-  auto result_future = client->async_send_request(which_nav_request);
-
-        if (rclcpp::spin_until_future_complete(node, result_future) == rclcpp::FutureReturnCode::SUCCESS) {
-            auto which_nav_response = result_future.get();
-            RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "%s response status: %d", which_nav_request->request_string.c_str(), which_nav_response->status);
-
-            if (which_nav_response->status == 1) {
-                RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "%s response OK", which_nav_request->request_string.c_str());
-            } else {
-                RCLCPP_WARN(rclcpp::get_logger("which_maps_client"), "%s response NOT OK", which_nav_request->request_string.c_str());
-            }
-        } else {
-            RCLCPP_ERROR(rclcpp::get_logger("which_maps_client"), "Failed to call service for %s", which_nav_request->request_string.c_str());
-        }
-}
+void callNavigationService();
 
  // switch mode parameters
 std::string current_mode = "navi";
@@ -284,11 +261,14 @@ int main(int argc, char **argv)
 {
   rclcpp::init(argc, argv);
 
-  std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("which_maps_server");
+  //std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("which_maps_server");
+  node = rclcpp::Node::make_shared("which_maps_server");
+
 
   rclcpp::Service<rom_interfaces::srv::WhichMaps>::SharedPtr service = node->create_service<rom_interfaces::srv::WhichMaps>("which_maps", &which_map_answer);
 
   client = node->create_client<rom_interfaces::srv::WhichMaps>("which_nav");
+  
 
   which_nav_request = std::make_shared<rom_interfaces::srv::WhichMaps::Request>();
 
@@ -320,4 +300,34 @@ int main(int argc, char **argv)
 
   rclcpp::spin(node);
   rclcpp::shutdown();
+}
+
+
+void callNavigationService()
+{
+  // // Wait for "which_maps" service
+  while (!client->wait_for_service(1s)) {
+    if (!rclcpp::ok()) {
+      RCLCPP_ERROR(rclcpp::get_logger("which_maps_client"), "Interrupted while waiting for the service. Exiting.");
+      return;
+    }
+    RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "Service not available, waiting again...");
+  }
+
+  which_nav_request->request_string = current_mode;
+
+  auto result_future = client->async_send_request(which_nav_request);
+
+        if (rclcpp::spin_until_future_complete(node, result_future) == rclcpp::FutureReturnCode::SUCCESS) {
+            auto which_nav_response = result_future.get();
+            RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "%s response status: %d", which_nav_request->request_string.c_str(), which_nav_response->status);
+
+            if (which_nav_response->status == 1) {
+                RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "%s response OK", which_nav_request->request_string.c_str());
+            } else {
+                RCLCPP_WARN(rclcpp::get_logger("which_maps_client"), "%s response NOT OK", which_nav_request->request_string.c_str());
+            }
+        } else {
+            RCLCPP_ERROR(rclcpp::get_logger("which_maps_client"), "Failed to call service for %s", which_nav_request->request_string.c_str());
+        }
 }
