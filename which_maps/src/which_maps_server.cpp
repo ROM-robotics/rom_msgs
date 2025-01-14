@@ -3,9 +3,8 @@
 #include "rom_interfaces/srv/which_maps.hpp"
 #include <filesystem>
 
+#include <memory>
 
-
-#include <chrono>
 #include <std_msgs/msg/string.hpp>
 #include <stdexcept>
 #include <string>
@@ -15,23 +14,13 @@
 #include <sys/wait.h>
 
 
-
-using namespace std::chrono_literals;
-
 std::string package_name = "which_maps";
-bool map_topic_exists = true;
+bool map_topic_exists = false;
 
-std::shared_ptr<rclcpp::Client<rom_interfaces::srv::WhichMaps>> client;
+std::shared_ptr<rclcpp::Publisher<std_msgs::msg::String>> global_publisher;
+auto trigger_msg = std_msgs::msg::String();
 
-std::shared_ptr<rom_interfaces::srv::WhichMaps::Request> which_nav_request;
-
-std::shared_ptr<rclcpp::Node> node;
-
-
-
-void callNavigationService();
-
- // switch mode parameters
+// switch mode parameters
 std::string current_mode = "navi";
 pid_t launch_pid = -1;
 
@@ -42,8 +31,6 @@ const std::string carto_mapping_launch = "mapping.launch.py";
 const std::string carto_localization_launch = "localization.launch.py";
     
 const std::string remapping_launch = "something.launch.py";
-
-
 
 // switch_mode functions
 
@@ -195,9 +182,9 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       response->status = 1; // ok
       startLaunch(cartographer_pkg, carto_mapping_launch );
       current_mode = "mapping";
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
 
-      callNavigationService();
+      trigger_msg.data = "mapping";
+      global_publisher->publish(trigger_msg);
     }
   }
   
@@ -215,9 +202,9 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       startLaunch(cartographer_pkg, carto_localization_launch);
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
       current_mode = "navi";
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
-
-      callNavigationService();
+      
+      trigger_msg.data = "nav";
+      global_publisher->publish(trigger_msg);
     }
   }
   
@@ -237,7 +224,8 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
       current_mode = "remapping";
 
-      callNavigationService();
+      trigger_msg.data = "remapping";
+      global_publisher->publish(trigger_msg);
     }   
   }
 
@@ -255,43 +243,19 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 }
 
 
-
-
 int main(int argc, char **argv)
 {
   rclcpp::init(argc, argv);
 
-  //std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("which_maps_server");
-  node = rclcpp::Node::make_shared("which_maps_server");
-
+  std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("which_maps_server");
 
   rclcpp::Service<rom_interfaces::srv::WhichMaps>::SharedPtr service = node->create_service<rom_interfaces::srv::WhichMaps>("which_maps", &which_map_answer);
 
-  client = node->create_client<rom_interfaces::srv::WhichMaps>("which_nav");
-  
-
-  which_nav_request = std::make_shared<rom_interfaces::srv::WhichMaps::Request>();
+  global_publisher = node->create_publisher<std_msgs::msg::String>("which_nav", 10);
 
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to answer maps.");
 
-  // auto topics = node->get_topic_names_and_types();
-  // for (const auto &topic : topics) 
-  // {
-  //   if (topic.first == "/map") 
-  //   {
-  //     map_topic_exists = true;
-  //     break;
-  //   }
-  // }
-
-  // if (map_topic_exists) 
-  // {
-  //   RCLCPP_INFO(node->get_logger(), "The /map topic exists.");
-  // } 
-  // else 
-  // {
-  //   RCLCPP_WARN(node->get_logger(), "The /map topic does not exist.");
-  // }
+  
 
   RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Fist Time trigger to Nav mode");
 
@@ -300,34 +264,4 @@ int main(int argc, char **argv)
 
   rclcpp::spin(node);
   rclcpp::shutdown();
-}
-
-
-void callNavigationService()
-{
-  // // Wait for "which_maps" service
-  while (!client->wait_for_service(1s)) {
-    if (!rclcpp::ok()) {
-      RCLCPP_ERROR(rclcpp::get_logger("which_maps_client"), "Interrupted while waiting for the service. Exiting.");
-      return;
-    }
-    RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "Service not available, waiting again...");
-  }
-
-  which_nav_request->request_string = current_mode;
-
-  auto result_future = client->async_send_request(which_nav_request);
-
-        if (rclcpp::spin_until_future_complete(node, result_future) == rclcpp::FutureReturnCode::SUCCESS) {
-            auto which_nav_response = result_future.get();
-            RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "%s response status: %d", which_nav_request->request_string.c_str(), which_nav_response->status);
-
-            if (which_nav_response->status == 1) {
-                RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "%s response OK", which_nav_request->request_string.c_str());
-            } else {
-                RCLCPP_WARN(rclcpp::get_logger("which_maps_client"), "%s response NOT OK", which_nav_request->request_string.c_str());
-            }
-        } else {
-            RCLCPP_ERROR(rclcpp::get_logger("which_maps_client"), "Failed to call service for %s", which_nav_request->request_string.c_str());
-        }
 }
