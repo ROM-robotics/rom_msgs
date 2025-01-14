@@ -174,7 +174,6 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   {
     if (current_mode == "mapping" ) 
     {
-            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
     }
     else 
@@ -194,7 +193,6 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   {
     if (current_mode == "navi" ) 
     {
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
     }
     else 
@@ -225,6 +223,8 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       current_mode = "remapping";
     }   
   }
+
+  /// 7. ဘာမှမလုပ်
   else 
   {
     response->total_maps = 0;
