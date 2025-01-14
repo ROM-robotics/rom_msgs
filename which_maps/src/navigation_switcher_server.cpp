@@ -160,4 +160,5 @@ int main(int argc, char **argv)
   
 
   rclcpp::spin(node);
-  rclcpp::shutdown(
+  rclcpp::shutdown();
+}
