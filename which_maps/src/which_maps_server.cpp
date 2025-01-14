@@ -15,22 +15,51 @@
 
 
 
-std::string package_name = "which_maps";
-bool map_topic_exists = false;
+//std::string package_name = "which_maps";
+//bool map_topic_exists = false;
 
+std::make_shared<rom_interfaces::srv::WhichMaps::Request> which_nav_request;
 
+void callNavigationService()
+{
+  // // Wait for "which_maps" service
+  while (!client->wait_for_service(1s)) {
+    if (!rclcpp::ok()) {
+      RCLCPP_ERROR(rclcpp::get_logger("which_maps_client"), "Interrupted while waiting for the service. Exiting.");
+      return 0;
+    }
+    RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "Service not available, waiting again...");
+  }
+
+  which_nav_request->request_string = current_mode;
+
+  auto result_future = client->async_send_request(which_nav_request);
+
+        if (rclcpp::spin_until_future_complete(node, result_future) == rclcpp::FutureReturnCode::SUCCESS) {
+            auto which_nav_response = result_future.get();
+            RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "%s response status: %d", which_nav_request->request_string.c_str(), which_nav_response->status);
+
+            if (which_nav_response->status == 1) {
+                RCLCPP_INFO(rclcpp::get_logger("which_maps_client"), "%s response OK", which_nav_request->request_string.c_str());
+            } else {
+                RCLCPP_WARN(rclcpp::get_logger("which_maps_client"), "%s response NOT OK", which_nav_request->request_string.c_str());
+            }
+        } else {
+            RCLCPP_ERROR(rclcpp::get_logger("which_maps_client"), "Failed to call service for %s", which_nav_request->request_string.c_str());
+        }
+}
 
  // switch mode parameters
-    std::string current_mode = "navi";
-    pid_t launch_pid = -1;
+std::string current_mode = "navi";
+pid_t launch_pid = -1;
 
-    // Package and launch file names
-    const std::string cartographer_pkg = "rom2109_carto";                 
-    const std::string carto_mapping_launch = "mapping.launch.py";
+// Package and launch file names
+const std::string cartographer_pkg = "rom2109_carto";                 
+const std::string carto_mapping_launch = "mapping.launch.py";
     
-    const std::string carto_localization_launch = "localization.launch.py";
+const std::string carto_localization_launch = "localization.launch.py";
     
-    const std::string remapping_launch = "something.launch.py";
+const std::string remapping_launch = "something.launch.py";
 
 
 
@@ -185,6 +214,8 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       startLaunch(cartographer_pkg, carto_mapping_launch );
       current_mode = "mapping";
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
+
+      callNavigationService();
     }
   }
   
@@ -203,6 +234,8 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
       current_mode = "navi";
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
+
+      callNavigationService();
     }
   }
   
@@ -221,6 +254,8 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       response->status = 1; // ok
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
       current_mode = "remapping";
+
+      callNavigationService();
     }   
   }
 
@@ -247,6 +282,10 @@ int main(int argc, char **argv)
   std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("which_maps_server");
 
   rclcpp::Service<rom_interfaces::srv::WhichMaps>::SharedPtr service = node->create_service<rom_interfaces::srv::WhichMaps>("which_maps", &which_map_answer);
+
+  rclcpp::Client<rom_interfaces::srv::WhichMaps>::SharedPtr client = node->create_client<rom_interfaces::srv::WhichMaps>("which_nav");
+
+  request = std::make_shared<rom_interfaces::srv::WhichMaps::Request>();
 
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to answer maps.");
 

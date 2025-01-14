@@ -28,6 +28,9 @@ endif()
 add_executable(which_maps_server src/which_maps_server.cpp)
 ament_target_dependencies(which_maps_server rclcpp rom_interfaces)
 
+add_executable(which_nav_server src/navigation_switcher_server.cpp)
+ament_target_dependencies(which_nav_server rclcpp rom_interfaces)
+
 # add_executable(ntmgr src/rom_node_thread_mgr.cpp)
 # ament_target_dependencies(ntmgr rclcpp rom_interfaces)
 
@@ -51,6 +54,7 @@ install(TARGETS
   add_two_ints_server
   which_maps_server
   which_maps_client
+  which_nav_server
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
