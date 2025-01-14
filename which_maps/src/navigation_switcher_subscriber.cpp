@@ -119,6 +119,10 @@ int main(int argc, char **argv)
     // Create a subscriber
     auto subscription = node->create_subscription<std_msgs::msg::String>("which_nav", 10, topic_callback);
 
+    RCLCPP_INFO(rclcpp::get_logger("which_nav_server"), "Fist Time trigger to Nav mode");
+
+    startLaunch(cartographer_pkg, carto_localization_launch);
+
     // Spin the node to process callbacks
     rclcpp::spin(node);
 
