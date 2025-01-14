@@ -18,7 +18,9 @@
 //std::string package_name = "which_maps";
 //bool map_topic_exists = false;
 
-std::make_shared<rom_interfaces::srv::WhichMaps::Request> which_nav_request;
+std::shared_ptr<rom_interfaces::srv::WhichMaps>  client;
+std::shared_ptr<rom_interfaces::srv::WhichMaps::Request> which_nav_request;
+
 
 void callNavigationService()
 {
@@ -283,9 +285,9 @@ int main(int argc, char **argv)
 
   rclcpp::Service<rom_interfaces::srv::WhichMaps>::SharedPtr service = node->create_service<rom_interfaces::srv::WhichMaps>("which_maps", &which_map_answer);
 
-  rclcpp::Client<rom_interfaces::srv::WhichMaps>::SharedPtr client = node->create_client<rom_interfaces::srv::WhichMaps>("which_nav");
+  client = node->create_client<rom_interfaces::srv::WhichMaps>("which_nav");
 
-  request = std::make_shared<rom_interfaces::srv::WhichMaps::Request>();
+  which_nav_request = std::make_shared<rom_interfaces::srv::WhichMaps::Request>();
 
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to answer maps.");
 
