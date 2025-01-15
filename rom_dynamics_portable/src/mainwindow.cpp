@@ -16,6 +16,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     ui->centralwidget->setStyleSheet("background-color: rgba(255, 255, 255, 230);"); // 50% opacity
     setAttribute(Qt::WA_TranslucentBackground, true);
 
+    busyDialog = new QProgressDialog("Please wait...", QString(), 0, 0, this);
+    busyDialog->setWindowFlags(Qt::FramelessWindowHint);
+    busyDialog->setFixedSize(400, 150); 
+    busyDialog->setWindowModality(Qt::WindowModal);
+    busyDialog->setCancelButton(nullptr); // Optional: Disable cancel button
+    busyDialog->move(1300, 550); 
+    busyDialog->hide();
+
     statusLabelPtr_ = ui->statusLabel;
     statusLabelPtr_->setWordWrap(true); // Enable word wrapping
     statusLabelPtr_->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -237,6 +245,12 @@ void MainWindow::on_btnEstop_clicked()
 
 void MainWindow::onResponseReceived(int service_status) {
     QString currentText = statusLabelPtr_->text();
+
+    // Hide the spinner
+    if (busyDialog->isVisible()) {
+        busyDialog->hide();
+    }
+
     if (service_status == -1) {
         statusLabelPtr_->setText(currentText + "\n" + "Error: Service not available or failed.\nReceiving not ok.\n");
     } else {
@@ -303,15 +317,18 @@ void ServiceClient::sendRequest(const std::string& request_string, const std::st
 
 void MainWindow::saveMapClicked()
 {
-    statusLabelPtr_->setText("\nမြေပုံအား default_map အမည်ဖြင့်သိမ်းဆည်းခြင်းနေပါသည်။ ... \n");
+    statusLabelPtr_->setText("\nမြေပုံအား default အမည်ဖြင့်သိမ်းဆည်းခြင်းနေပါသည်။ ... \n");
 
     saveMapBtnPtr_->setStyleSheet("background-color: green;");
 
+    //busyDialog->setLabelText("Saving the map...");
+    busyDialog->show();
+
     std::string a = "save_map";
-    std::string b = "default_map";
+    std::string b = "default";
     QMetaObject::invokeMethod(service_client_, [a, b, this]() { service_client_->sendRequest(a, b); });
 
-    statusLabelPtr_->setText("Sending save map request...\nString: \"save_map\" \nmap_name: \"default_map\"\n");
+    statusLabelPtr_->setText("Sending save map request...\nString: \"save_map\" \nmap_name: \"default\"\n");
 }
 
 

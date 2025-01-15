@@ -88,6 +88,8 @@ class MainWindow : public QMainWindow
     
     private:
         std::shared_ptr<Ui::MainWindow> ui = nullptr;
+
+        QProgressDialog *busyDialog; // Busy dialog
         
         QPushButton *sendMappingBtnPtr_;
         QPushButton *sendNavigationBtnPtr_;
