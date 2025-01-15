@@ -121,19 +121,39 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
       // Save the map
       // command စစ်ဆေးရန်။
-      std:: string cmd = "cd /home/mr_robot/Desktop/Git/rom_dynamics_robots/developer_packages/rom2109/rom2109_nav2/maps && ros2 run nav2_map_server map_saver_cli -f " + map_name;
+      std:: string cmd = "cd /home/mr_robot/data/maps && ros2 service call /write_state cartographer_ros_msgs/srv/WriteState '{filename: 'default.pbstream', include_unfinished_submaps: true}'";
+
 
       int ret_code = std::system(cmd.c_str());
 
-      if (ret_code == 0)
-      {
-        RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command executed successfully.");
-        response->status = 1; // ok
-        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
-      } 
+      if(ret_code == 0) {
+        RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 1 executed successfully.");
+
+        std::string cmd2 = std::string("ros2 run cartographer_ros cartographer_assets_writer ") +
+                            "-configuration_directory /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/config/ " +
+                            "-configuration_basename rom_nav_2d.lua " +
+                            "-urdf_filename /home/mr_robot/devel_ws/install/rom2109_description/share/rom2109_description/urdf/rom2109.urdf " +
+                            "-output_file_prefix /home/mr_robot/data/maps/default " +
+                            "-pbstream_filename /home/mr_robot/data/maps/default.pbstream";
+
+        int ret_code2 = std::system(cmd2.c_str());
+
+        if (ret_code2 == 0)
+        {
+          RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 2 executed successfully.");
+          response->status = 1; // ok
+          RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+        } 
+        else 
+        {
+          RCLCPP_ERROR(rclcpp::get_logger("which_map_server"), "Map saver command 2 failed with return code: %d", ret_code2);
+          response->status = -1; // not ok
+          RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
+        }
+      }
       else 
       {
-        RCLCPP_ERROR(rclcpp::get_logger("which_map_server"), "Map saver command failed with return code: %d", ret_code);
+        RCLCPP_ERROR(rclcpp::get_logger("which_map_server"), "Map saver command 1 failed with return code: %d", ret_code);
         response->status = -1; // not ok
         RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
       }    
