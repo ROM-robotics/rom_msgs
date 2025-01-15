@@ -317,7 +317,7 @@ void ServiceClient::sendRequest(const std::string& request_string, const std::st
 
 void MainWindow::saveMapClicked()
 {
-    statusLabelPtr_->setText("\nမြေပုံအား default အမည်ဖြင့်သိမ်းဆည်းခြင်းနေပါသည်။ ... \n");
+    statusLabelPtr_->setText("\nမြေပုံအား default_map အမည်ဖြင့်သိမ်းဆည်းခြင်းနေပါသည်။ ... \n");
 
     saveMapBtnPtr_->setStyleSheet("background-color: green;");
 
@@ -325,10 +325,10 @@ void MainWindow::saveMapClicked()
     busyDialog->show();
 
     std::string a = "save_map";
-    std::string b = "default";
+    std::string b = "default_map";
     QMetaObject::invokeMethod(service_client_, [a, b, this]() { service_client_->sendRequest(a, b); });
 
-    statusLabelPtr_->setText("Sending save map request...\nString: \"save_map\" \nmap_name: \"default\"\n");
+    statusLabelPtr_->setText("Sending save map request...\nString: \"save_map\" \nmap_name: \"default_map\"\n");
 }
 
 

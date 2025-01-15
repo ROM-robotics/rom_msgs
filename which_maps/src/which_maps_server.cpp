@@ -121,21 +121,21 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
       // Save the map
       // command စစ်ဆေးရန်။
-      std:: string cmd = "cd /home/mr_robot/data/maps && ros2 service call /write_state cartographer_ros_msgs/srv/WriteState '{filename: 'default.pbstream', include_unfinished_submaps: true}'";
+      std:: string cmd = "cd /home/mr_robot/data/maps/ && touch " + map_name + "_hack; rm " + map_name + "* && ros2 service call /write_state cartographer_ros_msgs/srv/WriteState '{filename: '/home/mr_robot/data/maps/" +  map_name + ".pbstream', include_unfinished_submaps: true}'";
 
-
+      // first command
       int ret_code = std::system(cmd.c_str());
 
       if(ret_code == 0) {
         RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 1 executed successfully.");
 
-        std::string cmd2 = std::string("ros2 run cartographer_ros cartographer_assets_writer ") +
-                            "-configuration_directory /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/config/ " +
-                            "-configuration_basename rom_nav_2d.lua " +
-                            "-urdf_filename /home/mr_robot/devel_ws/install/rom2109_description/share/rom2109_description/urdf/rom2109.urdf " +
-                            "-output_file_prefix /home/mr_robot/data/maps/default " +
-                            "-pbstream_filename /home/mr_robot/data/maps/default.pbstream";
-
+        std::string cmd2 = std::string("ros2 run cartographer_ros cartographer_pbstream_to_ros_map ") +
+                            "-pbstream_filename /home/mr_robot/data/maps/" + map_name + ".pbstream " +
+                            "-map_filename /home/mr_robot/data/maps/" + map_name + ".pgm " +
+                            "-yaml_filename /home/mr_robot/data/maps/" + map_name + ".yaml && ";
+                            // "mv map.pgm " + map_name + ".pgm && "
+                            // "mv map.yaml " + map_name + ".yaml";
+        // second command
         int ret_code2 = std::system(cmd2.c_str());
 
         if (ret_code2 == 0)
