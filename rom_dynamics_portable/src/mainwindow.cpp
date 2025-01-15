@@ -325,7 +325,7 @@ void MainWindow::saveMapClicked()
     busyDialog->show();
 
     std::string a = "save_map";
-    std::string b = "default_map";
+    std::string b = "office";
     QMetaObject::invokeMethod(service_client_, [a, b, this]() { service_client_->sendRequest(a, b); });
 
     statusLabelPtr_->setText("Sending save map request...\nString: \"save_map\" \nmap_name: \"default_map\"\n");
