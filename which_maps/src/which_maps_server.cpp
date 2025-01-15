@@ -118,6 +118,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
     if (map_topic_exists) 
     {
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "The /map topic exists.");
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "map: %s", map_name.c_str());
 
       // Save the map
       // command စစ်ဆေးရန်။
