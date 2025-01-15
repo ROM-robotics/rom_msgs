@@ -343,6 +343,9 @@ void ServiceClient::sendRequest(const std::string& request_string, const std::st
 
 void MainWindow::saveMapClicked()
 {
+    showBusyDialog();
+    setButtonsEnabled(false);
+    /*
     statusLabelPtr_->setText("\nမြေပုံအား default_map အမည်ဖြင့်သိမ်းဆည်းခြင်းနေပါသည်။ ... \n");
 
     saveMapBtnPtr_->setStyleSheet("background-color: green;");
@@ -352,6 +355,37 @@ void MainWindow::saveMapClicked()
     QMetaObject::invokeMethod(service_client_, [a, b, this]() { service_client_->sendRequest(a, b); });
 
     statusLabelPtr_->setText("Sending save map request...\nString: \"save_map\" \nmap_name: \"default_map\"\n");
+    */
+
+    //-----------------------------------------------------------------------------------------------------------
+    // Prompt the user to enter a map name
+    bool ok;
+
+    QRegExp regex("^[^_]+$"); // Regular expression: no underscores allowed
+
+    QString mapName = QInputDialog::getText(this, tr("Save Map"),
+                                            tr("Enter map name:"), QLineEdit::Normal,
+                                            tr("default"), &ok);
+
+    if (ok && !mapName.isEmpty()) {
+        // Update the status label and send the save map request
+        statusLabelPtr_->setText(tr("\nမြေပုံအား '%1' အမည်ဖြင့်သိမ်းဆည်းခြင်းနေပါသည်။ ... \n").arg(mapName));
+        saveMapBtnPtr_->setStyleSheet("background-color: green;");
+
+        std::string a = "save_map";
+        std::string b = mapName.toStdString();
+        QMetaObject::invokeMethod(service_client_, [a, b, this]() { service_client_->sendRequest(a, b); });
+
+        statusLabelPtr_->setText(tr("Sending save map request...\nString: \"save_map\"\nmap_name: \"%1\"\n").arg(mapName));
+    } 
+    else 
+    {
+        statusLabelPtr_->setText("\nSave map canceled by user.\n");
+
+        hideBusyDialog();
+        setButtonsEnabled(true);
+    }
+    //-----------------------------------------------------------------------------------------------------------
 }
 
 
@@ -423,6 +457,7 @@ void MainWindow::setButtonsEnabled(bool enabled) {
     for (QPushButton* button : buttons) {
         button->setEnabled(enabled);
     }
+    ui->shutdownBtn->setEnabled(true);
 }
 
 void MainWindow::hideBusyDialog() {

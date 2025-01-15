@@ -1,6 +1,10 @@
 #ifndef ROM_ALGORITHM_H
 #define ROM_ALGORITHM_H
 
+#ifndef UNUSED
+#define UNUSED(x) (void)(x)
+#endif
+
 #include <rclcpp/rclcpp.hpp>
 
 #include <QObject>
@@ -19,6 +23,8 @@ double quaternion_to_euler(double x, double y, double z, double w) {
     double t4 = +2.0 * (w * z + x * y);
     double t5 = +1.0 - 2.0 * (z * z + x * x);
     double z_rot = atan2(t4, t5);
+
+    UNUSED(y_rot); UNUSED(z_rot);
     return x_rot; // * radian_to_degree_constant;
 }
 
