@@ -132,7 +132,8 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
         std::string cmd2 = std::string("ros2 run cartographer_ros cartographer_pbstream_to_ros_map ") +
                             "-pbstream_filename /home/mr_robot/data/maps/" + map_name + ".pbstream " +
                             "-map_filename /home/mr_robot/data/maps/" + map_name + ".pgm " +
-                            "-yaml_filename /home/mr_robot/data/maps/" + map_name + ".yaml && ";
+                            "-yaml_filename /home/mr_robot/data/maps/" + map_name + ".yaml"
+                            // && "
                             // "mv map.pgm " + map_name + ".pgm && "
                             // "mv map.yaml " + map_name + ".yaml";
         // second command
