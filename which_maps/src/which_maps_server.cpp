@@ -15,7 +15,7 @@
 
 
 std::string package_name = "which_maps";
-bool map_topic_exists = false;
+bool map_topic_exists = true;
 
 std::shared_ptr<rclcpp::Publisher<std_msgs::msg::String>> global_publisher;
 auto trigger_msg = std_msgs::msg::String();
