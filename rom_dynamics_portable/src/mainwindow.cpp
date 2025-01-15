@@ -16,14 +16,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     ui->centralwidget->setStyleSheet("background-color: rgba(255, 255, 255, 230);"); // 50% opacity
     setAttribute(Qt::WA_TranslucentBackground, true);
 
-    busyDialog = new QProgressDialog("Please wait...", QString(), 0, 0, this);
-    busyDialog->setWindowFlags(Qt::FramelessWindowHint);
-    busyDialog->setFixedSize(400, 150); 
-    busyDialog->setWindowModality(Qt::WindowModal);
-    busyDialog->setCancelButton(nullptr); // Optional: Disable cancel button
-    busyDialog->move(1300, 550); 
-    busyDialog->hide();
-
     statusLabelPtr_ = ui->statusLabel;
     statusLabelPtr_->setWordWrap(true); // Enable word wrapping
     statusLabelPtr_->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -138,6 +130,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     qRegisterMetaType<nav_msgs::msg::Odometry::SharedPtr>("nav_msgs::msg::Odometry::SharedPtr");
 
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
+
+    ui->saveMapBtn->hide();//setEnabled(false);
+    ui->openMapBtn->show();//setEnabled(true);
+    ui->selectMapBtn->show();//setEnabled(true);
 }
 
 
@@ -150,6 +146,7 @@ MainWindow::~MainWindow()
 
     delete service_client_;
     delete rosThread;
+    removeBusyDialog(); 
 }
 
 
@@ -185,6 +182,16 @@ void MainWindow::sendMappingMode() {
         ui->mappingBtn->setStyleSheet("background-color: green;");
         ui->navigationBtn->setStyleSheet("background-color: none;");
         ui->remappingBtn->setStyleSheet("background-color: none;");
+
+        showBusyDialog();
+        setButtonsEnabled(false);
+
+        ui->saveMapBtn->show();
+        ui->openMapBtn->hide();
+        ui->selectMapBtn->hide();
+        // ui->saveMapBtn->setEnabled(true);
+        // ui->openMapBtn->setEnabled(false);
+        // ui->selectMapBtn->setEnabled(false);
     }
 }
 
@@ -204,6 +211,16 @@ void MainWindow::sendNavigationMode() {
         ui->mappingBtn->setStyleSheet("background-color: none;");
         ui->navigationBtn->setStyleSheet("background-color: green;");
         ui->remappingBtn->setStyleSheet("background-color: none;");
+
+        showBusyDialog();
+        setButtonsEnabled(false);
+
+        ui->saveMapBtn->hide();
+        ui->openMapBtn->show();
+        ui->selectMapBtn->show();
+        // ui->saveMapBtn->setEnabled(false);
+        // ui->openMapBtn->setEnabled(true);
+        // ui->selectMapBtn->setEnabled(true);
     }
 }
 
@@ -223,6 +240,16 @@ void MainWindow::sendRemappingMode() {
         ui->mappingBtn->setStyleSheet("background-color: none;");
         ui->navigationBtn->setStyleSheet("background-color: none;");
         ui->remappingBtn->setStyleSheet("background-color: green;");
+
+        showBusyDialog();
+        setButtonsEnabled(false);
+
+        ui->saveMapBtn->show();
+        ui->openMapBtn->show();
+        ui->selectMapBtn->show();
+        // ui->saveMapBtn->setEnabled(true);
+        // ui->openMapBtn->setEnabled(true);
+        // ui->selectMapBtn->setEnabled(true);
     }
 }
 
@@ -246,11 +273,6 @@ void MainWindow::on_btnEstop_clicked()
 void MainWindow::onResponseReceived(int service_status) {
     QString currentText = statusLabelPtr_->text();
 
-    // Hide the spinner
-    if (busyDialog->isVisible()) {
-        busyDialog->hide();
-    }
-
     if (service_status == -1) {
         statusLabelPtr_->setText(currentText + "\n" + "Error: Service not available or failed.\nReceiving not ok.\n");
     } else {
@@ -260,6 +282,9 @@ void MainWindow::onResponseReceived(int service_status) {
     saveMapBtnPtr_->setStyleSheet("background-color: none;"); 
     //openMapBtnPtr_->setStyleSheet("background-color: none;");
     //selectMapBtnPtr_->setStyleSheet("background-color: none;");
+
+    hideBusyDialog();
+    setButtonsEnabled(true);
 }
 
 
@@ -293,7 +318,8 @@ void ServiceClient::sendRequest(const std::string& request_string, const std::st
 
     if (request_string == "save_map") {
         request->map_name_to_save = optional_param;
-    } else if (request_string == "select_map") {
+    } 
+    else if (request_string == "select_map") {
         request->map_name_to_select = optional_param;
     }
     
@@ -320,9 +346,6 @@ void MainWindow::saveMapClicked()
     statusLabelPtr_->setText("\nမြေပုံအား default_map အမည်ဖြင့်သိမ်းဆည်းခြင်းနေပါသည်။ ... \n");
 
     saveMapBtnPtr_->setStyleSheet("background-color: green;");
-
-    //busyDialog->setLabelText("Saving the map...");
-    busyDialog->show();
 
     std::string a = "save_map";
     std::string b = "office";
@@ -395,25 +418,39 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 }
 /// end dragging
 
+void MainWindow::setButtonsEnabled(bool enabled) {
+    QList<QPushButton*> buttons = findChildren<QPushButton*>();
+    for (QPushButton* button : buttons) {
+        button->setEnabled(enabled);
+    }
+}
 
-// void ServiceClient::sendRequest(int a, int b) 
-// {
-//     auto request = std::make_shared<example_interfaces::srv::AddTwoInts::Request>();
-//     request->a = a;
-//     request->b = b;
+void MainWindow::hideBusyDialog() {
+    if (busyDialog_->isVisible()) {
+        busyDialog_->hide();
+    }
+}
 
-//     if (!client->wait_for_service(std::chrono::seconds(5))) {
-//         emit responseReceived(-1); // Error: service not available
-//         return;
-//     }
+void MainWindow::removeBusyDialog() {
+    if (busyDialog_ != nullptr) {
+        delete busyDialog_;  // Free the memory
+        busyDialog_ = nullptr;
+    }
+}
 
-//     auto future = client->async_send_request(request);
-//     future.wait();
+void MainWindow::showBusyDialog() {
+    if (busyDialog_ == nullptr) {
 
-//     try {
-//         auto response = future.get();
-//         emit responseReceived(response->sum);
-//     } catch (const std::exception &e) {
-//         emit responseReceived(-1); // Error: response failure
-//     }
-// }
+        busyDialog_ = new QProgressDialog("Please wait...", QString(), 0, 0, this);
+        busyDialog_->setWindowFlags(Qt::FramelessWindowHint);
+        busyDialog_->setFixedSize(400, 150); 
+        busyDialog_->setWindowModality(Qt::WindowModal);
+        busyDialog_->setCancelButton(nullptr); // Optional: Disable cancel button
+        busyDialog_->move(1300, 550); 
+        //busyDialog_->hide();
+    }
+
+    // Show the dialog
+    busyDialog_->show();
+}
+

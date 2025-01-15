@@ -49,6 +49,8 @@ int main(int argc, char *argv[])
 
     QObject::connect(mainWindow.getUi()->btnStop, &QPushButton::clicked, cmd_publisher.get(), &Publisher::setStop);
     QObject::connect(mainWindow.getUi()->btnStop, &QPushButton::clicked, &mainWindow, &MainWindow::labelEditForSetStop);
+
+    
     
     return a.exec();
 }

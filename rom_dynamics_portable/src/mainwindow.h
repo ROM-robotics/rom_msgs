@@ -55,6 +55,11 @@ class MainWindow : public QMainWindow
         explicit MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
         std::shared_ptr<Ui::MainWindow> getUi() { return ui; }
+
+        void showBusyDialog();
+        void removeBusyDialog();
+        void hideBusyDialog();
+        void setButtonsEnabled(bool enabled);
     
     public slots:
         void displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg);
@@ -89,7 +94,7 @@ class MainWindow : public QMainWindow
     private:
         std::shared_ptr<Ui::MainWindow> ui = nullptr;
 
-        QProgressDialog *busyDialog; // Busy dialog
+        QProgressDialog *busyDialog_ = nullptr; // Busy dialog
         
         QPushButton *sendMappingBtnPtr_;
         QPushButton *sendNavigationBtnPtr_;
