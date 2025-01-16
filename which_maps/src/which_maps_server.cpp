@@ -143,7 +143,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
         {
           RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 2 executed successfully.");
 
-          std::string cmd3 = "sed 's|/*.pbstream|/" + map_name + ".pbstream|g' /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
+          std::string cmd3 = "sed \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
           int ret_code3 = std::system(cmd3.c_str());
           if(ret_code3==0)
           {
@@ -156,7 +156,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
             if(ret_code4==0) 
             { 
               RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 4 OK"); 
-              std::string cmd5 = "sed -i 's|^image: map\.pgm|image: " + map_name + ".pgm|' /home/mr_robot/data/maps/" + map_name + ".yaml";
+              std::string cmd5 = "sed -i \"s|^image: .*\\.pgm|image: " + map_name + ".pgm|\" /home/mr_robot/data/maps/" + map_name + ".yaml";
               int ret_code5 = std::system(cmd5.c_str());
               if(ret_code5==0) { RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 5 Ok."); response->status = 1; }
               else { RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 5 Fail"); response->status = -1; } 
