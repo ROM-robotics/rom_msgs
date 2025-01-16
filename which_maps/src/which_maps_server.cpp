@@ -143,13 +143,13 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
         {
           RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 2 executed successfully.");
 
-          std::string cmd3 = "sed \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
+          std::string cmd3 = "sed -i \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
           int ret_code3 = std::system(cmd3.c_str());
           if(ret_code3==0)
           {
             RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 3 OK"); 
 
-            std::string cmd4 = "sed 's|/*.yaml|/" + map_name + ".yaml|g' /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
+            std::string cmd4 = "sed -i \"s|/.*\\.yaml|/" + map_name + ".yaml|g\" /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
 
             int ret_code4 = std::system(cmd4.c_str());
 
