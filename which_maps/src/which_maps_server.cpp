@@ -245,7 +245,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
       current_mode = "navi";
       
-      trigger_msg.data = "nav";
+      trigger_msg.data = "navi";
       global_publisher->publish(trigger_msg);
     }
   }
