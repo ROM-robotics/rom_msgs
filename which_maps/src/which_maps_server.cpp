@@ -151,7 +151,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
             std::string cmd4 = "sed 's|/*.yaml|/custom.yaml|g' /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
 
-            int ret_code4 = std::system(cmd4.c_str()):
+            int ret_code4 = std::system(cmd4.c_str());
 
             if(ret_code4==0) { RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 4 OK"); response->status = 1; }
             else             { RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 4 Fail"); response->status = -1; }
