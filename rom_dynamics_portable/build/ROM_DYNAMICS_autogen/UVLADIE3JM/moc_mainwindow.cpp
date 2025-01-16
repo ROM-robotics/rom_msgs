@@ -132,8 +132,8 @@ void ServiceClient::responseReceived(int _t1)
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[19];
-    char stringdata0[320];
+    QByteArrayData data[21];
+    char stringdata0[371];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -147,25 +147,29 @@ QT_MOC_LITERAL(1, 11, 18), // "displayCurrentPose"
 QT_MOC_LITERAL(2, 30, 0), // ""
 QT_MOC_LITERAL(3, 31, 34), // "nav_msgs::msg::Odometry::Shar..."
 QT_MOC_LITERAL(4, 66, 3), // "msg"
-QT_MOC_LITERAL(5, 70, 15), // "sendMappingMode"
-QT_MOC_LITERAL(6, 86, 18), // "sendNavigationMode"
-QT_MOC_LITERAL(7, 105, 17), // "sendRemappingMode"
-QT_MOC_LITERAL(8, 123, 14), // "saveMapClicked"
-QT_MOC_LITERAL(9, 138, 14), // "openMapClicked"
-QT_MOC_LITERAL(10, 153, 16), // "selectMapClicked"
-QT_MOC_LITERAL(11, 170, 22), // "labelEditForSetForward"
-QT_MOC_LITERAL(12, 193, 20), // "labelEditForSetRight"
-QT_MOC_LITERAL(13, 214, 19), // "labelEditForSetLeft"
-QT_MOC_LITERAL(14, 234, 19), // "labelEditForSetStop"
-QT_MOC_LITERAL(15, 254, 22), // "on_shutdownBtn_clicked"
-QT_MOC_LITERAL(16, 277, 19), // "on_btnEstop_clicked"
-QT_MOC_LITERAL(17, 297, 18), // "onResponseReceived"
-QT_MOC_LITERAL(18, 316, 3) // "sum"
+QT_MOC_LITERAL(5, 70, 17), // "changeCurrentMode"
+QT_MOC_LITERAL(6, 88, 32), // "std_msgs::msg::String::SharedPtr"
+QT_MOC_LITERAL(7, 121, 15), // "sendMappingMode"
+QT_MOC_LITERAL(8, 137, 18), // "sendNavigationMode"
+QT_MOC_LITERAL(9, 156, 17), // "sendRemappingMode"
+QT_MOC_LITERAL(10, 174, 14), // "saveMapClicked"
+QT_MOC_LITERAL(11, 189, 14), // "openMapClicked"
+QT_MOC_LITERAL(12, 204, 16), // "selectMapClicked"
+QT_MOC_LITERAL(13, 221, 22), // "labelEditForSetForward"
+QT_MOC_LITERAL(14, 244, 20), // "labelEditForSetRight"
+QT_MOC_LITERAL(15, 265, 19), // "labelEditForSetLeft"
+QT_MOC_LITERAL(16, 285, 19), // "labelEditForSetStop"
+QT_MOC_LITERAL(17, 305, 22), // "on_shutdownBtn_clicked"
+QT_MOC_LITERAL(18, 328, 19), // "on_btnEstop_clicked"
+QT_MOC_LITERAL(19, 348, 18), // "onResponseReceived"
+QT_MOC_LITERAL(20, 367, 3) // "sum"
 
     },
     "MainWindow\0displayCurrentPose\0\0"
     "nav_msgs::msg::Odometry::SharedPtr\0"
-    "msg\0sendMappingMode\0sendNavigationMode\0"
+    "msg\0changeCurrentMode\0"
+    "std_msgs::msg::String::SharedPtr\0"
+    "sendMappingMode\0sendNavigationMode\0"
     "sendRemappingMode\0saveMapClicked\0"
     "openMapClicked\0selectMapClicked\0"
     "labelEditForSetForward\0labelEditForSetRight\0"
@@ -181,7 +185,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -189,23 +193,25 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   84,    2, 0x0a /* Public */,
-       5,    0,   87,    2, 0x0a /* Public */,
-       6,    0,   88,    2, 0x0a /* Public */,
-       7,    0,   89,    2, 0x0a /* Public */,
-       8,    0,   90,    2, 0x0a /* Public */,
-       9,    0,   91,    2, 0x0a /* Public */,
-      10,    0,   92,    2, 0x0a /* Public */,
-      11,    0,   93,    2, 0x0a /* Public */,
-      12,    0,   94,    2, 0x0a /* Public */,
-      13,    0,   95,    2, 0x0a /* Public */,
-      14,    0,   96,    2, 0x0a /* Public */,
-      15,    0,   97,    2, 0x08 /* Private */,
-      16,    0,   98,    2, 0x08 /* Private */,
-      17,    1,   99,    2, 0x08 /* Private */,
+       1,    1,   89,    2, 0x0a /* Public */,
+       5,    1,   92,    2, 0x0a /* Public */,
+       7,    0,   95,    2, 0x0a /* Public */,
+       8,    0,   96,    2, 0x0a /* Public */,
+       9,    0,   97,    2, 0x0a /* Public */,
+      10,    0,   98,    2, 0x0a /* Public */,
+      11,    0,   99,    2, 0x0a /* Public */,
+      12,    0,  100,    2, 0x0a /* Public */,
+      13,    0,  101,    2, 0x0a /* Public */,
+      14,    0,  102,    2, 0x0a /* Public */,
+      15,    0,  103,    2, 0x0a /* Public */,
+      16,    0,  104,    2, 0x0a /* Public */,
+      17,    0,  105,    2, 0x08 /* Private */,
+      18,    0,  106,    2, 0x08 /* Private */,
+      19,    1,  107,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
+    QMetaType::Void, 0x80000000 | 6,    4,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -218,7 +224,7 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   18,
+    QMetaType::Void, QMetaType::Int,   20,
 
        0        // eod
 };
@@ -230,19 +236,20 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         (void)_t;
         switch (_id) {
         case 0: _t->displayCurrentPose((*reinterpret_cast< const nav_msgs::msg::Odometry::SharedPtr(*)>(_a[1]))); break;
-        case 1: _t->sendMappingMode(); break;
-        case 2: _t->sendNavigationMode(); break;
-        case 3: _t->sendRemappingMode(); break;
-        case 4: _t->saveMapClicked(); break;
-        case 5: _t->openMapClicked(); break;
-        case 6: _t->selectMapClicked(); break;
-        case 7: _t->labelEditForSetForward(); break;
-        case 8: _t->labelEditForSetRight(); break;
-        case 9: _t->labelEditForSetLeft(); break;
-        case 10: _t->labelEditForSetStop(); break;
-        case 11: _t->on_shutdownBtn_clicked(); break;
-        case 12: _t->on_btnEstop_clicked(); break;
-        case 13: _t->onResponseReceived((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: _t->changeCurrentMode((*reinterpret_cast< const std_msgs::msg::String::SharedPtr(*)>(_a[1]))); break;
+        case 2: _t->sendMappingMode(); break;
+        case 3: _t->sendNavigationMode(); break;
+        case 4: _t->sendRemappingMode(); break;
+        case 5: _t->saveMapClicked(); break;
+        case 6: _t->openMapClicked(); break;
+        case 7: _t->selectMapClicked(); break;
+        case 8: _t->labelEditForSetForward(); break;
+        case 9: _t->labelEditForSetRight(); break;
+        case 10: _t->labelEditForSetLeft(); break;
+        case 11: _t->labelEditForSetStop(); break;
+        case 12: _t->on_shutdownBtn_clicked(); break;
+        case 13: _t->on_btnEstop_clicked(); break;
+        case 14: _t->onResponseReceived((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -277,13 +284,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 15;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 14)
+        if (_id < 15)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 14;
+        _id -= 15;
     }
     return _id;
 }

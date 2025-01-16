@@ -271,6 +271,30 @@ ros2/source/cmd_publisher.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.s
 .PHONY : ros2/source/cmd_publisher.cpp.s
 
+ros2/source/mode_subscriber.o: ros2/source/mode_subscriber.cpp.o
+.PHONY : ros2/source/mode_subscriber.o
+
+# target to build an object file
+ros2/source/mode_subscriber.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.o
+.PHONY : ros2/source/mode_subscriber.cpp.o
+
+ros2/source/mode_subscriber.i: ros2/source/mode_subscriber.cpp.i
+.PHONY : ros2/source/mode_subscriber.i
+
+# target to preprocess a source file
+ros2/source/mode_subscriber.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.i
+.PHONY : ros2/source/mode_subscriber.cpp.i
+
+ros2/source/mode_subscriber.s: ros2/source/mode_subscriber.cpp.s
+.PHONY : ros2/source/mode_subscriber.s
+
+# target to generate assembly for a file
+ros2/source/mode_subscriber.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.s
+.PHONY : ros2/source/mode_subscriber.cpp.s
+
 ros2/source/pose_subscriber.o: ros2/source/pose_subscriber.cpp.o
 .PHONY : ros2/source/pose_subscriber.o
 
@@ -366,6 +390,9 @@ help:
 	@echo "... ros2/source/cmd_publisher.o"
 	@echo "... ros2/source/cmd_publisher.i"
 	@echo "... ros2/source/cmd_publisher.s"
+	@echo "... ros2/source/mode_subscriber.o"
+	@echo "... ros2/source/mode_subscriber.i"
+	@echo "... ros2/source/mode_subscriber.s"
 	@echo "... ros2/source/pose_subscriber.o"
 	@echo "... ros2/source/pose_subscriber.i"
 	@echo "... ros2/source/pose_subscriber.s"

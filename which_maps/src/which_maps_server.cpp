@@ -272,7 +272,8 @@ int main(int argc, char **argv)
 
   rclcpp::Service<rom_interfaces::srv::WhichMaps>::SharedPtr service = node->create_service<rom_interfaces::srv::WhichMaps>("which_maps", &which_map_answer);
 
-  global_publisher = node->create_publisher<std_msgs::msg::String>("which_nav", 10);
+  // latch publisher
+  global_publisher = node->create_publisher<std_msgs::msg::String>("which_nav", rclcpp::QoS(1).transient_local());
 
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to answer maps.");
 
@@ -280,6 +281,8 @@ int main(int argc, char **argv)
 
   startLaunch(cartographer_pkg, carto_localization_launch);
   
+  trigger_msg.data = current_mode;
+  global_publisher->publish(trigger_msg);
 
   rclcpp::spin(node);
   rclcpp::shutdown();

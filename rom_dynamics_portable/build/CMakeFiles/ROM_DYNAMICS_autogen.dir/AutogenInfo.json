@@ -1793,6 +1793,12 @@
 			null
 		],
 		[
+			"/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/header/mode_subscriber.h",
+			"MU",
+			"R75NXRNHZL/moc_mode_subscriber.cpp",
+			null
+		],
+		[
 			"/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/header/pose_subscriber.h",
 			"MU",
 			"R75NXRNHZL/moc_pose_subscriber.cpp",
@@ -1919,6 +1925,11 @@
 	[
 		[
 			"/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/source/cmd_publisher.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/source/mode_subscriber.cpp",
 			"MU",
 			null
 		],

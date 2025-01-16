@@ -3,6 +3,7 @@
 #include <QObject>
 #include "cmd_publisher.h"
 #include "pose_subscriber.h"
+#include "mode_subscriber.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,11 +12,14 @@ int main(int argc, char *argv[])
     rclcpp::init(argc, argv);
     std::shared_ptr<Publisher> cmd_publisher = nullptr;
     std::shared_ptr<Subscriber> pose_subscriber = nullptr;
+    std::shared_ptr<ModeSubscriber> mode_subscriber = nullptr;
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     cmd_publisher = std::make_shared<Publisher>("cmd_vel_from_qt");
-    pose_subscriber = std::make_shared<Subscriber>("/odom"); // to delete
+    pose_subscriber = std::make_shared<Subscriber>("/odom"); 
+    mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
     executor->add_node(cmd_publisher);
     executor->add_node(pose_subscriber);
+    executor->add_node(mode_subscriber);
     std::thread executor_thread([executor](){executor->spin();});
 
     // QT APPLICATION //
@@ -36,6 +40,7 @@ int main(int argc, char *argv[])
     mainWindow.show();
 
     QObject::connect(pose_subscriber.get(), &Subscriber::logReceived, &mainWindow, &MainWindow::displayCurrentPose);
+    QObject::connect(mode_subscriber.get(), &ModeSubscriber::modeReceived, &mainWindow, &MainWindow::changeCurrentMode);
    
     // ဒါရဖို့ mainwindow ရဲ့ ui ကို unique_ptr ကနေ shared_ptr ပြောင်းပြီး pointer ကို .getUi() နဲ့ ရယူတယ်။
     QObject::connect(mainWindow.getUi()->btnForward, &QPushButton::clicked, cmd_publisher.get(), &Publisher::setForward);

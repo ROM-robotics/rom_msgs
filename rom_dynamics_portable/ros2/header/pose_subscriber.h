@@ -19,7 +19,7 @@ class Subscriber : public QObject, public rclcpp::Node
 
     private:
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subscription_;
-        void mapCallback(const nav_msgs::msg::Odometry::SharedPtr msg);
+        void poseCallback(const nav_msgs::msg::Odometry::SharedPtr msg);
 };
 
 #endif // SUBSCRIBER_H

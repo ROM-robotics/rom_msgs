@@ -1360,4 +1360,5 @@ CMakeFiles/ROM_DYNAMICS.dir/src/main.cpp.o: \
  /home/mr_robot/devel_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/msg/rosidl_generator_cpp__visibility_control.hpp \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/QObject \
  /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/header/cmd_publisher.h \
- /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/header/pose_subscriber.h
+ /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/header/pose_subscriber.h \
+ /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/header/mode_subscriber.h

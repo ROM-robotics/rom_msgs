@@ -6,6 +6,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o.d"
   "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.o"
   "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.o.d"
+  "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.o"
+  "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.o.d"
   "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/pose_subscriber.cpp.o"
   "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/pose_subscriber.cpp.o.d"
   "CMakeFiles/ROM_DYNAMICS.dir/src/main.cpp.o"

@@ -126,8 +126,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
 
     current_mode_ = "navi";
 
-    /* signal ပို့လို့ရတဲ့ meta object ဖြစ်အောင်လို့ */
+    /* signal ပို့လို့ရတဲ့ meta object ဖြစ်အောင်လို့ ၊ ဒါမရှိရင် error မရှိသော်လည်း subscrib လုပ်မရ */
     qRegisterMetaType<nav_msgs::msg::Odometry::SharedPtr>("nav_msgs::msg::Odometry::SharedPtr");
+    qRegisterMetaType<std_msgs::msg::String::SharedPtr>("std_msgs::msg::String::SharedPtr");
 
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
 
@@ -162,6 +163,28 @@ void MainWindow::displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg
     ui->phiValueLabel->setText(QString("%1").arg(theta_degree));
 }
 
+void MainWindow::changeCurrentMode(const std_msgs::msg::String::SharedPtr msg)
+{
+    //std::string msg_data = msg->data;
+    QString msg_data = QString::fromStdString(msg->data);
+    statusLabelPtr_->setText(tr("\n... Received current mode from Robot.\n       String: \"%1\"\n").arg(msg_data));
+
+    if (msg_data == "navi")
+    {
+        //sendNavigationBtnPtr_->click();
+        sendNavigationMode();
+    } 
+    else if (msg_data == "mapping")
+    {
+        //sendMappingBtnPtr_->click();
+        sendMappingMode();
+    } 
+    else if (msg_data == "remapping")
+    {
+        //sendRemappingBtnPtr_->click();
+        sendRemappingMode();
+    }
+}
 
 void MainWindow::sendMappingMode() {
 

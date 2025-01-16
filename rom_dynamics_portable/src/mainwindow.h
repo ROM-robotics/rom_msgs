@@ -63,6 +63,7 @@ class MainWindow : public QMainWindow
     
     public slots:
         void displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg);
+        void changeCurrentMode(const std_msgs::msg::String::SharedPtr msg);
         
         void sendMappingMode();
         void sendNavigationMode();

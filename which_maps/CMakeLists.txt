@@ -28,7 +28,7 @@ endif()
 add_executable(which_maps_server src/which_maps_server.cpp)
 ament_target_dependencies(which_maps_server rclcpp rom_interfaces)
 
-add_executable(which_nav_server src/navigation_switcher_subscriber.cpp)
+add_executable(which_nav_server src/which_navs_server.cpp)
 ament_target_dependencies(which_nav_server rclcpp rom_interfaces)
 
 # add_executable(ntmgr src/rom_node_thread_mgr.cpp)
