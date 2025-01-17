@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<Subscriber> pose_subscriber = nullptr;
     std::shared_ptr<ModeSubscriber> mode_subscriber = nullptr;
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
-    cmd_publisher = std::make_shared<Publisher>("cmd_vel_from_qt");
+    cmd_publisher = std::make_shared<Publisher>("cmd_vel_qt_to_twist");
     pose_subscriber = std::make_shared<Subscriber>("/odom"); 
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
     executor->add_node(cmd_publisher);

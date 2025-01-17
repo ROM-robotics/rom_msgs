@@ -149,7 +149,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
           {
             RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 3 OK"); 
 
-            std::string cmd4 = "sed -i \"s|/.*\\.yaml|/" + map_name + ".yaml|g\" /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
+            std::string cmd4 = "sed -i \"s|maps/.*\\.yaml|/maps/" + map_name + ".yaml|g\" /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
 
             int ret_code4 = std::system(cmd4.c_str());
 
