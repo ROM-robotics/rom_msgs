@@ -14,13 +14,15 @@ int main(int argc, char *argv[])
     std::shared_ptr<Subscriber> pose_subscriber = nullptr;
     std::shared_ptr<ModeSubscriber> mode_subscriber = nullptr;
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
+    std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> single_executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
     cmd_publisher = std::make_shared<Publisher>("cmd_vel_qt_to_twist");
     pose_subscriber = std::make_shared<Subscriber>("/odom"); 
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
-    executor->add_node(cmd_publisher);
+    single_executor->add_node(cmd_publisher);
     executor->add_node(pose_subscriber);
     executor->add_node(mode_subscriber);
     std::thread executor_thread([executor](){executor->spin();});
+    std::thread single_executor_thread([single_executor](){single_executor->spin();});
 
     // QT APPLICATION //
     QApplication a(argc, argv);
