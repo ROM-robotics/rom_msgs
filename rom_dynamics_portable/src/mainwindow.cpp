@@ -13,14 +13,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     ui->setupUi(this);
 
     setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-    ui->centralwidget->setStyleSheet("background-color: rgba(255, 255, 255, 230);"); // 50% opacity
+    ui->centralwidget->setStyleSheet(
+    "QWidget#centralwidget {"
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
+    "       stop: 0 rgba(0, 0, 0, 0.8), "  // Black with 70% opacity
+    "       stop: 1 rgba(0, 0, 0, 1.0)"   // Black with 30% opacity
+    "   );"
+    "}"
+    );
+    //ui->centralwidget->setStyleSheet("background-color: rgba(255, 255, 255, 230);"); // 50% opacity
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     statusLabelPtr_ = ui->statusLabel;
     statusLabelPtr_->setWordWrap(true); // Enable word wrapping
     statusLabelPtr_->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
-    
     sendMappingBtnPtr_ = ui->mappingBtn;
     sendNavigationBtnPtr_ = ui->navigationBtn;
     sendRemappingBtnPtr_ = ui->remappingBtn;
@@ -28,6 +36,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     saveMapBtnPtr_ = ui->saveMapBtn;
     openMapBtnPtr_ = ui->openMapBtn;
     selectMapBtnPtr_ = ui->selectMapBtn;
+
+    x_spinBoxPtr_ = ui->xspinBox;
+    y_spinBoxPtr_ = ui->yspinBox;
+    z_spinBoxPtr_ = ui->zspinBox;
+    x_spinBoxPtr_->setMinimum(-100); 
+    x_spinBoxPtr_->setMaximum(100);  
+    x_spinBoxPtr_->setValue(0);      
+    y_spinBoxPtr_->setMinimum(-100); 
+    y_spinBoxPtr_->setMaximum(100);  
+    y_spinBoxPtr_->setValue(0);      
+    z_spinBoxPtr_->setMinimum(-180); 
+    z_spinBoxPtr_->setMaximum(180);  
+    z_spinBoxPtr_->setValue(0);
+
 
     // Initialize the ROS Worker
     service_client_ = new ServiceClient();
@@ -48,6 +70,32 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
 
     rosThread->start();
 
+    ui->companyLabel->setStyleSheet(
+    "QLabel {"
+    "   color: #dde7ed;"
+    "}"
+    );
+    x_spinBoxPtr_->setStyleSheet(
+    "QSpinBox {"
+    "   background-color: gray;"
+    "   color: white;" 
+    "}"
+    "QSpinBox::up-button, QSpinBox::down-button {"
+    "   background-color: none;"  // Optional: To ensure the buttons are transparent or styled accordingly
+    "}"
+    );
+    y_spinBoxPtr_->setStyleSheet(
+    "QSpinBox {"
+    "   background-color: black;"
+    "   color: white;" 
+    "}"
+    );
+    z_spinBoxPtr_->setStyleSheet(
+    "QSpinBox {"
+    "   background-color: gray;"
+    "   color: white;" 
+    "}"
+    );
     ui->shutdownBtn->setStyleSheet(
     "QPushButton:pressed {"
     "    background-color: rgb(255, 200, 200);"        // Background color when pressed
@@ -59,38 +107,59 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     "}"
     );
     ui->btnStop->setStyleSheet(
+    "QPushButton {"
+    "   color: white;"
+    "}"
     "QPushButton:pressed {"
     "    background-color: rgb(255, 200, 200);"       
     "}"
     );
 
     ui->btnForward->setStyleSheet(
+    "QPushButton {"
+    "   color: white;"
+    "}"
     "QPushButton:pressed {"
     "    background-color: rgb(200, 255, 200);"      
     "}"
     );
     ui->btnLeft->setStyleSheet(
+    "QPushButton {"
+    "   color: white;"
+    "}"
     "QPushButton:pressed {"
     "    background-color: rgb(200, 255, 200);"       
     "}"
     );
     ui->btnRight->setStyleSheet(
+    "QPushButton {"
+    "   color: white;"
+    "}"
     "QPushButton:pressed {"
     "    background-color: rgb(200, 255, 200);"        
     "}"
     );
 
     ui->saveMapBtn->setStyleSheet(
+    "QPushButton {"
+    "   background-color: white;"
+    "}"
     "QPushButton:pressed {"
     "    background-color: rgb(200, 255, 200);" 
     "}"       
     );
     ui->openMapBtn->setStyleSheet(
+    "QPushButton {"
+    "   background-color: white;"
+    "}"
     "QPushButton:pressed {"
     "    background-color: rgb(200, 255, 200);"       
     "}"
     );
     ui->selectMapBtn->setStyleSheet(
+    "QPushButton {"
+    "   background-color: white;"
+    "}"
     "QPushButton:pressed {"
     "    background-color: rgb(200, 255, 200);"       
     "}"
@@ -105,10 +174,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     "   color: red;"
     "   font-size: 36px;"
     "}"
-     "QPushButton:hover {"
-     "   background-color: red;"
-     "   color: white;"
-     "}"
+    "QPushButton:hover {"
+    "   background-color: red;"
+    "   color: white;"
+    "}"
     );
     ui->goBtn->setStyleSheet(
     "QPushButton {"
@@ -121,6 +190,112 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     "QPushButton:hover {"
     "   background-color: green;"
     "   color: white;"
+    "}"
+    );
+    ui->goBtn->setStyleSheet(
+    "QPushButton {"
+    "   border-radius: 35px;"
+    "   border: 2px solid #1B1F4F;" // Dark outer edge like Neptune's shadow
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
+    "       stop: 0 #000080, "            // Deep blue (core Neptune color)
+    "       stop: 0.5 #1E90FF, "         // Bright cyan for methane atmosphere
+    "       stop: 0.8 #87CEEB, "         // Sky blue highlights
+    "       stop: 1 #FFFFFF"             // White for clouds
+    "   );"
+    "   color: black;"          
+    "   font-size: 35px;"
+    "}"
+    "QPushButton:hover {"
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
+    "       stop: 0 #191970, "            // Darker blue for depth
+    "       stop: 0.5 #4682B4, "         // Steel blue for variation
+    "       stop: 0.8 #5F9EA0, "         // Cadet blue highlights
+    "       stop: 1 #F0FFFF"             // Light cyan-white for soft clouds
+    "   );"
+    "   color: white;"  
+    "}"
+    );
+    ui->rthBtn->setStyleSheet(
+    "QPushButton {"
+    "   border-radius: 50px;"
+    "   border: 2px solid #3E8E41;" // Earth-tone border
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
+    "       stop: 0 #1E90FF, "            // Ocean Blue (stronger at start)
+    "       stop: 0.3 #87CEFA, "         // Sky Blue (transitional)
+    "       stop: 0.6 #32CD32, "         // Land Green
+    "       stop: 1 #FFFFFF"             // Cloud White
+    "   );"
+    "   color: black;"
+    "   font-size: 35px;"
+    "   font-weight: bold;"
+    "}"
+    "QPushButton:hover {"
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
+    "       stop: 0 #4682B4, "            // Darker Ocean Blue
+    "       stop: 0.3 #5F9EA0, "         // Cadet Blue (transitional)
+    "       stop: 0.6 #228B22, "         // Darker Land Green
+    "       stop: 1 #F0F8FF"             // Lighter Cloud White
+    "   );"
+    "   color: white;"
+    "}"
+    );
+    ui->cancelBtn->setStyleSheet(
+    "QPushButton {"
+    "   border-radius: 70px;"
+    "   border: 2px solid #FF8C00;" // Warm orange border
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
+    "       stop: 0 #FFFF00, "            // Bright Yellow (center of the sun)
+    "       stop: 0.4 #FFA500, "         // Orange (middle glow)
+    "       stop: 1 #FF4500"             // Red-Orange (outer glow)
+    "   );"
+    "   color: black;"
+    "   font-size: 36px;"
+    "   font-weight: bold;"
+    "}"
+    "QPushButton:hover {"
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
+    "       stop: 0 #FFD700, "            // Golden Yellow
+    "       stop: 0.4 #FF8C00, "         // Darker Orange
+    "       stop: 1 #FF6347"             // Tomato Red (darker outer glow)
+    "   );"
+    "   color: white;"
+    "}"
+    );
+    ui->btnEstop->setStyleSheet(
+    "QPushButton {"
+    "   border: 1px solid gray;"
+    "   background-color: white;"
+    "   color: black;"
+    "   font-weight: bold;"
+    "}"
+     "QPushButton:hover {"
+     "   background-color: black;"
+     "   color: white;"
+     "}"
+    );
+
+    ui->xspinBox->setStyleSheet(
+    "QSpinBox {"
+    "   border: 2px solid red;" 
+    "   border-radius: 10px;"        // Rounding the corners
+    "}"
+    );
+    ui->yspinBox->setStyleSheet(
+    "QSpinBox {"
+    "   border: 2px solid green;" 
+    "   border-radius: 10px;"        // Rounding the corners
+    "}"
+    );
+    ui->zspinBox->setStyleSheet(
+    "QSpinBox {"
+    "   border: 2px solid blue;" 
+    "   border-radius: 10px;"        // Rounding the corners
     "}"
     );
 
@@ -203,8 +378,8 @@ void MainWindow::sendMappingMode() {
 
         statusLabelPtr_->setText("Changing Mapping Mode...\nSending \"mapping\" mode...\n");
         ui->mappingBtn->setStyleSheet("background-color: green;");
-        ui->navigationBtn->setStyleSheet("background-color: none;");
-        ui->remappingBtn->setStyleSheet("background-color: none;");
+        ui->navigationBtn->setStyleSheet("background-color: white;");
+        ui->remappingBtn->setStyleSheet("background-color: white;");
 
         showBusyDialog();
         setButtonsEnabled(false);
@@ -231,9 +406,9 @@ void MainWindow::sendNavigationMode() {
         QMetaObject::invokeMethod(service_client_, [a, b, this]() { service_client_->sendRequest(a, b); });
 
         statusLabelPtr_->setText("Changing Mapping Mode...\nSending \"navi\" mode...\n");
-        ui->mappingBtn->setStyleSheet("background-color: none;");
+        ui->mappingBtn->setStyleSheet("background-color: white;");
         ui->navigationBtn->setStyleSheet("background-color: green;");
-        ui->remappingBtn->setStyleSheet("background-color: none;");
+        ui->remappingBtn->setStyleSheet("background-color: white;");
 
         showBusyDialog();
         setButtonsEnabled(false);
@@ -260,8 +435,8 @@ void MainWindow::sendRemappingMode() {
         QMetaObject::invokeMethod(service_client_, [a, b, this]() { service_client_->sendRequest(a, b); });
         
         statusLabelPtr_->setText("Changing Mapping Mode...\nSending \"remapping\" mode...\n");
-        ui->mappingBtn->setStyleSheet("background-color: none;");
-        ui->navigationBtn->setStyleSheet("background-color: none;");
+        ui->mappingBtn->setStyleSheet("background-color: white;");
+        ui->navigationBtn->setStyleSheet("background-color: white;");
         ui->remappingBtn->setStyleSheet("background-color: green;");
 
         showBusyDialog();
@@ -302,7 +477,7 @@ void MainWindow::onResponseReceived(int service_status) {
         //statusLabelPtr_->setText(QString("Result: %1").arg(sum));
         statusLabelPtr_->setText(currentText + "\n" + "Receiving response..\nIts ok.\n");
     }
-    saveMapBtnPtr_->setStyleSheet("background-color: none;"); 
+    saveMapBtnPtr_->setStyleSheet("background-color: white;"); 
     //openMapBtnPtr_->setStyleSheet("background-color: none;");
     //selectMapBtnPtr_->setStyleSheet("background-color: none;");
 
@@ -505,6 +680,25 @@ void MainWindow::showBusyDialog() {
         busyDialog_->setWindowModality(Qt::WindowModal);
         busyDialog_->setCancelButton(nullptr); // Optional: Disable cancel button
         busyDialog_->move(1300, 550); 
+        busyDialog_->setStyleSheet(
+    "QProgressBar {"
+    "   border: 2px solid black;"
+    "   border-radius: 5px;"
+    "   text-align: center;"
+    "   height: 10px;"
+    "}"
+    "QProgressBar::chunk {"
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 0, "   // Horizontal gradient
+    "       stop: 0 rgba(0, 0, 0, 1), "     // Black at the start (comet)
+    "       stop: 0.3 rgba(0, 0, 0, 0.8), " // Slight fade for the comet trail
+    "       stop: 0.6 rgba(169, 169, 169, 0.6), " // Gray transition
+    "       stop: 1 rgba(255, 255, 255, 1)"            // White at the end
+    "   );"
+    "   border-radius: 5px;"                    // Match the progress bar corners
+    "}"
+);
+
         //busyDialog_->hide();
     }
 

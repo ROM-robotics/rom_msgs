@@ -95,6 +95,10 @@ class MainWindow : public QMainWindow
     private:
         std::shared_ptr<Ui::MainWindow> ui = nullptr;
 
+        QSpinBox *x_spinBoxPtr_;
+        QSpinBox *y_spinBoxPtr_;
+        QSpinBox *z_spinBoxPtr_;
+
         QProgressDialog *busyDialog_ = nullptr; // Busy dialog
         
         QPushButton *sendMappingBtnPtr_;

@@ -23,7 +23,8 @@ find_package(std_srvs REQUIRED)
 find_package(rom_interfaces REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
-find_package(example_interfaces REQUIRED)
+find_package(rclcpp_action REQUIRED)
+#find_package(example_interfaces REQUIRED)
 
 find_package(rviz_common REQUIRED)
 find_package(rviz_rendering REQUIRED)
@@ -60,7 +61,7 @@ add_executable(ROM_DYNAMICS
 
 target_link_libraries(ROM_DYNAMICS ${Qt5Core_LIBRARIES})
 target_link_libraries(ROM_DYNAMICS ${Qt5Widgets_LIBRARIES})
-ament_target_dependencies(ROM_DYNAMICS rclcpp std_msgs geometry_msgs nav_msgs tf2 example_interfaces tf2_geometry_msgs rom_interfaces)
+ament_target_dependencies(ROM_DYNAMICS rclcpp rclcpp_action std_msgs geometry_msgs nav_msgs tf2 tf2_geometry_msgs rom_interfaces)
 
 #---------------- END -----------------#
 
