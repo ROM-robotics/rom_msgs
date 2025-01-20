@@ -295,6 +295,30 @@ ros2/source/mode_subscriber.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.s
 .PHONY : ros2/source/mode_subscriber.cpp.s
 
+ros2/source/navigate_to_pose_client.o: ros2/source/navigate_to_pose_client.cpp.o
+.PHONY : ros2/source/navigate_to_pose_client.o
+
+# target to build an object file
+ros2/source/navigate_to_pose_client.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.o
+.PHONY : ros2/source/navigate_to_pose_client.cpp.o
+
+ros2/source/navigate_to_pose_client.i: ros2/source/navigate_to_pose_client.cpp.i
+.PHONY : ros2/source/navigate_to_pose_client.i
+
+# target to preprocess a source file
+ros2/source/navigate_to_pose_client.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.i
+.PHONY : ros2/source/navigate_to_pose_client.cpp.i
+
+ros2/source/navigate_to_pose_client.s: ros2/source/navigate_to_pose_client.cpp.s
+.PHONY : ros2/source/navigate_to_pose_client.s
+
+# target to generate assembly for a file
+ros2/source/navigate_to_pose_client.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.s
+.PHONY : ros2/source/navigate_to_pose_client.cpp.s
+
 ros2/source/pose_subscriber.o: ros2/source/pose_subscriber.cpp.o
 .PHONY : ros2/source/pose_subscriber.o
 
@@ -393,6 +417,9 @@ help:
 	@echo "... ros2/source/mode_subscriber.o"
 	@echo "... ros2/source/mode_subscriber.i"
 	@echo "... ros2/source/mode_subscriber.s"
+	@echo "... ros2/source/navigate_to_pose_client.o"
+	@echo "... ros2/source/navigate_to_pose_client.i"
+	@echo "... ros2/source/navigate_to_pose_client.s"
 	@echo "... ros2/source/pose_subscriber.o"
 	@echo "... ros2/source/pose_subscriber.i"
 	@echo "... ros2/source/pose_subscriber.s"

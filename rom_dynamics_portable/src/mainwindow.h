@@ -19,6 +19,7 @@
 
 #include <rom_interfaces/srv/which_maps.hpp>
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -41,8 +42,8 @@ signals:
 private:
     rclcpp::Node::SharedPtr node;
     
-    rclcpp::Client<rom_interfaces::srv::WhichMaps>::SharedPtr client;
-    std::thread rosThread;
+    rclcpp::Client<rom_interfaces::srv::WhichMaps>::SharedPtr client_;
+    std::thread rosServiceClientThread_;
 
     void spin();
 };
@@ -60,6 +61,10 @@ class MainWindow : public QMainWindow
         void removeBusyDialog();
         void hideBusyDialog();
         void setButtonsEnabled(bool enabled);
+
+        void applyStyles();
+    signals:
+        void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr msg);
     
     public slots:
         void displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg);
@@ -77,6 +82,8 @@ class MainWindow : public QMainWindow
         void labelEditForSetRight();
         void labelEditForSetLeft();
         void labelEditForSetStop();
+
+        void onNavigationResult(const std::string & _t1);
         
     private slots:
         void on_shutdownBtn_clicked();
@@ -85,7 +92,13 @@ class MainWindow : public QMainWindow
     private slots:
         void onResponseReceived(int sum);  
 
+        // action goal
+        void on_goBtn_clicked();
+        void on_cancelBtn_clicked();
+        void on_rthBtn_clicked();
+
     protected:
+
         // for dragging
         void mousePressEvent(QMouseEvent *event) override;
         void mouseMoveEvent(QMouseEvent *event) override;
@@ -94,6 +107,11 @@ class MainWindow : public QMainWindow
     
     private:
         std::shared_ptr<Ui::MainWindow> ui = nullptr;
+
+        // action goal
+        QPushButton *btnGoToGoal_;
+        QPushButton *btnCancelGoal_;
+        QPushButton *btnReturnToHome_;
 
         QSpinBox *x_spinBoxPtr_;
         QSpinBox *y_spinBoxPtr_;
@@ -112,8 +130,8 @@ class MainWindow : public QMainWindow
 
         QLabel* statusLabelPtr_ = nullptr;
 
-        ServiceClient *service_client_;
-        QThread *rosThread;
+        ServiceClient *service_clientPtr_;
+        QThread *rosServiceClientThreadPtr_;
 
         // for dragging
         bool dragging;

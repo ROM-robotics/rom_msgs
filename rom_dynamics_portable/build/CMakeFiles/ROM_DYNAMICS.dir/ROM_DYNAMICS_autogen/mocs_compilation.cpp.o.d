@@ -713,23 +713,101 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/string__traits.hpp \
  /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/string__type_support.hpp \
  /opt/ros/humble/include/std_msgs/std_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
+ /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/R75NXRNHZL/moc_navigate_to_pose_client.cpp \
+ /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/R75NXRNHZL/../../../ros2/header/navigate_to_pose_client.h \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/rclcpp_action.hpp \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/client.hpp \
+ /opt/ros/humble/include/rosidl_runtime_c/rosidl_runtime_c/action_type_support_struct.h \
+ /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_typesupport_cpp/action_type_support.hpp \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/client_goal_handle.hpp \
+ /opt/ros/humble/include/rcl_action/rcl_action/action_client.h \
+ /opt/ros/humble/include/rcl_action/rcl_action/types.h \
+ /opt/ros/humble/include/rcl_action/rcl_action/visibility_control.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/goal_info.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_info__struct.h \
+ /opt/ros/humble/include/unique_identifier_msgs/unique_identifier_msgs/msg/detail/uuid__struct.h \
+ /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/time__struct.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_info__functions.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/rosidl_generator_c__visibility_control.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_info__type_support.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/goal_status.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status__struct.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status__functions.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status__type_support.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/goal_status_array.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status_array__struct.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status_array__functions.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status_array__type_support.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/srv/cancel_goal.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/srv/detail/cancel_goal__struct.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/srv/detail/cancel_goal__functions.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/srv/detail/cancel_goal__type_support.h \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/goal_status.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status__struct.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_info__struct.hpp \
+ /opt/ros/humble/include/unique_identifier_msgs/unique_identifier_msgs/msg/detail/uuid__struct.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status__builder.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status__traits.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_info__traits.hpp \
+ /opt/ros/humble/include/unique_identifier_msgs/unique_identifier_msgs/msg/detail/uuid__traits.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status__type_support.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/exceptions.hpp \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/types.hpp \
+ /usr/include/c++/11/climits \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/goal_info.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_info__builder.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_info__type_support.hpp \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/visibility_control.hpp \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/client_goal_handle_impl.hpp \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/create_client.hpp \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/create_server.hpp \
+ /opt/ros/humble/include/rcl_action/rcl_action/action_server.h \
+ /opt/ros/humble/include/rcl_action/rcl_action/goal_handle.h \
+ /opt/ros/humble/include/rcl_action/rcl_action/goal_state_machine.h \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/server.hpp \
+ /opt/ros/humble/include/rclcpp_action/rclcpp_action/server_goal_handle.hpp \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QThread \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qthread.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qdeadlinetimer.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qelapsedtimer.h \
+ /opt/ros/humble/include/nav2_msgs/nav2_msgs/action/navigate_to_pose.hpp \
+ /opt/ros/humble/include/nav2_msgs/nav2_msgs/action/detail/navigate_to_pose__struct.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__struct.hpp \
+ /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/header__struct.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose__struct.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/quaternion__struct.hpp \
+ /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/empty__struct.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/srv/cancel_goal.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/srv/detail/cancel_goal__struct.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/srv/detail/cancel_goal__builder.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/srv/detail/cancel_goal__traits.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/srv/detail/cancel_goal__type_support.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/goal_status_array.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status_array__struct.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status_array__builder.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status_array__traits.hpp \
+ /opt/ros/humble/include/action_msgs/action_msgs/msg/detail/goal_status_array__type_support.hpp \
+ /opt/ros/humble/include/nav2_msgs/nav2_msgs/action/detail/navigate_to_pose__builder.hpp \
+ /opt/ros/humble/include/nav2_msgs/nav2_msgs/action/detail/navigate_to_pose__traits.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__traits.hpp \
+ /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/header__traits.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose__traits.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__traits.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/quaternion__traits.hpp \
+ /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/empty__traits.hpp \
+ /opt/ros/humble/include/nav2_msgs/nav2_msgs/action/detail/navigate_to_pose__type_support.hpp \
+ /opt/ros/humble/include/nav2_msgs/nav2_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
  /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/R75NXRNHZL/moc_pose_subscriber.cpp \
  /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/R75NXRNHZL/../../../ros2/header/pose_subscriber.h \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/odometry.hpp \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__struct.hpp \
- /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/header__struct.hpp \
  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_with_covariance__struct.hpp \
- /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose__struct.hpp \
- /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp \
- /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/quaternion__struct.hpp \
  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/twist_with_covariance__struct.hpp \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__builder.hpp \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__traits.hpp \
- /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/header__traits.hpp \
  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_with_covariance__traits.hpp \
- /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose__traits.hpp \
- /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__traits.hpp \
- /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/quaternion__traits.hpp \
  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/twist_with_covariance__traits.hpp \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/odometry__type_support.hpp \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
@@ -802,7 +880,6 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdatastream.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdatetime.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdeadlinetimer.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qelapsedtimer.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdebug.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdir.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qfileinfo.h \
@@ -950,8 +1027,6 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qtextboundaryfinder.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qtextcodec.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qtextstream.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qthread.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qdeadlinetimer.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qthreadpool.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qthread.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qthreadstorage.h \
@@ -1340,7 +1415,6 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qwizard.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qtwidgetsversion.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMainWindow \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/QThread \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLineEdit \
@@ -1349,9 +1423,7 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QSpinBox \
  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/pose_stamped.hpp \
- /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__struct.hpp \
  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__builder.hpp \
- /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__traits.hpp \
  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__type_support.hpp \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/occupancy_grid.hpp \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/occupancy_grid__struct.hpp \

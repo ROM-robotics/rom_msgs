@@ -157,6 +157,20 @@ CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/source/mode_subscriber.cpp -o CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.s
 
+CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.o: CMakeFiles/ROM_DYNAMICS.dir/flags.make
+CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.o: ../ros2/source/navigate_to_pose_client.cpp
+CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.o: CMakeFiles/ROM_DYNAMICS.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.o -MF CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.o.d -o CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.o -c /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/source/navigate_to_pose_client.cpp
+
+CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/source/navigate_to_pose_client.cpp > CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.i
+
+CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/source/navigate_to_pose_client.cpp -o CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.s
+
 # Object files for target ROM_DYNAMICS
 ROM_DYNAMICS_OBJECTS = \
 "CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o" \
@@ -164,7 +178,8 @@ ROM_DYNAMICS_OBJECTS = \
 "CMakeFiles/ROM_DYNAMICS.dir/src/mainwindow.cpp.o" \
 "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.o" \
 "CMakeFiles/ROM_DYNAMICS.dir/ros2/source/pose_subscriber.cpp.o" \
-"CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.o"
+"CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.o" \
+"CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.o"
 
 # External object files for target ROM_DYNAMICS
 ROM_DYNAMICS_EXTERNAL_OBJECTS =
@@ -175,14 +190,15 @@ ROM_DYNAMICS: CMakeFiles/ROM_DYNAMICS.dir/src/mainwindow.cpp.o
 ROM_DYNAMICS: CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.o
 ROM_DYNAMICS: CMakeFiles/ROM_DYNAMICS.dir/ros2/source/pose_subscriber.cpp.o
 ROM_DYNAMICS: CMakeFiles/ROM_DYNAMICS.dir/ros2/source/mode_subscriber.cpp.o
+ROM_DYNAMICS: CMakeFiles/ROM_DYNAMICS.dir/ros2/source/navigate_to_pose_client.cpp.o
 ROM_DYNAMICS: CMakeFiles/ROM_DYNAMICS.dir/build.make
 ROM_DYNAMICS: /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.15.3
-ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_fastrtps_c.so
-ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_fastrtps_cpp.so
-ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_introspection_c.so
-ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_introspection_cpp.so
-ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_cpp.so
-ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_generator_py.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav2_msgs__rosidl_typesupport_fastrtps_c.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav2_msgs__rosidl_typesupport_fastrtps_cpp.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav2_msgs__rosidl_typesupport_introspection_c.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav2_msgs__rosidl_typesupport_introspection_cpp.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav2_msgs__rosidl_typesupport_cpp.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav2_msgs__rosidl_generator_py.so
 ROM_DYNAMICS: /home/mr_robot/devel_ws/install/rom_interfaces/lib/librom_interfaces__rosidl_typesupport_fastrtps_c.so
 ROM_DYNAMICS: /home/mr_robot/devel_ws/install/rom_interfaces/lib/librom_interfaces__rosidl_typesupport_fastrtps_cpp.so
 ROM_DYNAMICS: /home/mr_robot/devel_ws/install/rom_interfaces/lib/librom_interfaces__rosidl_typesupport_introspection_c.so
@@ -191,7 +207,15 @@ ROM_DYNAMICS: /home/mr_robot/devel_ws/install/rom_interfaces/lib/librom_interfac
 ROM_DYNAMICS: /home/mr_robot/devel_ws/install/rom_interfaces/lib/librom_interfaces__rosidl_generator_py.so
 ROM_DYNAMICS: /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.15.3
 ROM_DYNAMICS: /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.15.3
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_fastrtps_c.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_fastrtps_cpp.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_introspection_c.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_introspection_cpp.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_cpp.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_generator_py.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav2_msgs__rosidl_typesupport_c.so
 ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_typesupport_c.so
+ROM_DYNAMICS: /opt/ros/humble/lib/libnav2_msgs__rosidl_generator_c.so
 ROM_DYNAMICS: /opt/ros/humble/lib/libnav_msgs__rosidl_generator_c.so
 ROM_DYNAMICS: /usr/lib/x86_64-linux-gnu/liborocos-kdl.so
 ROM_DYNAMICS: /opt/ros/humble/lib/libtf2_ros.so
@@ -296,7 +320,7 @@ ROM_DYNAMICS: /opt/ros/humble/lib/librosidl_runtime_c.so
 ROM_DYNAMICS: /opt/ros/humble/lib/librcutils.so
 ROM_DYNAMICS: /usr/lib/x86_64-linux-gnu/libpython3.10.so
 ROM_DYNAMICS: CMakeFiles/ROM_DYNAMICS.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable ROM_DYNAMICS"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable ROM_DYNAMICS"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ROM_DYNAMICS.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
