@@ -330,8 +330,8 @@ public:
         phiLabel->setText(QCoreApplication::translate("MainWindow", "\317\225 :", nullptr));
         phiValueLabel->setText(QCoreApplication::translate("MainWindow", "sync ...", nullptr));
         goBtn->setText(QCoreApplication::translate("MainWindow", "Go", nullptr));
-        xSendLabel->setText(QCoreApplication::translate("MainWindow", "x ( meter )", nullptr));
-        ySendLabel->setText(QCoreApplication::translate("MainWindow", "y ( meter )", nullptr));
+        xSendLabel->setText(QCoreApplication::translate("MainWindow", "x ( feet )", nullptr));
+        ySendLabel->setText(QCoreApplication::translate("MainWindow", "y ( feet )", nullptr));
         zSendLabel->setText(QCoreApplication::translate("MainWindow", "z ( degree )", nullptr));
         cancelBtn->setText(QCoreApplication::translate("MainWindow", "Cancel", nullptr));
         rthBtn->setText(QCoreApplication::translate("MainWindow", "RTH", nullptr));

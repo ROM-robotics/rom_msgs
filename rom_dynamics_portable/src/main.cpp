@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     QObject::connect(mainWindow.getUi()->btnStop, &QPushButton::clicked, &mainWindow, &MainWindow::labelEditForSetStop);
 
     // Action Goal
-    QObject::connect(&mainWindow, &MainWindow::sendNavigationGoal, &rosActionThread, &RosExecutorThread::sendNavigationGoal);
+    //QObject::connect(&mainWindow, &MainWindow::sendNavigationGoal, &rosActionThread, &RosExecutorThread::sendNavigationGoal);
     //QObject::connect(&rosActionThread, &RosExecutorThread::navigationResult, &mainWindow, &MainWindow::onNavigationResult);
     
     return a.exec();

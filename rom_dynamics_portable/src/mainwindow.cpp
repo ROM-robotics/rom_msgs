@@ -515,13 +515,13 @@ void MainWindow::on_goBtn_clicked()
 
     // rosActionClientThread_->start();
 
-    geometry_msgs::msg::Pose::SharedPtr pose;
-    pose->position.x = x;
-    pose->position.y = y;
+    // geometry_msgs::msg::Pose::SharedPtr pose;
+    // pose->position.x = x;
+    // pose->position.y = y;
 
-    yaw_to_quaternion(theta, pose->orientation.z, pose->orientation.w);
+    // yaw_to_quaternion(theta, pose->orientation.z, pose->orientation.w);
 
-    emit sendNavigationGoal(pose);
+    //emit sendNavigationGoal(pose);
 }
 
 

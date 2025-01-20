@@ -570,7 +570,7 @@ font-size: 35px;</string>
 color: #e8e7e6;</string>
     </property>
     <property name="text">
-     <string>x ( meter )</string>
+     <string>x ( feet )</string>
     </property>
    </widget>
    <widget class="QLabel" name="ySendLabel">
@@ -594,7 +594,7 @@ color: #e8e7e6;</string>
 color: #e8e7e6;</string>
     </property>
     <property name="text">
-     <string>y ( meter )</string>
+     <string>y ( feet )</string>
     </property>
    </widget>
    <widget class="QLabel" name="zSendLabel">
