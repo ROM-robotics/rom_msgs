@@ -1,5 +1,6 @@
 /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/UVLADIE3JM/moc_mainwindow.cpp: /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/src/mainwindow.h \
   /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/moc_predefs.h \
+  /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ui_mainwindow.h \
   /home/mr_robot/devel_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/msg/rosidl_generator_cpp__visibility_control.hpp \
   /home/mr_robot/devel_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__builder.hpp \
   /home/mr_robot/devel_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__struct.hpp \
@@ -708,12 +709,14 @@
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs.h \
   /usr/include/x86_64-linux-gnu/qt5/QtCore/QDeadlineTimer \
+  /usr/include/x86_64-linux-gnu/qt5/QtCore/QEasingCurve \
   /usr/include/x86_64-linux-gnu/qt5/QtCore/QEvent \
   /usr/include/x86_64-linux-gnu/qt5/QtCore/QList \
   /usr/include/x86_64-linux-gnu/qt5/QtCore/QMargins \
   /usr/include/x86_64-linux-gnu/qt5/QtCore/QMetaType \
   /usr/include/x86_64-linux-gnu/qt5/QtCore/QObject \
   /usr/include/x86_64-linux-gnu/qt5/QtCore/QPointF \
+  /usr/include/x86_64-linux-gnu/qt5/QtCore/QPropertyAnimation \
   /usr/include/x86_64-linux-gnu/qt5/QtCore/QRect \
   /usr/include/x86_64-linux-gnu/qt5/QtCore/QScopedPointer \
   /usr/include/x86_64-linux-gnu/qt5/QtCore/QSharedDataPointer \
@@ -1035,6 +1038,7 @@
   /usr/include/x86_64-linux-gnu/qt5/QtGui/qvector4d.h \
   /usr/include/x86_64-linux-gnu/qt5/QtGui/qwindow.h \
   /usr/include/x86_64-linux-gnu/qt5/QtGui/qwindowdefs.h \
+  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QApplication \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QCommonStyle \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLayout \
@@ -1042,6 +1046,7 @@
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMainWindow \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QScrollerProperties \
+  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QSpinBox \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QWidget \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QtWidgets \
   /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QtWidgetsDepends \

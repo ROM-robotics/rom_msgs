@@ -8,6 +8,7 @@
 #include <QThread>
 #include <atomic>
 #include <nav2_msgs/action/navigate_to_pose.hpp>
+#include <QDebug>
 
 class RosExecutorThread : public QThread
 {
@@ -22,7 +23,10 @@ public:
 
     void startThread();
     void stopThread();
-    void sendNavigationGoal(const geometry_msgs::msg::Pose& goal_pose);
+
+    bool isRunning() { return running_; }
+public slots:
+    void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr goal_pose);
 
 signals:
     void navigationResult(const std::string& result_status);

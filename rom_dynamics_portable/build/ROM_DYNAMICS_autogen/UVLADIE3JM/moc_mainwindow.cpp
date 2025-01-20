@@ -133,7 +133,7 @@ void ServiceClient::responseReceived(int _t1)
 }
 struct qt_meta_stringdata_MainWindow_t {
     QByteArrayData data[29];
-    char stringdata0[517];
+    char stringdata0[527];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -163,14 +163,14 @@ QT_MOC_LITERAL(17, 320, 19), // "labelEditForSetLeft"
 QT_MOC_LITERAL(18, 340, 19), // "labelEditForSetStop"
 QT_MOC_LITERAL(19, 360, 18), // "onNavigationResult"
 QT_MOC_LITERAL(20, 379, 11), // "std::string"
-QT_MOC_LITERAL(21, 391, 3), // "_t1"
-QT_MOC_LITERAL(22, 395, 22), // "on_shutdownBtn_clicked"
-QT_MOC_LITERAL(23, 418, 19), // "on_btnEstop_clicked"
-QT_MOC_LITERAL(24, 438, 18), // "onResponseReceived"
-QT_MOC_LITERAL(25, 457, 3), // "sum"
-QT_MOC_LITERAL(26, 461, 16), // "on_goBtn_clicked"
-QT_MOC_LITERAL(27, 478, 20), // "on_cancelBtn_clicked"
-QT_MOC_LITERAL(28, 499, 17) // "on_rthBtn_clicked"
+QT_MOC_LITERAL(21, 391, 13), // "result_status"
+QT_MOC_LITERAL(22, 405, 22), // "on_shutdownBtn_clicked"
+QT_MOC_LITERAL(23, 428, 19), // "on_btnEstop_clicked"
+QT_MOC_LITERAL(24, 448, 18), // "onResponseReceived"
+QT_MOC_LITERAL(25, 467, 3), // "sum"
+QT_MOC_LITERAL(26, 471, 16), // "on_goBtn_clicked"
+QT_MOC_LITERAL(27, 488, 20), // "on_cancelBtn_clicked"
+QT_MOC_LITERAL(28, 509, 17) // "on_rthBtn_clicked"
 
     },
     "MainWindow\0sendNavigationGoal\0\0"
@@ -183,10 +183,11 @@ QT_MOC_LITERAL(28, 499, 17) // "on_rthBtn_clicked"
     "openMapClicked\0selectMapClicked\0"
     "labelEditForSetForward\0labelEditForSetRight\0"
     "labelEditForSetLeft\0labelEditForSetStop\0"
-    "onNavigationResult\0std::string\0_t1\0"
-    "on_shutdownBtn_clicked\0on_btnEstop_clicked\0"
-    "onResponseReceived\0sum\0on_goBtn_clicked\0"
-    "on_cancelBtn_clicked\0on_rthBtn_clicked"
+    "onNavigationResult\0std::string\0"
+    "result_status\0on_shutdownBtn_clicked\0"
+    "on_btnEstop_clicked\0onResponseReceived\0"
+    "sum\0on_goBtn_clicked\0on_cancelBtn_clicked\0"
+    "on_rthBtn_clicked"
 };
 #undef QT_MOC_LITERAL
 

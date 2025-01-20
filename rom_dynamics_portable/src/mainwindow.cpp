@@ -159,7 +159,8 @@ void MainWindow::sendMappingMode() {
         QMetaObject::invokeMethod(service_clientPtr_, [a, b, this]() { service_clientPtr_->sendRequest(a, b); });
 
         statusLabelPtr_->setText("Changing Mapping Mode...\nSending \"mapping\" mode...\n");
-        ui->mappingBtn->setStyleSheet("background-color: green;");
+        //ui->mappingBtn->setStyleSheet("background-color: green;");
+        ui->mappingBtn->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e, stop: 1 #132742);");
         ui->navigationBtn->setStyleSheet("background-color: white;");
         ui->remappingBtn->setStyleSheet("background-color: white;");
 
@@ -189,7 +190,8 @@ void MainWindow::sendNavigationMode() {
 
         statusLabelPtr_->setText("Changing Mapping Mode...\nSending \"navi\" mode...\n");
         ui->mappingBtn->setStyleSheet("background-color: white;");
-        ui->navigationBtn->setStyleSheet("background-color: green;");
+        // ui->navigationBtn->setStyleSheet("background-color: green;");
+        ui->navigationBtn->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e, stop: 1 #132742);");
         ui->remappingBtn->setStyleSheet("background-color: white;");
 
         showBusyDialog();
@@ -219,7 +221,8 @@ void MainWindow::sendRemappingMode() {
         statusLabelPtr_->setText("Changing Mapping Mode...\nSending \"remapping\" mode...\n");
         ui->mappingBtn->setStyleSheet("background-color: white;");
         ui->navigationBtn->setStyleSheet("background-color: white;");
-        ui->remappingBtn->setStyleSheet("background-color: green;");
+        //ui->remappingBtn->setStyleSheet("background-color: green;");
+        ui->remappingBtn->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e, stop: 1 #132742);");
 
         showBusyDialog();
         setButtonsEnabled(false);
@@ -350,8 +353,9 @@ void MainWindow::saveMapClicked()
     if (ok && !mapName.isEmpty()) {
         // Update the status label and send the save map request
         statusLabelPtr_->setText(tr("\nမြေပုံအား '%1' အမည်ဖြင့်သိမ်းဆည်းခြင်းနေပါသည်။ ... \n").arg(mapName));
-        saveMapBtnPtr_->setStyleSheet("background-color: green;");
-
+        //saveMapBtnPtr_->setStyleSheet("background-color: green;");
+        saveMapBtnPtr_->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e, stop: 1 #132742);");
+        
         std::string a = "save_map";
         std::string b = mapName.toStdString();
         QMetaObject::invokeMethod(service_clientPtr_, [a, b, this]() { service_clientPtr_->sendRequest(a, b); });
@@ -490,9 +494,14 @@ void MainWindow::showBusyDialog() {
 
 void MainWindow::on_goBtn_clicked()
 {
+    if(x_spinBoxPtr_->value() == 0 && y_spinBoxPtr_->value() == 0 && z_spinBoxPtr_->value() == 0)
+    {
+        statusLabelPtr_->setText("\n   x , y, theta တန်ဖိုးများထည့်သွင်းပါ။\n");
+        return;
+    }
     double x    = ( x_spinBoxPtr_->value() * foot_to_meter_constant );
-    double y    = (y_spinBoxPtr_->value() * foot_to_meter_constant );
-    double theta= (z_spinBoxPtr_->value() * degree_to_radian_constant);
+    double y    = ( y_spinBoxPtr_->value() * foot_to_meter_constant );
+    double theta= ( z_spinBoxPtr_->value() * degree_to_radian_constant);
     
     QString statusText = QString("Sending Action Goal  .......\n            X       : %1 meters\n            Y       : %2 meters\n    Heading : %3 radians\n")
                         .arg(x)
@@ -500,28 +509,34 @@ void MainWindow::on_goBtn_clicked()
                         .arg(theta);
     statusLabelPtr_->setText(statusText);
 
+    showBusyDialog();
+    QApplication::processEvents();  // Ensure dialog is displayed
 
-    // QMetaObject::invokeMethod(action_client_, [x, y, theta, this]() { action_client_->sendGoal(x, y, theta); });
+    setButtonsEnabled(false);
+    
+    btnGoToGoal_->setEnabled(false);
 
+    //btnCancelGoal_->show();
+    btnCancelGoal_->setEnabled(true);
 
-    // // Create and start the goal sender thread
-    // //current_goal_thread_ = new GoalSenderThread(node_, x, y, theta);
-    // connect(action_client_, &NavigateToPoseClient::goalSent, this, &MainWindow::onGoalSent);
-    // //connect(action_client_, &GoalSenderThread::feedbackReceived, this, &MainWindow::onFeedbackReceived);
-    // //connect(action_client_, &GoalSenderThread::goalCanceled, this, &MainWindow::onGoalCanceled);
-    // connect(action_client_, &NavigateToPoseClient::goalReached, this, &MainWindow::onGoalReached);
-    // //connect(action_client_, &GoalSenderThread::goalFailed, this, &MainWindow::onGoalFailed);
-    // //connect(action_client_, &GoalSenderThread::actionServerError, this, &MainWindow::onactionServerError);
+    //btnReturnToHome_->show();
+    btnReturnToHome_->setEnabled(true);
+    ui->btnEstop->setEnabled(true);
+    
 
-    // rosActionClientThread_->start();
+    auto pose = geometry_msgs::msg::Pose::SharedPtr(new geometry_msgs::msg::Pose());
+    pose->position.x = x;
+    pose->position.y = y;
 
-    // geometry_msgs::msg::Pose::SharedPtr pose;
-    // pose->position.x = x;
-    // pose->position.y = y;
+    yaw_to_quaternion(theta, pose->orientation.z, pose->orientation.w);
 
-    // yaw_to_quaternion(theta, pose->orientation.z, pose->orientation.w);
-
+    
     //emit sendNavigationGoal(pose);
+
+    // Emit the navigation goal
+    QMetaObject::invokeMethod(this, [this, pose]() {
+        emit sendNavigationGoal(pose);
+    }, Qt::QueuedConnection);
 }
 
 
@@ -536,9 +551,47 @@ void MainWindow::on_rthBtn_clicked()
 
 }
 
-void MainWindow::onNavigationResult(const std::string & _t1)
+void MainWindow::onNavigationResult(const std::string& result_status)
 {
-    // 
+    QString statusText = QString("Navigation Result : %1\n").arg(QString::fromStdString(result_status));
+    statusLabelPtr_->setText(statusText);
+    qDebug() << "get Navigation Result from Mainwindow::onNavigationResult " << QString::fromStdString(result_status);
+
+    hideBusyDialog();
+    //btnGoToGoal_->show();
+    setButtonsEnabled(true);
+}
+
+
+void MainWindow::toggleButtonWithAnimation(QPushButton* button, bool show) {
+    // Create a property animation
+    QPropertyAnimation* animation = new QPropertyAnimation(button, "geometry", this);
+
+    QRect startGeometry = button->geometry();
+    QRect endGeometry = startGeometry;
+
+    if (show) {
+        // Show the button and expand its geometry from zero height
+        button->show();
+        endGeometry.setHeight(startGeometry.height());
+    } else {
+        // Animate to zero height for hiding
+        endGeometry.setHeight(0);
+    }
+
+    animation->setDuration(300); // Duration of the animation in milliseconds
+    animation->setStartValue(startGeometry);
+    animation->setEndValue(endGeometry);
+    animation->setEasingCurve(QEasingCurve::InOutCubic); // Optional: Smooth easing curve
+
+    connect(animation, &QPropertyAnimation::finished, [button, show]() {
+        if (!show) {
+            button->hide(); // Ensure it is fully hidden after the animation
+        }
+    });
+
+    // Start the animation
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 
@@ -650,21 +703,22 @@ void MainWindow::applyStyles()
     "   font-size: 36px;"
     "}"
     "QPushButton:hover {"
-    "   background-color: red;"
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
+    "       stop: 0 #ffcccc, "            
+    "       stop: 1 #ff0000"             
+    "   );"
     "   color: white;"
     "}"
     );
-    ui->goBtn->setStyleSheet(
+    ui->navigationBtn->setStyleSheet(
     "QPushButton {"
-    "   border-radius: 55px;"
-    "   border: 1px solid gray;"
-    "   background-color: white;"
-    "   color: green;"
-    "   font-size: 56px;"
-    "}"
-    "QPushButton:hover {"
-    "   background-color: green;"
-    "   color: white;"
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
+    "       stop: 0 #1f406e, "            // Deep blue (core Neptune color)re
+    "       stop: 0.8 #87CEEB, "         // Sky blue highlights
+    "       stop: 1 #132742"             // White for clouds
+    "   );"
     "}"
     );
     ui->goBtn->setStyleSheet(

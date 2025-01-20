@@ -18,7 +18,8 @@
 #include <nav_msgs/msg/odometry.hpp>
 
 #include <rom_interfaces/srv/which_maps.hpp>
-
+#include <QPropertyAnimation>
+#include <QEasingCurve>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -62,6 +63,8 @@ class MainWindow : public QMainWindow
         void hideBusyDialog();
         void setButtonsEnabled(bool enabled);
 
+        void toggleButtonWithAnimation(QPushButton* button, bool show);
+
         void applyStyles();
     signals:
         void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr msg);
@@ -83,7 +86,7 @@ class MainWindow : public QMainWindow
         void labelEditForSetLeft();
         void labelEditForSetStop();
 
-        void onNavigationResult(const std::string & _t1);
+        void onNavigationResult(const std::string& result_status);
         
     private slots:
         void on_shutdownBtn_clicked();

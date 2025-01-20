@@ -1358,6 +1358,8 @@ CMakeFiles/ROM_DYNAMICS.dir/src/main.cpp.o: \
  /home/mr_robot/devel_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__traits.hpp \
  /home/mr_robot/devel_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__type_support.hpp \
  /home/mr_robot/devel_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/msg/rosidl_generator_cpp__visibility_control.hpp \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QPropertyAnimation \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QEasingCurve \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/QObject \
  /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/header/cmd_publisher.h \
  /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/ros2/header/pose_subscriber.h \
@@ -1432,4 +1434,5 @@ CMakeFiles/ROM_DYNAMICS.dir/src/main.cpp.o: \
  /opt/ros/humble/include/nav2_msgs/nav2_msgs/action/detail/navigate_to_pose__traits.hpp \
  /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/empty__traits.hpp \
  /opt/ros/humble/include/nav2_msgs/nav2_msgs/action/detail/navigate_to_pose__type_support.hpp \
- /opt/ros/humble/include/nav2_msgs/nav2_msgs/msg/rosidl_generator_cpp__visibility_control.hpp
+ /opt/ros/humble/include/nav2_msgs/nav2_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QDebug
