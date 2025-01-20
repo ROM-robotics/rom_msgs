@@ -465,7 +465,7 @@ void MainWindow::showBusyDialog() {
         busyDialog_->setFixedSize(400, 150); 
         busyDialog_->setWindowModality(Qt::WindowModal);
         busyDialog_->setCancelButton(nullptr); // Optional: Disable cancel button
-        busyDialog_->move(1300, 550); 
+        busyDialog_->move(350, 250); 
         busyDialog_->setStyleSheet(
     "QProgressBar {"
     "   border: 2px solid black;"

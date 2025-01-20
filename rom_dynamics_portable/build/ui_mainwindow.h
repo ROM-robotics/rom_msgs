@@ -59,14 +59,14 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1700, 700);
+        MainWindow->resize(1226, 580);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
         MainWindow->setSizePolicy(sizePolicy);
-        MainWindow->setMinimumSize(QSize(1700, 700));
-        MainWindow->setMaximumSize(QSize(1700, 700));
+        MainWindow->setMinimumSize(QSize(1226, 580));
+        MainWindow->setMaximumSize(QSize(1226, 580));
         QFont font;
         font.setPointSize(12);
         font.setBold(true);
@@ -78,59 +78,60 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         mappingBtn = new QPushButton(centralwidget);
         mappingBtn->setObjectName(QString::fromUtf8("mappingBtn"));
-        mappingBtn->setGeometry(QRect(70, 80, 261, 71));
+        mappingBtn->setGeometry(QRect(20, 20, 171, 51));
         QFont font1;
-        font1.setPointSize(11);
+        font1.setPointSize(10);
         font1.setBold(true);
         font1.setWeight(75);
         mappingBtn->setFont(font1);
         mappingBtn->setStyleSheet(QString::fromUtf8("background-color: white;"));
         navigationBtn = new QPushButton(centralwidget);
         navigationBtn->setObjectName(QString::fromUtf8("navigationBtn"));
-        navigationBtn->setGeometry(QRect(390, 80, 261, 71));
+        navigationBtn->setGeometry(QRect(210, 20, 191, 51));
+        navigationBtn->setFont(font1);
         navigationBtn->setStyleSheet(QString::fromUtf8("background-color: green;"));
         remappingBtn = new QPushButton(centralwidget);
         remappingBtn->setObjectName(QString::fromUtf8("remappingBtn"));
-        remappingBtn->setGeometry(QRect(710, 80, 261, 71));
+        remappingBtn->setGeometry(QRect(420, 20, 181, 51));
         remappingBtn->setFont(font1);
         remappingBtn->setStyleSheet(QString::fromUtf8("background-color: white;"));
         label = new QLabel(centralwidget);
         label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(78, 200, 271, 34));
-        label->setFont(font);
+        label->setGeometry(QRect(20, 100, 271, 34));
+        label->setFont(font1);
         label->setStyleSheet(QString::fromUtf8("background-color: none;\n"
 "color: white;"));
         label->setText(QString::fromUtf8("Robot Position"));
         openMapBtn = new QPushButton(centralwidget);
         openMapBtn->setObjectName(QString::fromUtf8("openMapBtn"));
-        openMapBtn->setGeometry(QRect(1030, 80, 201, 71));
+        openMapBtn->setGeometry(QRect(620, 20, 161, 51));
         openMapBtn->setFont(font1);
         openMapBtn->setStyleSheet(QString::fromUtf8("background-color: white;"));
         selectMapBtn = new QPushButton(centralwidget);
         selectMapBtn->setObjectName(QString::fromUtf8("selectMapBtn"));
-        selectMapBtn->setGeometry(QRect(1250, 80, 191, 71));
+        selectMapBtn->setGeometry(QRect(800, 20, 161, 51));
         selectMapBtn->setFont(font1);
         selectMapBtn->setStyleSheet(QString::fromUtf8("background-color: white;"));
         saveMapBtn = new QPushButton(centralwidget);
         saveMapBtn->setObjectName(QString::fromUtf8("saveMapBtn"));
-        saveMapBtn->setGeometry(QRect(1460, 80, 191, 71));
+        saveMapBtn->setGeometry(QRect(980, 20, 161, 51));
         saveMapBtn->setFont(font1);
         saveMapBtn->setStyleSheet(QString::fromUtf8("background-color: white;"));
         xLabel = new QLabel(centralwidget);
         xLabel->setObjectName(QString::fromUtf8("xLabel"));
-        xLabel->setGeometry(QRect(100, 270, 129, 34));
+        xLabel->setGeometry(QRect(32, 160, 129, 34));
         xLabel->setFont(font);
         xLabel->setStyleSheet(QString::fromUtf8("background-color: none;\n"
 "color: white;"));
         yLabel = new QLabel(centralwidget);
         yLabel->setObjectName(QString::fromUtf8("yLabel"));
-        yLabel->setGeometry(QRect(100, 350, 129, 34));
+        yLabel->setGeometry(QRect(32, 240, 129, 34));
         yLabel->setFont(font);
         yLabel->setStyleSheet(QString::fromUtf8("background-color: none;\n"
 "color: white;"));
         yValueLabel = new QLabel(centralwidget);
         yValueLabel->setObjectName(QString::fromUtf8("yValueLabel"));
-        yValueLabel->setGeometry(QRect(158, 350, 271, 34));
+        yValueLabel->setGeometry(QRect(90, 240, 91, 34));
         QFont font2;
         font2.setPointSize(9);
         font2.setBold(true);
@@ -141,7 +142,7 @@ public:
 "color: orange;"));
         xValueLabel = new QLabel(centralwidget);
         xValueLabel->setObjectName(QString::fromUtf8("xValueLabel"));
-        xValueLabel->setGeometry(QRect(158, 270, 271, 34));
+        xValueLabel->setGeometry(QRect(90, 160, 91, 34));
         QFont font3;
         font3.setPointSize(9);
         font3.setBold(true);
@@ -153,9 +154,9 @@ public:
 "color: orange;"));
         statusLabel = new QLabel(centralwidget);
         statusLabel->setObjectName(QString::fromUtf8("statusLabel"));
-        statusLabel->setGeometry(QRect(390, 200, 691, 291));
+        statusLabel->setGeometry(QRect(220, 110, 691, 291));
         QFont font4;
-        font4.setPointSize(10);
+        font4.setPointSize(9);
         font4.setBold(false);
         font4.setWeight(50);
         statusLabel->setFont(font4);
@@ -167,7 +168,7 @@ public:
         statusLabel->setMargin(10);
         shutdownBtn = new QPushButton(centralwidget);
         shutdownBtn->setObjectName(QString::fromUtf8("shutdownBtn"));
-        shutdownBtn->setGeometry(QRect(1646, 4, 51, 51));
+        shutdownBtn->setGeometry(QRect(1170, 0, 51, 51));
         QFont font5;
         font5.setBold(true);
         font5.setWeight(75);
@@ -180,10 +181,11 @@ public:
         shutdownBtn->setIconSize(QSize(16, 16));
         btnEstop = new QPushButton(centralwidget);
         btnEstop->setObjectName(QString::fromUtf8("btnEstop"));
-        btnEstop->setGeometry(QRect(78, 530, 191, 91));
+        btnEstop->setGeometry(QRect(20, 390, 101, 91));
+        btnEstop->setFont(font1);
         btnStop = new QPushButton(centralwidget);
         btnStop->setObjectName(QString::fromUtf8("btnStop"));
-        btnStop->setGeometry(QRect(1360, 360, 101, 101));
+        btnStop->setGeometry(QRect(1030, 270, 61, 61));
         QFont font6;
         font6.setPointSize(20);
         font6.setBold(true);
@@ -192,34 +194,34 @@ public:
         btnStop->setStyleSheet(QString::fromUtf8("color: white;"));
         btnForward = new QPushButton(centralwidget);
         btnForward->setObjectName(QString::fromUtf8("btnForward"));
-        btnForward->setGeometry(QRect(1360, 210, 101, 101));
+        btnForward->setGeometry(QRect(1020, 170, 81, 71));
         btnForward->setFont(font6);
         btnForward->setStyleSheet(QString::fromUtf8("color: white;"));
         btnLeft = new QPushButton(centralwidget);
         btnLeft->setObjectName(QString::fromUtf8("btnLeft"));
-        btnLeft->setGeometry(QRect(1170, 360, 101, 101));
+        btnLeft->setGeometry(QRect(940, 270, 61, 61));
         btnLeft->setFont(font6);
         btnLeft->setStyleSheet(QString::fromUtf8("color: white;"));
         btnRight = new QPushButton(centralwidget);
         btnRight->setObjectName(QString::fromUtf8("btnRight"));
-        btnRight->setGeometry(QRect(1550, 360, 101, 101));
+        btnRight->setGeometry(QRect(1120, 270, 61, 61));
         btnRight->setFont(font6);
         btnRight->setStyleSheet(QString::fromUtf8("color: white;"));
         phiLabel = new QLabel(centralwidget);
         phiLabel->setObjectName(QString::fromUtf8("phiLabel"));
-        phiLabel->setGeometry(QRect(98, 430, 129, 34));
+        phiLabel->setGeometry(QRect(30, 320, 129, 34));
         phiLabel->setFont(font);
         phiLabel->setStyleSheet(QString::fromUtf8("background-color: none;\n"
 "color: white;"));
         phiValueLabel = new QLabel(centralwidget);
         phiValueLabel->setObjectName(QString::fromUtf8("phiValueLabel"));
-        phiValueLabel->setGeometry(QRect(156, 430, 271, 34));
+        phiValueLabel->setGeometry(QRect(88, 320, 101, 34));
         phiValueLabel->setFont(font2);
         phiValueLabel->setStyleSheet(QString::fromUtf8("background-color: none;\n"
 "color: orange;"));
         goBtn = new QPushButton(centralwidget);
         goBtn->setObjectName(QString::fromUtf8("goBtn"));
-        goBtn->setGeometry(QRect(830, 570, 71, 71));
+        goBtn->setGeometry(QRect(620, 440, 71, 71));
         goBtn->setFont(font5);
         goBtn->setStyleSheet(QString::fromUtf8("border-radius: 35px;\n"
 "border: 1px solid gray;\n"
@@ -229,7 +231,7 @@ public:
         goBtn->setIconSize(QSize(16, 16));
         xSendLabel = new QLabel(centralwidget);
         xSendLabel->setObjectName(QString::fromUtf8("xSendLabel"));
-        xSendLabel->setGeometry(QRect(330, 540, 129, 34));
+        xSendLabel->setGeometry(QRect(170, 440, 129, 34));
         QFont font7;
         font7.setPointSize(7);
         font7.setBold(false);
@@ -239,19 +241,19 @@ public:
 "color: #e8e7e6;"));
         ySendLabel = new QLabel(centralwidget);
         ySendLabel->setObjectName(QString::fromUtf8("ySendLabel"));
-        ySendLabel->setGeometry(QRect(490, 540, 129, 34));
+        ySendLabel->setGeometry(QRect(330, 440, 129, 34));
         ySendLabel->setFont(font7);
         ySendLabel->setStyleSheet(QString::fromUtf8("background-color: none;\n"
 "color: #e8e7e6;"));
         zSendLabel = new QLabel(centralwidget);
         zSendLabel->setObjectName(QString::fromUtf8("zSendLabel"));
-        zSendLabel->setGeometry(QRect(660, 540, 129, 34));
+        zSendLabel->setGeometry(QRect(500, 440, 129, 34));
         zSendLabel->setFont(font7);
         zSendLabel->setStyleSheet(QString::fromUtf8("background-color: none;\n"
 "color: #e8e7e6;"));
         sendGoalLabel = new QLabel(centralwidget);
         sendGoalLabel->setObjectName(QString::fromUtf8("sendGoalLabel"));
-        sendGoalLabel->setGeometry(QRect(330, 510, 271, 34));
+        sendGoalLabel->setGeometry(QRect(170, 410, 271, 34));
         QFont font8;
         font8.setPointSize(11);
         font8.setBold(false);
@@ -262,14 +264,14 @@ public:
         sendGoalLabel->setText(QString::fromUtf8("Goal"));
         companyLabel = new QLabel(centralwidget);
         companyLabel->setObjectName(QString::fromUtf8("companyLabel"));
-        companyLabel->setGeometry(QRect(10, 660, 901, 34));
+        companyLabel->setGeometry(QRect(10, 540, 901, 34));
         companyLabel->setFont(font7);
         companyLabel->setStyleSheet(QString::fromUtf8("background-color: none;\n"
 "color: white;"));
         companyLabel->setText(QString::fromUtf8("\302\251 2015-2025 ROM Dynamics Robotics Company Limited. All rights reserved."));
         cancelBtn = new QPushButton(centralwidget);
         cancelBtn->setObjectName(QString::fromUtf8("cancelBtn"));
-        cancelBtn->setGeometry(QRect(1190, 530, 141, 141));
+        cancelBtn->setGeometry(QRect(980, 400, 141, 141));
         cancelBtn->setFont(font5);
         cancelBtn->setStyleSheet(QString::fromUtf8("border-radius: 70px;\n"
 "border: 2px solid #FF8C00;\n"
@@ -280,7 +282,7 @@ public:
         cancelBtn->setIconSize(QSize(16, 16));
         rthBtn = new QPushButton(centralwidget);
         rthBtn->setObjectName(QString::fromUtf8("rthBtn"));
-        rthBtn->setGeometry(QRect(1020, 550, 101, 101));
+        rthBtn->setGeometry(QRect(810, 420, 101, 101));
         rthBtn->setFont(font5);
         rthBtn->setStyleSheet(QString::fromUtf8("border-radius: 50px;\n"
 "border: 2px solid #3E8E41;\n"
@@ -290,15 +292,15 @@ public:
         rthBtn->setIconSize(QSize(16, 16));
         xspinBox = new QSpinBox(centralwidget);
         xspinBox->setObjectName(QString::fromUtf8("xspinBox"));
-        xspinBox->setGeometry(QRect(330, 580, 101, 49));
+        xspinBox->setGeometry(QRect(170, 480, 101, 49));
         xspinBox->setStyleSheet(QString::fromUtf8("color: white;"));
         zspinBox = new QSpinBox(centralwidget);
         zspinBox->setObjectName(QString::fromUtf8("zspinBox"));
-        zspinBox->setGeometry(QRect(660, 580, 101, 49));
+        zspinBox->setGeometry(QRect(500, 480, 101, 49));
         zspinBox->setStyleSheet(QString::fromUtf8("color: white;"));
         yspinBox = new QSpinBox(centralwidget);
         yspinBox->setObjectName(QString::fromUtf8("yspinBox"));
-        yspinBox->setGeometry(QRect(490, 580, 101, 49));
+        yspinBox->setGeometry(QRect(330, 480, 101, 49));
         yspinBox->setStyleSheet(QString::fromUtf8("color: white;"));
         MainWindow->setCentralWidget(centralwidget);
 

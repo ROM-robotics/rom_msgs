@@ -8,7 +8,6 @@
  mmc:Q_OBJECT
  mdp:/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/src/mainwindow.h
  mdp:/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/moc_predefs.h
- mdp:/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ui_mainwindow.h
  mdp:/home/mr_robot/devel_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/msg/rosidl_generator_cpp__visibility_control.hpp
  mdp:/home/mr_robot/devel_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__builder.hpp
  mdp:/home/mr_robot/devel_ws/install/rom_interfaces/include/rom_interfaces/rom_interfaces/srv/detail/which_maps__struct.hpp
@@ -1046,7 +1045,6 @@
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtGui/qvector4d.h
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtGui/qwindow.h
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtGui/qwindowdefs.h
- mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QApplication
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QCommonStyle
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLayout
@@ -1054,7 +1052,6 @@
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMainWindow
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QScrollerProperties
- mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QSpinBox
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QWidget
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QtWidgets
  mdp:/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QtWidgetsDepends
