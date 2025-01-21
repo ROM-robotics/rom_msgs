@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_RosExecutorThread_t {
-    QByteArrayData data[8];
-    char stringdata0[127];
+    QByteArrayData data[9];
+    char stringdata0[139];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -37,15 +37,17 @@ QT_MOC_LITERAL(1, 18, 16), // "navigationResult"
 QT_MOC_LITERAL(2, 35, 0), // ""
 QT_MOC_LITERAL(3, 36, 11), // "std::string"
 QT_MOC_LITERAL(4, 48, 13), // "result_status"
-QT_MOC_LITERAL(5, 62, 18), // "sendNavigationGoal"
-QT_MOC_LITERAL(6, 81, 35), // "geometry_msgs::msg::Pose::Sha..."
-QT_MOC_LITERAL(7, 117, 9) // "goal_pose"
+QT_MOC_LITERAL(5, 62, 20), // "onSendNavigationGoal"
+QT_MOC_LITERAL(6, 83, 35), // "geometry_msgs::msg::Pose::Sha..."
+QT_MOC_LITERAL(7, 119, 9), // "goal_pose"
+QT_MOC_LITERAL(8, 129, 9) // "hackySlot"
 
     },
     "RosExecutorThread\0navigationResult\0\0"
-    "std::string\0result_status\0sendNavigationGoal\0"
+    "std::string\0result_status\0"
+    "onSendNavigationGoal\0"
     "geometry_msgs::msg::Pose::SharedPtr\0"
-    "goal_pose"
+    "goal_pose\0hackySlot"
 };
 #undef QT_MOC_LITERAL
 
@@ -55,7 +57,7 @@ static const uint qt_meta_data_RosExecutorThread[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -63,15 +65,17 @@ static const uint qt_meta_data_RosExecutorThread[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   24,    2, 0x06 /* Public */,
+       1,    1,   29,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       5,    1,   27,    2, 0x0a /* Public */,
+       5,    1,   32,    2, 0x0a /* Public */,
+       8,    1,   35,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
 
  // slots: parameters
+    QMetaType::Void, 0x80000000 | 6,    7,
     QMetaType::Void, 0x80000000 | 6,    7,
 
        0        // eod
@@ -84,7 +88,8 @@ void RosExecutorThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
         (void)_t;
         switch (_id) {
         case 0: _t->navigationResult((*reinterpret_cast< const std::string(*)>(_a[1]))); break;
-        case 1: _t->sendNavigationGoal((*reinterpret_cast< const geometry_msgs::msg::Pose::SharedPtr(*)>(_a[1]))); break;
+        case 1: _t->onSendNavigationGoal((*reinterpret_cast< const geometry_msgs::msg::Pose::SharedPtr(*)>(_a[1]))); break;
+        case 2: _t->hackySlot((*reinterpret_cast< const geometry_msgs::msg::Pose::SharedPtr(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -128,13 +133,13 @@ int RosExecutorThread::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 3)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }

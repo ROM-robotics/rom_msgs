@@ -553,9 +553,12 @@ void MainWindow::on_rthBtn_clicked()
 
 void MainWindow::onNavigationResult(const std::string& result_status)
 {
-    QString statusText = QString("Navigation Result : %1\n").arg(QString::fromStdString(result_status));
-    statusLabelPtr_->setText(statusText);
-    qDebug() << "get Navigation Result from Mainwindow::onNavigationResult " << QString::fromStdString(result_status);
+    QString currentText = statusLabelPtr_->text();
+    QString statusText = QString("\nh1 Navigation Result : %1\n").arg(QString::fromStdString(result_status));
+
+    QString updateText = currentText + statusText;
+    statusLabelPtr_->setText(updateText);
+    qDebug() << "h1 get Navigation Result from Mainwindow::onNavigationResult " << QString::fromStdString(result_status);
 
     hideBusyDialog();
     //btnGoToGoal_->show();

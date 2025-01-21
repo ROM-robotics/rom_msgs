@@ -26,7 +26,8 @@ public:
 
     bool isRunning() { return running_; }
 public slots:
-    void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr goal_pose);
+    void onSendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr goal_pose);
+    void hackySlot(const geometry_msgs::msg::Pose::SharedPtr goal_pose);
 
 signals:
     void navigationResult(const std::string& result_status);

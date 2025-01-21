@@ -27,9 +27,16 @@ RosExecutorThread::~RosExecutorThread() {
 void RosExecutorThread::stopThread() {
     if (running_) {
         running_ = false;
-        rclcpp::shutdown();
+    
         quit();
         wait();
+
+        if (rclcpp::ok()) 
+        {
+            qDebug() << "Shutting down ROS context from rclcpp::ok() of RosExecutorThread::stopThread().";
+            rclcpp::shutdown(); // Shutdown ROS
+        }
+        qDebug() << "Stopped thread from RosExecutorThread::stopThread().";
     }
 }
 
@@ -39,39 +46,43 @@ void RosExecutorThread::run() {
         executor_->spin_some();
         QThread::msleep(10); // Prevent tight looping
     }
-    rclcpp::shutdown();
+    //rclcpp::shutdown();
 }
 
-void RosExecutorThread::sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr goal_pose) {
+void RosExecutorThread::onSendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr goal_pose) {
 
 
-    // to start thread
-    if (!running_) {
-        startThread();  
-        #ifdef ROM_QDEBUG
-            qDebug() << "started new thread for rom dynamics";
-        #endif
-    }
-    else {
-        #ifdef ROM_QDEBUG
-            qDebug() << "thread already running for rom dynamics";
-        #endif
+    if (running_) 
+    {
+        qDebug() << "Thread is already running, from if(running_) of RosExecutorThread::onSendNavigationGoal()";
+        return; // Avoid starting multiple threads
     }
 
+    running_ = true;
+    startThread(); // Start the QThread
+
+    #ifdef ROM_QDEBUG
+        qDebug() << "Started thread from RosExecutorThread::onSendNavigationGoal()";
+    #endif
+    
+    
     if (!action_client_->wait_for_action_server(std::chrono::seconds(3))) {
-        emit navigationResult("Action server not available");
+        //emit navigationResult("Action server not available");
 
-        QMetaObject::invokeMethod(this, [this]() 
-        {
-            if (running_) {
-                qDebug() << "Killing Thread!";
-                stopThread();
-            }
-        }, Qt::QueuedConnection);
-        
+        // QMetaObject::invokeMethod(this, [this]() 
+        // {
+        //     if (running_) {
+        //         #ifdef ROM_QDEBUG
+        //             qDebug() << "Killing Thread!";
+        //         #endif
+        //         stopThread();
+        //     }
+        // }, Qt::QueuedConnection);
+        stopThread();
+        qDebug() << "Killing Thread! from wait_for_action_server() of RosExecutorThread::onSendNavigationGoal()";
         return;
     }
-
+    /*
     auto goal_msg = NavigateToPose::Goal();
 
     goal_msg.pose.header.stamp = node_->get_clock()->now();
@@ -89,13 +100,15 @@ void RosExecutorThread::sendNavigationGoal(const geometry_msgs::msg::Pose::Share
         handleResult(result);
     };
 
-    action_client_->async_send_goal(goal_msg, send_goal_options);
+    action_client_->async_send_goal(goal_msg, send_goal_options); */
 }
 
 void RosExecutorThread::handleFeedback(
     GoalHandleNavigateToPose::SharedPtr,
     const std::shared_ptr<const NavigateToPose::Feedback> feedback) 
 {
+    qDebug() << "Handling feedback Case";
+
     // Process feedback and emit a Qt signal if necessary
     QString feedback_info = QString("Distance remaining: %1 meters")
                                 .arg(feedback->distance_remaining);
@@ -103,6 +116,9 @@ void RosExecutorThread::handleFeedback(
 }
 
 void RosExecutorThread::handleResult(const GoalHandleNavigateToPose::WrappedResult& result) {
+
+    qDebug() << "Handling result Case";
+
     std::string status;
     switch (result.code) {
         case rclcpp_action::ResultCode::SUCCEEDED:
@@ -143,14 +159,21 @@ void RosExecutorThread::handleResult(const GoalHandleNavigateToPose::WrappedResu
     // Stop the thread asynchronously
     QMetaObject::invokeMethod(this, [this]() {
         if (running_) {
-            qDebug() << "Killing Thread!";
+            qDebug() << "Killing Thread Asynchronously!";
             stopThread();
         }
     }, Qt::QueuedConnection);
 }
 
+void RosExecutorThread::hackySlot(const geometry_msgs::msg::Pose::SharedPtr goal_pose)
+{
+    #ifdef ROM_QDEBUG
+        qDebug() << "Hacky Slot Called!";
+    #endif
+}
 // In your RosExecutorThread class, the run() method is necessary because 
 // it is an implementation of QThread::run(). When you call start() on the QThread, 
 // it automatically invokes the run() method in a new thread. 
 // Therefore, you do need the run() method in your RosExecutorThread class, and 
 // it should handle the execution of the ROS 2 executor loop
+
