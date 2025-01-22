@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QDebug>
 
+#define ROM_Q_DEBUG 1
+
 NavigateToPoseClient::NavigateToPoseClient(const std::string &action_name) : Node("goal_action_client_node")
 {
     goal_msg_ = std::make_shared<nav2_msgs::action::NavigateToPose::Goal>();
@@ -20,11 +22,16 @@ void NavigateToPoseClient::onSendNavigationGoal(const geometry_msgs::msg::Pose::
         #ifdef ROM_Q_DEBUG
             qDebug() << "[ onSendNavigationGoal()slot ] : Action server not available!";
         #endif
+        
+        QMetaObject::invokeMethod(this, [this]() {
         emit navigationResult("Action server not available!");
+    }, Qt::QueuedConnection);
+
+        //emit navigationResult("Action server not available!");
         return;
     }
     #ifdef ROM_Q_DEBUG
-        qDebug() << "[ onSendNavigationGoal() slot ] : get pose ";
+        qDebug() << "[ onSendNavigationGoal() slot] : get pose ";
     #endif
     // Setting the goal message
     goal_msg_->pose.header.stamp = this->get_clock()->now();
@@ -50,10 +57,16 @@ void NavigateToPoseClient::handleFeedback(
     const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback> feedback)
 {
     QString feedback_info = QString("Distance remaining: %1 meters").arg(feedback->distance_remaining);
-    emit navigationResult(feedback_info.toStdString());
+    
+    QMetaObject::invokeMethod(this, [this, feedback_info]() {
+        emit navigationResult(feedback_info.toStdString());
+    }, Qt::QueuedConnection);
+    //emit navigationResult(feedback_info.toStdString());
+
     #ifdef ROM_Q_DEBUG
-        qDebug() << "[ handleFeedback() callback ] : get feedback from action server ";
+        qDebug() << "[ handleFeedback() callback  ] : get feedback from action server ";
     #endif
+    //rclcpp::shutdown();
 }
 
 void NavigateToPoseClient::handleResult(const rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult &result)
@@ -75,7 +88,11 @@ void NavigateToPoseClient::handleResult(const rclcpp_action::ClientGoalHandle<na
         break;
     }
     #ifdef ROM_Q_DEBUG
-        qDebug() << "[ handleResult() callback ] : get result from action server ";
+        qDebug() << "[   handleResult() callback  ] : get result from action server ";
     #endif
-    emit navigationResult(status);
+
+    QMetaObject::invokeMethod(this, [this, status]() {
+        emit navigationResult(status);
+    }, Qt::QueuedConnection);
+    //emit navigationResult(status);
 }

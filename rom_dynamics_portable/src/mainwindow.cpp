@@ -519,7 +519,7 @@ void MainWindow::on_goBtn_clicked()
 
     setButtonsEnabled(false);
     
-    btnGoToGoal_->setEnabled(false);
+    btnGoToGoal_->setEnabled(true);
 
     //btnCancelGoal_->show();
     btnCancelGoal_->setEnabled(true);
@@ -535,14 +535,17 @@ void MainWindow::on_goBtn_clicked()
 
     yaw_to_quaternion(theta, pose->orientation.z, pose->orientation.w);
     #ifdef ROM_Q_DEBUG 
-        qDebug() << "[    on_goBtn_clicked        ]: sending pose";
+        qDebug() << "[    on_goBtn_clicked        ] : sending pose";
     #endif
-    emit sendNavigationGoal(pose);
+
+    //emit sendNavigationGoal(pose);
     
-    // Emit the navigation goal
-    // QMetaObject::invokeMethod(this, [this, pose]() {
-    //     emit sendNavigationGoal(pose);
-    // }, Qt::QueuedConnection);
+    //Emit the navigation goal
+    QMetaObject::invokeMethod(this, [this, pose]() {
+        emit sendNavigationGoal(pose);
+    }, Qt::QueuedConnection);
+
+    hideBusyDialog();
 }
 
 
@@ -560,16 +563,18 @@ void MainWindow::on_rthBtn_clicked()
 void MainWindow::onNavigationResult(const std::string& result_status)
 {
     QString currentText = statusLabelPtr_->text();
-    QString statusText = QString("\nh1 Navigation Result : %1\n").arg(QString::fromStdString(result_status));
+    QString statusText = QString("\nNavigation Result : %1\n").arg(QString::fromStdString(result_status));
 
     QString updateText = currentText + statusText;
     statusLabelPtr_->setText(updateText);
+
     #ifdef ROM_Q_DEBUG 
         qDebug() << "[ onNavigationResult() slot  ] : get Navigation Result " << QString::fromStdString(result_status);
     #endif
-    hideBusyDialog();
+
+    //hideBusyDialog();
     //btnGoToGoal_->show();
-    setButtonsEnabled(true);
+    //setButtonsEnabled(true);
 }
 
 

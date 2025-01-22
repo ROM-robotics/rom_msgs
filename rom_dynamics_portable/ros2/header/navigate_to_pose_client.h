@@ -7,7 +7,7 @@
 #include <geometry_msgs/msg/pose.hpp>
 #include <QObject>
 
-#define ROM_Q_DEBUG 1
+
 
 class NavigateToPoseClient : public QObject, public rclcpp::Node
 {
