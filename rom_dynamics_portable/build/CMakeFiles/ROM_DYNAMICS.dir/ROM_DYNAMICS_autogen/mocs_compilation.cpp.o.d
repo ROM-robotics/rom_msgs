@@ -767,10 +767,6 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /opt/ros/humble/include/rcl_action/rcl_action/goal_state_machine.h \
  /opt/ros/humble/include/rclcpp_action/rclcpp_action/server.hpp \
  /opt/ros/humble/include/rclcpp_action/rclcpp_action/server_goal_handle.hpp \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/QThread \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qthread.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qdeadlinetimer.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qelapsedtimer.h \
  /opt/ros/humble/include/nav2_msgs/nav2_msgs/action/navigate_to_pose.hpp \
  /opt/ros/humble/include/nav2_msgs/nav2_msgs/action/detail/navigate_to_pose__struct.hpp \
  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__struct.hpp \
@@ -799,14 +795,9 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/empty__traits.hpp \
  /opt/ros/humble/include/nav2_msgs/nav2_msgs/action/detail/navigate_to_pose__type_support.hpp \
  /opt/ros/humble/include/nav2_msgs/nav2_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/QDebug \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qdebug.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qtextstream.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qiodevice.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qset.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qcontiguouscache.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qsharedpointer.h \
- /usr/include/x86_64-linux-gnu/qt5/QtCore/qsharedpointer_impl.h \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/pose.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose__builder.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose__type_support.hpp \
  /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/R75NXRNHZL/moc_pose_subscriber.cpp \
  /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/ROM_DYNAMICS_autogen/R75NXRNHZL/../../../ros2/header/pose_subscriber.h \
  /opt/ros/humble/include/nav_msgs/nav_msgs/msg/odometry.hpp \
@@ -845,6 +836,7 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qbasictimer.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qbitarray.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qbuffer.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qiodevice.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qbytearray.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qbytearraylist.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qbytearraymatcher.h \
@@ -855,6 +847,11 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdatetime.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qcborcommon.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdebug.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qtextstream.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qset.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qcontiguouscache.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qsharedpointer.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qsharedpointer_impl.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qregularexpression.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qurl.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/quuid.h \
@@ -882,6 +879,8 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdatastream.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdatetime.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdeadlinetimer.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qelapsedtimer.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qdebug.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qdir.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qfileinfo.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qfile.h \
@@ -1028,6 +1027,8 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qtextboundaryfinder.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qtextcodec.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qtextstream.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qthread.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qdeadlinetimer.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qthreadpool.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qthread.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qthreadstorage.h \
@@ -1416,6 +1417,7 @@ CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qwizard.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qtwidgetsversion.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMainWindow \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QThread \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLineEdit \

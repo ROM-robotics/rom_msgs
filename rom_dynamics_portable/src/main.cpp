@@ -15,21 +15,27 @@ int main(int argc, char *argv[])
     std::shared_ptr<Publisher> cmd_publisher = nullptr;
     std::shared_ptr<Subscriber> pose_subscriber = nullptr;
     std::shared_ptr<ModeSubscriber> mode_subscriber = nullptr;
+    std::shared_ptr<NavigateToPoseClient> goal_action_client = nullptr;
 
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> single_executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+    std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> action_executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
     cmd_publisher = std::make_shared<Publisher>("cmd_vel_qt_to_twist");
     pose_subscriber = std::make_shared<Subscriber>("/odom"); 
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
+    goal_action_client = std::make_shared<NavigateToPoseClient>("/navigate_to_pose");
 
     single_executor->add_node(cmd_publisher);
     
     executor->add_node(pose_subscriber);
     executor->add_node(mode_subscriber);
+
+    action_executor->add_node(goal_action_client);
     
     std::thread executor_thread([executor](){executor->spin();});
     std::thread single_executor_thread([single_executor](){single_executor->spin();});
+    std::thread action_executor_thread([action_executor](){action_executor->spin();});
 
     // QT APPLICATION //
     QApplication a(argc, argv);
@@ -45,10 +51,6 @@ int main(int argc, char *argv[])
     );
 
     MainWindow mainWindow;
-
-    // Action Goal
-    RosExecutorThread rosActionThread;
-    qRegisterMetaType<geometry_msgs::msg::Pose>("geometry_msgs::msg::Pose");
 
     mainWindow.show();
 
@@ -69,8 +71,10 @@ int main(int argc, char *argv[])
     QObject::connect(mainWindow.getUi()->btnStop, &QPushButton::clicked, &mainWindow, &MainWindow::labelEditForSetStop);
 
     // Action Goal
-    QObject::connect(&mainWindow, &MainWindow::sendNavigationGoal, &rosActionThread, &RosExecutorThread::hackySlot);
-    //QObject::connect(&rosActionThread, &RosExecutorThread::navigationResult, &mainWindow, &MainWindow::onNavigationResult);
+    QObject::connect(&mainWindow, &MainWindow::sendNavigationGoal, goal_action_client.get(), &NavigateToPoseClient::onSendNavigationGoal);
+    QObject::connect(goal_action_client.get(), &NavigateToPoseClient::navigationResult, &mainWindow, &MainWindow::onNavigationResult);
+
+    
     
     return a.exec();
 }

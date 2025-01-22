@@ -6,6 +6,8 @@
 
 extern void shutdown_thread();
 
+#define ROM_Q_DEBUG 1
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
 {
     setWindowTitle("ROM Dynamics Company's Robot Suite");
@@ -85,7 +87,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     /* signal ပို့လို့ရတဲ့ meta object ဖြစ်အောင်လို့ ၊ ဒါမရှိရင် error မရှိသော်လည်း subscribe လုပ်မရ */
     qRegisterMetaType<nav_msgs::msg::Odometry::SharedPtr>("nav_msgs::msg::Odometry::SharedPtr");
     qRegisterMetaType<std_msgs::msg::String::SharedPtr>("std_msgs::msg::String::SharedPtr");
-
+    qRegisterMetaType<geometry_msgs::msg::Pose>("geometry_msgs::msg::Pose");
+    
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
 
     ui->saveMapBtn->hide();//setEnabled(false);
@@ -499,10 +502,12 @@ void MainWindow::on_goBtn_clicked()
         statusLabelPtr_->setText("\n   x , y, theta တန်ဖိုးများထည့်သွင်းပါ။\n");
         return;
     }
-    double x    = ( x_spinBoxPtr_->value() * foot_to_meter_constant );
-    double y    = ( y_spinBoxPtr_->value() * foot_to_meter_constant );
-    double theta= ( z_spinBoxPtr_->value() * degree_to_radian_constant);
+
+    double x    = ( x_spinBoxPtr_->value() * foot_to_meter_constant );  // to meters
+    double y    = ( y_spinBoxPtr_->value() * foot_to_meter_constant );  // to meters
+    double theta= ( z_spinBoxPtr_->value() * degree_to_radian_constant);// to radian
     
+    // Display
     QString statusText = QString("Sending Action Goal  .......\n            X       : %1 meters\n            Y       : %2 meters\n    Heading : %3 radians\n")
                         .arg(x)
                         .arg(y)
@@ -529,14 +534,15 @@ void MainWindow::on_goBtn_clicked()
     pose->position.y = y;
 
     yaw_to_quaternion(theta, pose->orientation.z, pose->orientation.w);
-
+    #ifdef ROM_Q_DEBUG 
+        qDebug() << "[    on_goBtn_clicked        ]: sending pose";
+    #endif
+    emit sendNavigationGoal(pose);
     
-    //emit sendNavigationGoal(pose);
-
     // Emit the navigation goal
-    QMetaObject::invokeMethod(this, [this, pose]() {
-        emit sendNavigationGoal(pose);
-    }, Qt::QueuedConnection);
+    // QMetaObject::invokeMethod(this, [this, pose]() {
+    //     emit sendNavigationGoal(pose);
+    // }, Qt::QueuedConnection);
 }
 
 
@@ -558,8 +564,9 @@ void MainWindow::onNavigationResult(const std::string& result_status)
 
     QString updateText = currentText + statusText;
     statusLabelPtr_->setText(updateText);
-    qDebug() << "h1 get Navigation Result from Mainwindow::onNavigationResult " << QString::fromStdString(result_status);
-
+    #ifdef ROM_Q_DEBUG 
+        qDebug() << "[ onNavigationResult() slot  ] : get Navigation Result " << QString::fromStdString(result_status);
+    #endif
     hideBusyDialog();
     //btnGoToGoal_->show();
     setButtonsEnabled(true);

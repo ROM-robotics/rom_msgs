@@ -1,52 +1,38 @@
-#ifndef NTP_ACTION_CLIENT_H
-#define NTP_ACTION_CLIENT_H
-
+#ifndef NAVIGATE_TO_POSE_CLIENT_H
+#define NAVIGATE_TO_POSE_CLIENT_H
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
-#include <rclcpp/executors/multi_threaded_executor.hpp>
-#include <QThread>
-#include <atomic>
 #include <nav2_msgs/action/navigate_to_pose.hpp>
-#include <QDebug>
+#include <geometry_msgs/msg/pose.hpp>
+#include <QObject>
 
-class RosExecutorThread : public QThread
+#define ROM_Q_DEBUG 1
+
+class NavigateToPoseClient : public QObject, public rclcpp::Node
 {
     Q_OBJECT
 
 public:
-    using NavigateToPose = nav2_msgs::action::NavigateToPose;
-    using GoalHandleNavigateToPose = rclcpp_action::ClientGoalHandle<NavigateToPose>;
+    explicit NavigateToPoseClient(const std::string &action_name);
+    ~NavigateToPoseClient() = default;
 
-    explicit RosExecutorThread(QObject* parent = nullptr);
-    ~RosExecutorThread();
-
-    void startThread();
-    void stopThread();
-
-    bool isRunning() { return running_; }
 public slots:
     void onSendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr goal_pose);
-    void hackySlot(const geometry_msgs::msg::Pose::SharedPtr goal_pose);
 
 signals:
-    void navigationResult(const std::string& result_status);
-
-protected:
-    void run() override;
+    void navigationResult(const std::string &result);
 
 private:
-    std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor_;
-    std::shared_ptr<rclcpp::Node> node_;
-    rclcpp_action::Client<NavigateToPose>::SharedPtr action_client_;
-    std::atomic<bool> running_;
-
     void handleFeedback(
-        GoalHandleNavigateToPose::SharedPtr,
-        const std::shared_ptr<const NavigateToPose::Feedback> feedback);
+        rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr,
+        const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback> feedback);
 
-    void handleResult(const GoalHandleNavigateToPose::WrappedResult& result);
+    void handleResult(const rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult &result);
+
+    rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SharedPtr action_client_;
+    std::shared_ptr<nav2_msgs::action::NavigateToPose::Goal> goal_msg_;
+    //rclcpp::Node::SharedPtr node_;
 };
 
-
-#endif // NTP_ACTION_CLIENT_H
+#endif // NAVIGATE_TO_POSE_CLIENT_H

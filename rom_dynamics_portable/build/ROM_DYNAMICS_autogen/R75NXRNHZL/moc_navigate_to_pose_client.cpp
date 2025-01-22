@@ -21,43 +21,41 @@
 QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
-struct qt_meta_stringdata_RosExecutorThread_t {
-    QByteArrayData data[9];
-    char stringdata0[139];
+struct qt_meta_stringdata_NavigateToPoseClient_t {
+    QByteArrayData data[8];
+    char stringdata0[125];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_RosExecutorThread_t, stringdata0) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_NavigateToPoseClient_t, stringdata0) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_RosExecutorThread_t qt_meta_stringdata_RosExecutorThread = {
+static const qt_meta_stringdata_NavigateToPoseClient_t qt_meta_stringdata_NavigateToPoseClient = {
     {
-QT_MOC_LITERAL(0, 0, 17), // "RosExecutorThread"
-QT_MOC_LITERAL(1, 18, 16), // "navigationResult"
-QT_MOC_LITERAL(2, 35, 0), // ""
-QT_MOC_LITERAL(3, 36, 11), // "std::string"
-QT_MOC_LITERAL(4, 48, 13), // "result_status"
-QT_MOC_LITERAL(5, 62, 20), // "onSendNavigationGoal"
-QT_MOC_LITERAL(6, 83, 35), // "geometry_msgs::msg::Pose::Sha..."
-QT_MOC_LITERAL(7, 119, 9), // "goal_pose"
-QT_MOC_LITERAL(8, 129, 9) // "hackySlot"
+QT_MOC_LITERAL(0, 0, 20), // "NavigateToPoseClient"
+QT_MOC_LITERAL(1, 21, 16), // "navigationResult"
+QT_MOC_LITERAL(2, 38, 0), // ""
+QT_MOC_LITERAL(3, 39, 11), // "std::string"
+QT_MOC_LITERAL(4, 51, 6), // "result"
+QT_MOC_LITERAL(5, 58, 20), // "onSendNavigationGoal"
+QT_MOC_LITERAL(6, 79, 35), // "geometry_msgs::msg::Pose::Sha..."
+QT_MOC_LITERAL(7, 115, 9) // "goal_pose"
 
     },
-    "RosExecutorThread\0navigationResult\0\0"
-    "std::string\0result_status\0"
-    "onSendNavigationGoal\0"
+    "NavigateToPoseClient\0navigationResult\0"
+    "\0std::string\0result\0onSendNavigationGoal\0"
     "geometry_msgs::msg::Pose::SharedPtr\0"
-    "goal_pose\0hackySlot"
+    "goal_pose"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_RosExecutorThread[] = {
+static const uint qt_meta_data_NavigateToPoseClient[] = {
 
  // content:
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -65,38 +63,35 @@ static const uint qt_meta_data_RosExecutorThread[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   29,    2, 0x06 /* Public */,
+       1,    1,   24,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       5,    1,   32,    2, 0x0a /* Public */,
-       8,    1,   35,    2, 0x0a /* Public */,
+       5,    1,   27,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
 
  // slots: parameters
     QMetaType::Void, 0x80000000 | 6,    7,
-    QMetaType::Void, 0x80000000 | 6,    7,
 
        0        // eod
 };
 
-void RosExecutorThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void NavigateToPoseClient::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        auto *_t = static_cast<RosExecutorThread *>(_o);
+        auto *_t = static_cast<NavigateToPoseClient *>(_o);
         (void)_t;
         switch (_id) {
         case 0: _t->navigationResult((*reinterpret_cast< const std::string(*)>(_a[1]))); break;
         case 1: _t->onSendNavigationGoal((*reinterpret_cast< const geometry_msgs::msg::Pose::SharedPtr(*)>(_a[1]))); break;
-        case 2: _t->hackySlot((*reinterpret_cast< const geometry_msgs::msg::Pose::SharedPtr(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (RosExecutorThread::*)(const std::string & );
-            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&RosExecutorThread::navigationResult)) {
+            using _t = void (NavigateToPoseClient::*)(const std::string & );
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&NavigateToPoseClient::navigationResult)) {
                 *result = 0;
                 return;
             }
@@ -104,48 +99,50 @@ void RosExecutorThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
     }
 }
 
-QT_INIT_METAOBJECT const QMetaObject RosExecutorThread::staticMetaObject = { {
-    QMetaObject::SuperData::link<QThread::staticMetaObject>(),
-    qt_meta_stringdata_RosExecutorThread.data,
-    qt_meta_data_RosExecutorThread,
+QT_INIT_METAOBJECT const QMetaObject NavigateToPoseClient::staticMetaObject = { {
+    QMetaObject::SuperData::link<QObject::staticMetaObject>(),
+    qt_meta_stringdata_NavigateToPoseClient.data,
+    qt_meta_data_NavigateToPoseClient,
     qt_static_metacall,
     nullptr,
     nullptr
 } };
 
 
-const QMetaObject *RosExecutorThread::metaObject() const
+const QMetaObject *NavigateToPoseClient::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *RosExecutorThread::qt_metacast(const char *_clname)
+void *NavigateToPoseClient::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_meta_stringdata_RosExecutorThread.stringdata0))
+    if (!strcmp(_clname, qt_meta_stringdata_NavigateToPoseClient.stringdata0))
         return static_cast<void*>(this);
-    return QThread::qt_metacast(_clname);
+    if (!strcmp(_clname, "rclcpp::Node"))
+        return static_cast< rclcpp::Node*>(this);
+    return QObject::qt_metacast(_clname);
 }
 
-int RosExecutorThread::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int NavigateToPoseClient::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QThread::qt_metacall(_c, _id, _a);
+    _id = QObject::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 2;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 2)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 3;
+        _id -= 2;
     }
     return _id;
 }
 
 // SIGNAL 0
-void RosExecutorThread::navigationResult(const std::string & _t1)
+void NavigateToPoseClient::navigationResult(const std::string & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
