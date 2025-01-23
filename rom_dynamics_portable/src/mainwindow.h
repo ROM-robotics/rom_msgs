@@ -11,6 +11,7 @@
 #include "ui_mainwindow.h"
 
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp_action/rclcpp_action.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <std_msgs/msg/string.hpp>
@@ -68,6 +69,7 @@ class MainWindow : public QMainWindow
         void applyStyles();
     signals:
         void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr msg);
+        void sendCancelGoal(const rclcpp_action::GoalUUID& goal_uuid);
     
     public slots:
         void displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg);
@@ -87,6 +89,7 @@ class MainWindow : public QMainWindow
         void labelEditForSetStop();
 
         void onNavigationResult(const std::string& result_status);
+        void onSendGoalId(const rclcpp_action::GoalUUID& goal_uuid);
         
     private slots:
         void on_shutdownBtn_clicked();
@@ -116,6 +119,9 @@ class MainWindow : public QMainWindow
         QPushButton *btnCancelGoal_;
         QPushButton *btnReturnToHome_;
 
+        rclcpp_action::GoalUUID active_goal_uuid_;
+        bool is_goal_active_ = false;
+
         QSpinBox *x_spinBoxPtr_;
         QSpinBox *y_spinBoxPtr_;
         QSpinBox *z_spinBoxPtr_;
@@ -140,6 +146,9 @@ class MainWindow : public QMainWindow
         bool dragging;
         QPoint dragPosition;
         // end for dragging
+
+        // logging
+        QString currentText_;
 };
 
 #endif // MAINWINDOW_H

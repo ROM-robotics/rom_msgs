@@ -15,16 +15,47 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     ui->setupUi(this);
 
     setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+    /* Black */
+    // ui->centralwidget->setStyleSheet(
+    // "QWidget#centralwidget {"
+    // "   background: qlineargradient("
+    // "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
+    // "       stop: 0 rgba(0, 0, 0, 0.8), "  // Black with 70% opacity
+    // "       stop: 1 rgba(0, 0, 0, 1.0)"   // Black with 30% opacity
+    // "   );"
+    // "}"
+    // );
+    
+    /* Glaxy */
+    // ui->centralwidget->setStyleSheet(
+    // "QWidget {"
+    // "   background: qradialgradient("
+    // "       cx: 0.5, cy: 0.5, radius: 1, "
+    // "       fx: 0.5, fy: 0.5, "
+    // "       stop: 0 rgba(255, 255, 255, 1), "    // Bright center
+    // "       stop: 0.2 rgba(173, 216, 230, 0.8), " // Light blue
+    // "       stop: 0.4 rgba(147, 112, 219, 0.6), " // Purple tint
+    // "       stop: 0.6 rgba(255, 105, 180, 0.4), " // Pinkish transition
+    // "       stop: 1 rgba(0, 0, 0, 1) "            // Black edges
+    // "   );"
+    // "}"
+    // );
+
+    /* Darker Galaxy */
     ui->centralwidget->setStyleSheet(
-    "QWidget#centralwidget {"
-    "   background: qlineargradient("
-    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
-    "       stop: 0 rgba(0, 0, 0, 0.8), "  // Black with 70% opacity
-    "       stop: 1 rgba(0, 0, 0, 1.0)"   // Black with 30% opacity
+    "QWidget {"
+    "   background: qradialgradient("
+    "       cx: 0.0, cy: 0.0, radius: 0.8, "
+    "       fx: 0.7, fy: 0.3, "
+    "       stop: 0 rgba(200, 200, 255, 0.5), "   // Dim white center
+    "       stop: 0.2 rgba(100, 149, 237, 0.4), " // Faded blue
+    "       stop: 0.4 rgba(72, 61, 139, 0.5), "   // Dark purple tint
+    "       stop: 0.6 rgba(128, 0, 128, 0.6), "   // Dark magenta
+    "       stop: 0.8 rgba(20, 0, 20, 0.6), "    // Dark magenta
+    "       stop: 1 rgba(0, 0, 0, 0.7) "           // Deep black edges
     "   );"
     "}"
     );
-    //ui->centralwidget->setStyleSheet("background-color: rgba(255, 255, 255, 230);"); // 50% opacity
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     statusLabelPtr_ = ui->statusLabel;
@@ -163,7 +194,7 @@ void MainWindow::sendMappingMode() {
 
         statusLabelPtr_->setText("Changing Mapping Mode...\nSending \"mapping\" mode...\n");
         //ui->mappingBtn->setStyleSheet("background-color: green;");
-        ui->mappingBtn->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e, stop: 1 #132742);");
+        ui->mappingBtn->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e,stop: 0.8 #87CEEB, stop: 1 #132742);");
         ui->navigationBtn->setStyleSheet("background-color: white;");
         ui->remappingBtn->setStyleSheet("background-color: white;");
 
@@ -194,7 +225,7 @@ void MainWindow::sendNavigationMode() {
         statusLabelPtr_->setText("Changing Mapping Mode...\nSending \"navi\" mode...\n");
         ui->mappingBtn->setStyleSheet("background-color: white;");
         // ui->navigationBtn->setStyleSheet("background-color: green;");
-        ui->navigationBtn->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e, stop: 1 #132742);");
+        ui->navigationBtn->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e,stop: 0.8 #87CEEB, stop: 1 #132742);");
         ui->remappingBtn->setStyleSheet("background-color: white;");
 
         showBusyDialog();
@@ -225,7 +256,7 @@ void MainWindow::sendRemappingMode() {
         ui->mappingBtn->setStyleSheet("background-color: white;");
         ui->navigationBtn->setStyleSheet("background-color: white;");
         //ui->remappingBtn->setStyleSheet("background-color: green;");
-        ui->remappingBtn->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e, stop: 1 #132742);");
+        ui->remappingBtn->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e,stop: 0.8 #87CEEB, stop: 1 #132742);");
 
         showBusyDialog();
         setButtonsEnabled(false);
@@ -391,21 +422,37 @@ void MainWindow::selectMapClicked()
 void MainWindow::labelEditForSetForward()
 {
     statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nForward:\n     Linear velocity    : 0.4   m/s\n     Angular velocity : 0.0 rad/s\n");
+    ui->btnForward->setStyleSheet("color: white; background-color: none; border: 2px solid white;");
+    ui->btnRight->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+    ui->btnLeft->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+    ui->btnStop->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
 }
 
 void MainWindow::labelEditForSetRight()
 {
     statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nRight:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : 0.4   rad/s\n");
+    ui->btnForward->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+    ui->btnRight->setStyleSheet("color: white; background-color: none; border: 2px solid white;");
+    ui->btnLeft->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+    ui->btnStop->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
 }
 
 void MainWindow::labelEditForSetLeft()
 {
     statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nLeft:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : -0.4 rad/s\n");
+    ui->btnForward->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+    ui->btnRight->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+    ui->btnLeft->setStyleSheet("color: white; background-color: none; border: 2px solid white;");
+    ui->btnStop->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
 }
 
 void MainWindow::labelEditForSetStop()
 {
     statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nStop:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : 0.0   rad/s\n");
+    ui->btnForward->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+    ui->btnRight->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+    ui->btnLeft->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+    ui->btnStop->setStyleSheet("color: white; background-color: none; border: 2px solid white;");
 }
 
 
@@ -468,6 +515,10 @@ void MainWindow::showBusyDialog() {
         busyDialog_->setFixedSize(400, 150); 
         busyDialog_->setWindowModality(Qt::WindowModal);
         busyDialog_->setCancelButton(nullptr); // Optional: Disable cancel button
+
+        // busyDialog_->move((this->width() - busyDialog_->width()) / 2,
+        //           (this->height() - busyDialog_->height()) / 2);
+
         busyDialog_->move(350, 250); 
         busyDialog_->setStyleSheet(
     "QProgressBar {"
@@ -513,22 +564,17 @@ void MainWindow::on_goBtn_clicked()
                         .arg(y)
                         .arg(theta);
     statusLabelPtr_->setText(statusText);
+    currentText_ = statusText;
 
     showBusyDialog();
     QApplication::processEvents();  // Ensure dialog is displayed
 
     setButtonsEnabled(false);
     
-    btnGoToGoal_->setEnabled(true);
-
-    //btnCancelGoal_->show();
-    btnCancelGoal_->setEnabled(true);
-
-    //btnReturnToHome_->show();
-    btnReturnToHome_->setEnabled(true);
-    ui->btnEstop->setEnabled(true);
+    // btnCancelGoal_->setEnabled(true);
+    // btnReturnToHome_->setEnabled(true);
+    // ui->btnEstop->setEnabled(true);
     
-
     auto pose = geometry_msgs::msg::Pose::SharedPtr(new geometry_msgs::msg::Pose());
     pose->position.x = x;
     pose->position.y = y;
@@ -544,39 +590,97 @@ void MainWindow::on_goBtn_clicked()
     QMetaObject::invokeMethod(this, [this, pose]() {
         emit sendNavigationGoal(pose);
     }, Qt::QueuedConnection);
-
-    hideBusyDialog();
 }
 
 
 void MainWindow::on_cancelBtn_clicked()
 {
-
+    if (is_goal_active_) 
+    {
+        statusLabelPtr_->setText("\n Cancel Goal လုပ်လိုက်ပါပြီ။ \n");
+            emit sendCancelGoal(active_goal_uuid_);
+        active_goal_uuid_.fill(0);
+        is_goal_active_ = false;
+    }
+    else
+    {
+        statusLabelPtr_->setText("\n Cancel လုပ်ဖို့ Goal မရှိပါ။ \n");
+        return;
+    }
 }
 
 
 void MainWindow::on_rthBtn_clicked()
 {
+    double x    = 0.3;
+    double y    = 0.0;
+    double theta= 0.0;
+    
+    QString statusText = QString("Sending Action Goal  .......\n            X       : %1 meters\n            Y       : %2 meters\n    Heading : %3 radians\n")
+                        .arg(x)
+                        .arg(y)
+                        .arg(theta);
+    statusLabelPtr_->setText(statusText);
+    currentText_ = statusText;
 
+    showBusyDialog();
+    QApplication::processEvents();  // Ensure dialog is displayed
+
+    setButtonsEnabled(false);
+    
+    // btnCancelGoal_->setEnabled(true);
+    // ui->btnEstop->setEnabled(true);
+    
+    auto pose = geometry_msgs::msg::Pose::SharedPtr(new geometry_msgs::msg::Pose());
+    pose->position.x = x;
+    pose->position.y = y;
+
+    yaw_to_quaternion(theta, pose->orientation.z, pose->orientation.w);
+
+    
+    //emit sendNavigationGoal(pose);
+
+    // Emit the navigation goal signal for different threads
+    QMetaObject::invokeMethod(this, [this, pose]() {
+        emit sendNavigationGoal(pose);
+    }, Qt::QueuedConnection);
 }
+
 
 void MainWindow::onNavigationResult(const std::string& result_status)
 {
-    QString currentText = statusLabelPtr_->text();
-    QString statusText = QString("\nNavigation Result : %1\n").arg(QString::fromStdString(result_status));
+    QString statusText = QString("Navigation Result : %1\n").arg(QString::fromStdString(result_status));
 
-    QString updateText = currentText + statusText;
+    QString updateText = currentText_ + statusText;
     statusLabelPtr_->setText(updateText);
 
     #ifdef ROM_Q_DEBUG 
         qDebug() << "[ onNavigationResult() slot  ] : get Navigation Result " << QString::fromStdString(result_status);
     #endif
-
-    //hideBusyDialog();
-    //btnGoToGoal_->show();
-    //setButtonsEnabled(true);
+    
+    setButtonsEnabled(true);
+    hideBusyDialog();
 }
 
+
+void MainWindow::onSendGoalId(const rclcpp_action::GoalUUID& goal_uuid)
+{
+    // need char array to string conversion
+
+    QString currentText = statusLabelPtr_->text();
+    //QString statusText = QString("\nGoal ID : %1\n").arg(QString::fromStdString(goal_id));
+    QString statusText = QString("\nGoal ID \n");
+    QString updateText = currentText + statusText;
+    statusLabelPtr_->setText(updateText);
+
+    #ifdef ROM_Q_DEBUG
+        //qDebug() << "Goal ID from Mainwindow::sendGoalId " << QString::fromStdString(goal_id);
+        qDebug() << "Goal ID from Mainwindow::sendGoalId ";
+    #endif
+
+    //goal_id_ = goal_id;
+    active_goal_uuid_ = goal_uuid;
+}
 
 void MainWindow::toggleButtonWithAnimation(QPushButton* button, bool show) {
     // Create a property animation
@@ -651,6 +755,8 @@ void MainWindow::applyStyles()
     );
     ui->btnStop->setStyleSheet(
     "QPushButton {"
+    "   border: 2px solid white;"
+    "   background-color: none;"
     "   color: white;"
     "}"
     "QPushButton:pressed {"
@@ -660,7 +766,8 @@ void MainWindow::applyStyles()
 
     ui->btnForward->setStyleSheet(
     "QPushButton {"
-    "   color: white;"
+    "   background-color: none;"
+    "   color: #979ba1;"
     "}"
     "QPushButton:pressed {"
     "    background-color: rgb(200, 255, 200);"      
@@ -668,7 +775,8 @@ void MainWindow::applyStyles()
     );
     ui->btnLeft->setStyleSheet(
     "QPushButton {"
-    "   color: white;"
+    "   background-color: none;"
+    "   color: #979ba1;"
     "}"
     "QPushButton:pressed {"
     "    background-color: rgb(200, 255, 200);"       
@@ -676,7 +784,8 @@ void MainWindow::applyStyles()
     );
     ui->btnRight->setStyleSheet(
     "QPushButton {"
-    "   color: white;"
+    "   background-color: none;"
+    "   color: #979ba1;"
     "}"
     "QPushButton:pressed {"
     "    background-color: rgb(200, 255, 200);"        
@@ -828,18 +937,24 @@ void MainWindow::applyStyles()
     "QSpinBox {"
     "   border: 2px solid red;" 
     "   border-radius: 10px;"        // Rounding the corners
+    "   background-color: #f0f0f0;"
+    "   color: black;"
     "}"
     );
     ui->yspinBox->setStyleSheet(
     "QSpinBox {"
     "   border: 2px solid green;" 
     "   border-radius: 10px;"        // Rounding the corners
+    "   background-color: #f0f0f0;"
+    "   color: black;"
     "}"
     );
     ui->zspinBox->setStyleSheet(
     "QSpinBox {"
     "   border: 2px solid blue;" 
     "   border-radius: 10px;"        // Rounding the corners
+    "   background-color: #f0f0f0;"
+    "   color: black;"
     "}"
     );
 

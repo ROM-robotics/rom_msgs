@@ -73,7 +73,9 @@ int main(int argc, char *argv[])
     // Action Goal
     QObject::connect(&mainWindow, &MainWindow::sendNavigationGoal, goal_action_client.get(), &NavigateToPoseClient::onSendNavigationGoal);
     QObject::connect(goal_action_client.get(), &NavigateToPoseClient::navigationResult, &mainWindow, &MainWindow::onNavigationResult);
-
+    // Cancel Goal
+    QObject::connect(goal_action_client.get(), &NavigateToPoseClient::sendGoalId, &mainWindow, &MainWindow::onSendGoalId);
+    QObject::connect(&mainWindow, &MainWindow::sendCancelGoal, goal_action_client.get(), &NavigateToPoseClient::onSendCancelGoal);
     
     
     return a.exec();

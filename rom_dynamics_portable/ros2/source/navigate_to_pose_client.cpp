@@ -33,6 +33,7 @@ void NavigateToPoseClient::onSendNavigationGoal(const geometry_msgs::msg::Pose::
     #ifdef ROM_Q_DEBUG
         qDebug() << "[ onSendNavigationGoal() slot] : get pose ";
     #endif
+
     // Setting the goal message
     goal_msg_->pose.header.stamp = this->get_clock()->now();
     goal_msg_->pose.header.frame_id = "map";
@@ -49,7 +50,31 @@ void NavigateToPoseClient::onSendNavigationGoal(const geometry_msgs::msg::Pose::
     };
 
     // Sending goal
-    action_client_->async_send_goal(*goal_msg_, send_goal_options);
+    //--- action_client_->async_send_goal(*goal_msg_, send_goal_options);
+    auto future_goal_handle = action_client_->async_send_goal(*goal_msg_, send_goal_options); 
+
+    if(future_goal_handle.get())
+    {
+        goal_handle_ = future_goal_handle.get();
+
+        #ifdef ROM_Q_DEBUG
+            qDebug() << "Goal Accepted";
+        #endif
+
+        rclcpp_action::GoalUUID goal_uuid = goal_handle_->get_goal_id();
+        //std::string goal_id = goal_handle_->get_goal_id().uuid;
+
+        QMetaObject::invokeMethod(this, [this, goal_uuid]() {
+            emit sendGoalId(goal_uuid);
+        }, Qt::QueuedConnection);
+        //emit sendGoalId(goal_uuid);
+    }
+    else
+    {
+        #ifdef ROM_Q_DEBUG
+            qDebug() << "Goal Rejected";
+        #endif
+    }
 }
 
 void NavigateToPoseClient::handleFeedback(
@@ -76,15 +101,27 @@ void NavigateToPoseClient::handleResult(const rclcpp_action::ClientGoalHandle<na
     {
     case rclcpp_action::ResultCode::SUCCEEDED:
         status = "Goal succeeded!";
+        #ifdef ROM_Q_DEBUG
+            qDebug() << "Goal succeeded! for rom dynamics";
+        #endif
         break;
     case rclcpp_action::ResultCode::ABORTED:
         status = "Goal aborted!";
+        #ifdef ROM_Q_DEBUG
+            qDebug() << "Goal aborted! for rom dynamics";
+        #endif
         break;
     case rclcpp_action::ResultCode::CANCELED:
         status = "Goal canceled!";
+        #ifdef ROM_Q_DEBUG
+            qDebug() << "Goal canceled! for rom dynamics";
+        #endif
         break;
     default:
         status = "Unknown result code!";
+        #ifdef ROM_Q_DEBUG
+            qDebug() << "Unknown result code! for rom dynamics";
+        #endif
         break;
     }
     #ifdef ROM_Q_DEBUG
@@ -95,4 +132,48 @@ void NavigateToPoseClient::handleResult(const rclcpp_action::ClientGoalHandle<na
         emit navigationResult(status);
     }, Qt::QueuedConnection);
     //emit navigationResult(status);
+}
+
+void NavigateToPoseClient::onSendCancelGoal(const rclcpp_action::GoalUUID& goal_uuid)
+{
+    active_goal_uuid_ = goal_uuid;
+
+    //action_client_->cancel_goal_async(active_goal_uuid_);
+
+    if (active_goal_uuid_.empty()) 
+    {
+        #ifdef ROM_Q_DEBUG
+            qDebug() << "No active goal to cancel";
+        #endif
+        
+        QMetaObject::invokeMethod(this, [this]() {
+            emit navigationResult("No active goal to cancel");
+        }, Qt::QueuedConnection);
+
+        return;
+    }
+
+    auto future_cancel = action_client_->async_cancel_all_goals();
+
+    // error တက်တယ် ၊ spin ရှိပြီးသားမို့ မလိုဘူးယူဆတယ်။
+    //rclcpp::spin_until_future_complete(this->get_node_base_interface(), future_cancel);
+
+    if (future_cancel.get()) 
+    {
+        #ifdef ROM_Q_DEBUG
+            qDebug() << "Successfully canceled goal";
+        #endif
+        QMetaObject::invokeMethod(this, [this]() {
+            emit navigationResult("Successfully canceled goal");
+        }, Qt::QueuedConnection);
+    } 
+    else 
+    {
+        #ifdef ROM_Q_DEBUG
+            qDebug() << "Failed to cancel goal";
+        #endif
+        QMetaObject::invokeMethod(this, [this]() {
+            emit navigationResult("Failed to cancel goal");
+        }, Qt::QueuedConnection);
+    }
 }
