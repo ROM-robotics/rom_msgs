@@ -13,9 +13,11 @@ std::string current_mode = "navi";
 pid_t launch_pid = -1;
 
 // Package and launch file names
-const std::string cartographer_pkg = "rom2109_nav2";                 
-const std::string carto_mapping_launch = "navigation.launch.py";
-const std::string carto_localization_launch = "navigation_with_map_server.launch.py";
+const std::string robot_name = std::getenv("ROM_ROBOT_MODEL");
+
+const std::string nav2_pkg = robot_name +"_nav2";                
+const std::string nav2_mapping_launch = "navigation.launch.py";
+const std::string nav2_localization_launch = "navigation_with_map_server.launch.py";
 const std::string remapping_launch = "something.launch.py";
 
 void startLaunch(const std::string &package, const std::string &launch_file) 
@@ -67,7 +69,7 @@ void topic_callback(const std_msgs::msg::String::SharedPtr msg)
       
       RCLCPP_INFO(rclcpp::get_logger("which_nav_switcher"), "Sending : Response Status OK");
       
-      startLaunch(cartographer_pkg, carto_mapping_launch );
+      startLaunch(nav2_pkg, nav2_mapping_launch );
       current_mode = "mapping";
     }
   }
@@ -83,7 +85,7 @@ void topic_callback(const std_msgs::msg::String::SharedPtr msg)
     {
       shutdownLaunch();
       
-      startLaunch(cartographer_pkg, carto_localization_launch);
+      startLaunch(nav2_pkg, nav2_localization_launch);
       RCLCPP_INFO(rclcpp::get_logger("which_nav_switcher"), "Sending : Response Status OK");
       current_mode = "navi";
     }
@@ -100,7 +102,7 @@ void topic_callback(const std_msgs::msg::String::SharedPtr msg)
     else 
     {
       shutdownLaunch();
-      startLaunch(cartographer_pkg, remapping_launch);
+      startLaunch(nav2_pkg, remapping_launch);
       
       RCLCPP_INFO(rclcpp::get_logger("which_nav_switcher"), "Sending : Response Status OK");
       current_mode = "remapping";
@@ -121,7 +123,7 @@ int main(int argc, char **argv)
 
     RCLCPP_INFO(rclcpp::get_logger("which_nav_server"), "Fist Time trigger to Nav mode");
 
-    startLaunch(cartographer_pkg, carto_localization_launch);
+    startLaunch(nav2_pkg, nav2_localization_launch);
 
     // Spin the node to process callbacks
     rclcpp::spin(node);

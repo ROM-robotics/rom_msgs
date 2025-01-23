@@ -25,7 +25,9 @@ std::string current_mode = "navi";
 pid_t launch_pid = -1;
 
 // Package and launch file names
-const std::string cartographer_pkg = "rom2109_carto";                 
+const std::string robot_name = std::getenv("ROM_ROBOT_MODEL");
+
+const std::string cartographer_pkg = robot_name +"_carto";                 
 const std::string carto_mapping_launch = "mapping.launch.py";
     
 const std::string carto_localization_launch = "localization.launch.py";
