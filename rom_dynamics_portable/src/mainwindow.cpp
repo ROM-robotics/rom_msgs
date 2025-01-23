@@ -828,9 +828,12 @@ void MainWindow::applyStyles()
     "}"
     "QPushButton:hover {"
     "   background: qlineargradient("
-    "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
-    "       stop: 0 #ffcccc, "            
-    "       stop: 1 #ff0000"             
+    "       x1: 0, y1: 0, x2: 1, y2: 1," // Diagonal gradient
+    "       stop: 0 yellow,"             // Bright yellow
+    "       stop: 0.4 #ff9a00,"            // Bright yellow-orange
+    "       stop: 0.6 #ff4500,"          // Deep orange
+    "       stop: 0.9 #d30000,"          // Fiery red
+    "       stop: 1 #800000"             // Dark red        
     "   );"
     "   color: white;"
     "}"
