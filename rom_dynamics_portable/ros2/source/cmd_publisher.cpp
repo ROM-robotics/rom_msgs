@@ -18,7 +18,7 @@ Publisher::Publisher(const std::string &topic_name) : Node("qt_twist_publisher")
 
             if (this->drive_command_ == "forward")
             {
-                message_->linear.x = 0.400;
+                message_->linear.x = 0.090;
                 message_->angular.z = 0.000;
                 publish_->publish(*message_);
 
@@ -28,7 +28,7 @@ Publisher::Publisher(const std::string &topic_name) : Node("qt_twist_publisher")
             else if (this->drive_command_ == "left")
             {
                 message_->linear.x = 0.000;
-                message_->angular.z = 0.400;
+                message_->angular.z = 0.200;
                 publish_->publish(*message_);
 
                 count = 0;
@@ -37,7 +37,7 @@ Publisher::Publisher(const std::string &topic_name) : Node("qt_twist_publisher")
             else if (this->drive_command_ == "right")
             {
                 message_->linear.x = 0.000;
-                message_->angular.z = -0.400;
+                message_->angular.z = -0.200;
                 publish_->publish(*message_);
 
                 count = 0;
