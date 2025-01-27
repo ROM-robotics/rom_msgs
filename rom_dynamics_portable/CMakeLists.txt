@@ -49,8 +49,8 @@ add_executable(ROM_DYNAMICS
     src/main.cpp
     src/mainwindow.h
     src/mainwindow.cpp
-    ros2/header/cmd_publisher.h
-    ros2/source/cmd_publisher.cpp
+    ros2/header/cmd_service_client.h
+    ros2/source/cmd_service_client.cpp
     ros2/header/pose_subscriber.h
     ros2/source/pose_subscriber.cpp
     ros2/header/rom_algorithm.h

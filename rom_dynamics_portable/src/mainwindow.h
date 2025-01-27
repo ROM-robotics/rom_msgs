@@ -90,6 +90,8 @@ class MainWindow : public QMainWindow
 
         void onNavigationResult(const std::string& result_status);
         void onSendGoalId(const rclcpp_action::GoalUUID& goal_uuid);
+
+        void onCmdServiceResponse(bool success);
         
     private slots:
         void on_shutdownBtn_clicked();

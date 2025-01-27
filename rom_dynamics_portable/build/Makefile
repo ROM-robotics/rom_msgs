@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable
+CMAKE_SOURCE_DIR = /home/mr_robot/qt_ros_ws/src/rom_msgs/rom_dynamics_portable
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build
+CMAKE_BINARY_DIR = /home/mr_robot/qt_ros_ws/src/rom_msgs/rom_dynamics_portable/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -142,9 +142,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/CMakeFiles /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mr_robot/qt_ros_ws/src/rom_msgs/rom_dynamics_portable/build/CMakeFiles /home/mr_robot/qt_ros_ws/src/rom_msgs/rom_dynamics_portable/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mr_robot/qt_ros_ws/src/rom_msgs/rom_dynamics_portable/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -247,29 +247,29 @@ ROM_DYNAMICS_autogen/mocs_compilation.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ROM_DYNAMICS_autogen/mocs_compilation.cpp.s
 .PHONY : ROM_DYNAMICS_autogen/mocs_compilation.cpp.s
 
-ros2/source/cmd_publisher.o: ros2/source/cmd_publisher.cpp.o
-.PHONY : ros2/source/cmd_publisher.o
+ros2/source/cmd_service_client.o: ros2/source/cmd_service_client.cpp.o
+.PHONY : ros2/source/cmd_service_client.o
 
 # target to build an object file
-ros2/source/cmd_publisher.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.o
-.PHONY : ros2/source/cmd_publisher.cpp.o
+ros2/source/cmd_service_client.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_service_client.cpp.o
+.PHONY : ros2/source/cmd_service_client.cpp.o
 
-ros2/source/cmd_publisher.i: ros2/source/cmd_publisher.cpp.i
-.PHONY : ros2/source/cmd_publisher.i
+ros2/source/cmd_service_client.i: ros2/source/cmd_service_client.cpp.i
+.PHONY : ros2/source/cmd_service_client.i
 
 # target to preprocess a source file
-ros2/source/cmd_publisher.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.i
-.PHONY : ros2/source/cmd_publisher.cpp.i
+ros2/source/cmd_service_client.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_service_client.cpp.i
+.PHONY : ros2/source/cmd_service_client.cpp.i
 
-ros2/source/cmd_publisher.s: ros2/source/cmd_publisher.cpp.s
-.PHONY : ros2/source/cmd_publisher.s
+ros2/source/cmd_service_client.s: ros2/source/cmd_service_client.cpp.s
+.PHONY : ros2/source/cmd_service_client.s
 
 # target to generate assembly for a file
-ros2/source/cmd_publisher.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_publisher.cpp.s
-.PHONY : ros2/source/cmd_publisher.cpp.s
+ros2/source/cmd_service_client.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROM_DYNAMICS.dir/build.make CMakeFiles/ROM_DYNAMICS.dir/ros2/source/cmd_service_client.cpp.s
+.PHONY : ros2/source/cmd_service_client.cpp.s
 
 ros2/source/mode_subscriber.o: ros2/source/mode_subscriber.cpp.o
 .PHONY : ros2/source/mode_subscriber.o
@@ -411,9 +411,9 @@ help:
 	@echo "... ROM_DYNAMICS_autogen/mocs_compilation.o"
 	@echo "... ROM_DYNAMICS_autogen/mocs_compilation.i"
 	@echo "... ROM_DYNAMICS_autogen/mocs_compilation.s"
-	@echo "... ros2/source/cmd_publisher.o"
-	@echo "... ros2/source/cmd_publisher.i"
-	@echo "... ros2/source/cmd_publisher.s"
+	@echo "... ros2/source/cmd_service_client.o"
+	@echo "... ros2/source/cmd_service_client.i"
+	@echo "... ros2/source/cmd_service_client.s"
 	@echo "... ros2/source/mode_subscriber.o"
 	@echo "... ros2/source/mode_subscriber.i"
 	@echo "... ros2/source/mode_subscriber.s"

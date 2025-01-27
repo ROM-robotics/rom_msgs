@@ -28,6 +28,9 @@ endif()
 add_executable(which_maps_server src/which_maps_server.cpp)
 ament_target_dependencies(which_maps_server rclcpp rom_interfaces)
 
+add_executable(which_vel_server src/which_vel_server.cpp)
+ament_target_dependencies(which_vel_server rclcpp rom_interfaces)
+
 add_executable(which_nav_server src/which_navs_server.cpp)
 ament_target_dependencies(which_nav_server rclcpp rom_interfaces)
 
@@ -47,14 +50,15 @@ install(
 #   client
 #   DESTINATION lib/${PROJECT_NAME})
 
-add_executable(add_two_ints_server src/add_two_ints_server.cpp)
-ament_target_dependencies(add_two_ints_server rclcpp example_interfaces)
+#add_executable(add_two_ints_server src/add_two_ints_server.cpp)
+#ament_target_dependencies(add_two_ints_server rclcpp example_interfaces)
 
 install(TARGETS
-  add_two_ints_server
+  #add_two_ints_server
   which_maps_server
   which_maps_client
   which_nav_server
+  which_vel_server
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

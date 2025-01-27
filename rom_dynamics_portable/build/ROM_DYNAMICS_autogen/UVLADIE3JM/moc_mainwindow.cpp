@@ -132,8 +132,8 @@ void ServiceClient::responseReceived(int _t1)
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[33];
-    char stringdata0[589];
+    QByteArrayData data[35];
+    char stringdata0[618];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -168,13 +168,15 @@ QT_MOC_LITERAL(22, 409, 18), // "onNavigationResult"
 QT_MOC_LITERAL(23, 428, 11), // "std::string"
 QT_MOC_LITERAL(24, 440, 13), // "result_status"
 QT_MOC_LITERAL(25, 454, 12), // "onSendGoalId"
-QT_MOC_LITERAL(26, 467, 22), // "on_shutdownBtn_clicked"
-QT_MOC_LITERAL(27, 490, 19), // "on_btnEstop_clicked"
-QT_MOC_LITERAL(28, 510, 18), // "onResponseReceived"
-QT_MOC_LITERAL(29, 529, 3), // "sum"
-QT_MOC_LITERAL(30, 533, 16), // "on_goBtn_clicked"
-QT_MOC_LITERAL(31, 550, 20), // "on_cancelBtn_clicked"
-QT_MOC_LITERAL(32, 571, 17) // "on_rthBtn_clicked"
+QT_MOC_LITERAL(26, 467, 20), // "onCmdServiceResponse"
+QT_MOC_LITERAL(27, 488, 7), // "success"
+QT_MOC_LITERAL(28, 496, 22), // "on_shutdownBtn_clicked"
+QT_MOC_LITERAL(29, 519, 19), // "on_btnEstop_clicked"
+QT_MOC_LITERAL(30, 539, 18), // "onResponseReceived"
+QT_MOC_LITERAL(31, 558, 3), // "sum"
+QT_MOC_LITERAL(32, 562, 16), // "on_goBtn_clicked"
+QT_MOC_LITERAL(33, 579, 20), // "on_cancelBtn_clicked"
+QT_MOC_LITERAL(34, 600, 17) // "on_rthBtn_clicked"
 
     },
     "MainWindow\0sendNavigationGoal\0\0"
@@ -190,6 +192,7 @@ QT_MOC_LITERAL(32, 571, 17) // "on_rthBtn_clicked"
     "labelEditForSetLeft\0labelEditForSetStop\0"
     "onNavigationResult\0std::string\0"
     "result_status\0onSendGoalId\0"
+    "onCmdServiceResponse\0success\0"
     "on_shutdownBtn_clicked\0on_btnEstop_clicked\0"
     "onResponseReceived\0sum\0on_goBtn_clicked\0"
     "on_cancelBtn_clicked\0on_rthBtn_clicked"
@@ -202,7 +205,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      22,   14, // methods
+      23,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -210,30 +213,31 @@ static const uint qt_meta_data_MainWindow[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,  124,    2, 0x06 /* Public */,
-       5,    1,  127,    2, 0x06 /* Public */,
+       1,    1,  129,    2, 0x06 /* Public */,
+       5,    1,  132,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       8,    1,  130,    2, 0x0a /* Public */,
-      10,    1,  133,    2, 0x0a /* Public */,
-      12,    0,  136,    2, 0x0a /* Public */,
-      13,    0,  137,    2, 0x0a /* Public */,
-      14,    0,  138,    2, 0x0a /* Public */,
-      15,    0,  139,    2, 0x0a /* Public */,
-      16,    0,  140,    2, 0x0a /* Public */,
-      17,    0,  141,    2, 0x0a /* Public */,
-      18,    0,  142,    2, 0x0a /* Public */,
-      19,    0,  143,    2, 0x0a /* Public */,
-      20,    0,  144,    2, 0x0a /* Public */,
-      21,    0,  145,    2, 0x0a /* Public */,
-      22,    1,  146,    2, 0x0a /* Public */,
-      25,    1,  149,    2, 0x0a /* Public */,
-      26,    0,  152,    2, 0x08 /* Private */,
-      27,    0,  153,    2, 0x08 /* Private */,
-      28,    1,  154,    2, 0x08 /* Private */,
-      30,    0,  157,    2, 0x08 /* Private */,
-      31,    0,  158,    2, 0x08 /* Private */,
-      32,    0,  159,    2, 0x08 /* Private */,
+       8,    1,  135,    2, 0x0a /* Public */,
+      10,    1,  138,    2, 0x0a /* Public */,
+      12,    0,  141,    2, 0x0a /* Public */,
+      13,    0,  142,    2, 0x0a /* Public */,
+      14,    0,  143,    2, 0x0a /* Public */,
+      15,    0,  144,    2, 0x0a /* Public */,
+      16,    0,  145,    2, 0x0a /* Public */,
+      17,    0,  146,    2, 0x0a /* Public */,
+      18,    0,  147,    2, 0x0a /* Public */,
+      19,    0,  148,    2, 0x0a /* Public */,
+      20,    0,  149,    2, 0x0a /* Public */,
+      21,    0,  150,    2, 0x0a /* Public */,
+      22,    1,  151,    2, 0x0a /* Public */,
+      25,    1,  154,    2, 0x0a /* Public */,
+      26,    1,  157,    2, 0x0a /* Public */,
+      28,    0,  160,    2, 0x08 /* Private */,
+      29,    0,  161,    2, 0x08 /* Private */,
+      30,    1,  162,    2, 0x08 /* Private */,
+      32,    0,  165,    2, 0x08 /* Private */,
+      33,    0,  166,    2, 0x08 /* Private */,
+      34,    0,  167,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -254,9 +258,10 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 23,   24,
     QMetaType::Void, 0x80000000 | 6,    7,
+    QMetaType::Void, QMetaType::Bool,   27,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   29,
+    QMetaType::Void, QMetaType::Int,   31,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -286,12 +291,13 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 13: _t->labelEditForSetStop(); break;
         case 14: _t->onNavigationResult((*reinterpret_cast< const std::string(*)>(_a[1]))); break;
         case 15: _t->onSendGoalId((*reinterpret_cast< const rclcpp_action::GoalUUID(*)>(_a[1]))); break;
-        case 16: _t->on_shutdownBtn_clicked(); break;
-        case 17: _t->on_btnEstop_clicked(); break;
-        case 18: _t->onResponseReceived((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 19: _t->on_goBtn_clicked(); break;
-        case 20: _t->on_cancelBtn_clicked(); break;
-        case 21: _t->on_rthBtn_clicked(); break;
+        case 16: _t->onCmdServiceResponse((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 17: _t->on_shutdownBtn_clicked(); break;
+        case 18: _t->on_btnEstop_clicked(); break;
+        case 19: _t->onResponseReceived((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 20: _t->on_goBtn_clicked(); break;
+        case 21: _t->on_cancelBtn_clicked(); break;
+        case 22: _t->on_rthBtn_clicked(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -342,13 +348,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 22)
+        if (_id < 23)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 22;
+        _id -= 23;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 22)
+        if (_id < 23)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 22;
+        _id -= 23;
     }
     return _id;
 }

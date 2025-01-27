@@ -421,7 +421,9 @@ void MainWindow::selectMapClicked()
 
 void MainWindow::labelEditForSetForward()
 {
-    statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nForward:\n     Linear velocity    : 0.4   m/s\n     Angular velocity : 0.0 rad/s\n");
+    QString statusText = QString("\nConstant Speed with 10Hz.\n\nForward:\n     Linear velocity    : 0.4   m/s\n     Angular velocity : 0.0 rad/s\n");
+    statusLabelPtr_->setText(statusText);
+    currentText_ = statusText;
     ui->btnForward->setStyleSheet("color: white; background-color: none; border: 2px solid white;");
     ui->btnRight->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
     ui->btnLeft->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
@@ -430,7 +432,9 @@ void MainWindow::labelEditForSetForward()
 
 void MainWindow::labelEditForSetRight()
 {
-    statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nRight:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : 0.4   rad/s\n");
+    QString statusText = QString("\nConstant Speed with 10Hz.\n\nRight:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : 0.4   rad/s\n");
+    statusLabelPtr_->setText(statusText);
+    currentText_ = statusText;
     ui->btnForward->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
     ui->btnRight->setStyleSheet("color: white; background-color: none; border: 2px solid white;");
     ui->btnLeft->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
@@ -439,7 +443,9 @@ void MainWindow::labelEditForSetRight()
 
 void MainWindow::labelEditForSetLeft()
 {
-    statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nLeft:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : -0.4 rad/s\n");
+    QString statusText = QString("\nConstant Speed with 10Hz.\n\nLeft:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : -0.4 rad/s\n");
+    statusLabelPtr_->setText(statusText);
+    currentText_ = statusText;
     ui->btnForward->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
     ui->btnRight->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
     ui->btnLeft->setStyleSheet("color: white; background-color: none; border: 2px solid white;");
@@ -448,7 +454,9 @@ void MainWindow::labelEditForSetLeft()
 
 void MainWindow::labelEditForSetStop()
 {
-    statusLabelPtr_->setText("\nConstant Speed with 10Hz.\n\nStop:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : 0.0   rad/s\n");
+    QString statusText = QString("\nConstant Speed with 10Hz.\n\nStop:\n     Linear velocity    : 0.0   m/s\n     Angular velocity : 0.0   rad/s\n");
+    statusLabelPtr_->setText(statusText);
+    currentText_ = statusText;
     ui->btnForward->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
     ui->btnRight->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
     ui->btnLeft->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
@@ -713,6 +721,30 @@ void MainWindow::toggleButtonWithAnimation(QPushButton* button, bool show) {
     animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
+void MainWindow::onCmdServiceResponse(bool success){
+    if(!success){
+        QString statusText = QString("Service not found !\n");
+        QString updateText = currentText_ + statusText;
+        statusLabelPtr_->setText(updateText);
+
+        #ifdef ROM_Q_DEBUG 
+            qDebug() << "[    onCmdServiceResponse        ] : Service not found";
+        #endif
+
+        // ui->btnForward->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+        // ui->btnRight->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+        // ui->btnLeft->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+        // ui->btnStop->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+
+    }else {
+        #ifdef ROM_Q_DEBUG 
+            qDebug() << "[    onCmdServiceResponse        ] : Service OK !";
+        #endif
+    }
+
+    
+
+}
 
 void MainWindow::applyStyles()
 {
