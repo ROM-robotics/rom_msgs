@@ -15,31 +15,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     ui->setupUi(this);
 
     setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-    /* Black */
-    // ui->centralwidget->setStyleSheet(
-    // "QWidget#centralwidget {"
-    // "   background: qlineargradient("
-    // "       x1: 0, y1: 0, x2: 1, y2: 1, " // Diagonal gradient
-    // "       stop: 0 rgba(0, 0, 0, 0.8), "  // Black with 70% opacity
-    // "       stop: 1 rgba(0, 0, 0, 1.0)"   // Black with 30% opacity
-    // "   );"
-    // "}"
-    // );
-    
-    /* Glaxy */
-    // ui->centralwidget->setStyleSheet(
-    // "QWidget {"
-    // "   background: qradialgradient("
-    // "       cx: 0.5, cy: 0.5, radius: 1, "
-    // "       fx: 0.5, fy: 0.5, "
-    // "       stop: 0 rgba(255, 255, 255, 1), "    // Bright center
-    // "       stop: 0.2 rgba(173, 216, 230, 0.8), " // Light blue
-    // "       stop: 0.4 rgba(147, 112, 219, 0.6), " // Purple tint
-    // "       stop: 0.6 rgba(255, 105, 180, 0.4), " // Pinkish transition
-    // "       stop: 1 rgba(0, 0, 0, 1) "            // Black edges
-    // "   );"
-    // "}"
-    // );
 
     /* Darker Galaxy */
     ui->centralwidget->setStyleSheet(
@@ -108,6 +83,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
 
     // Open map အတွက် responseReceived, onResponseReceived အသစ်ပြန်ရေးရန်
     connect(service_clientPtr_, &ServiceClient::responseReceived, this, &MainWindow::onResponseReceived);
+    connect(service_clientPtr_, &ServiceClient::responseDataReceived, this, &MainWindow::onResponseDataReceived);
 
     rosServiceClientThreadPtr_->start();
 
@@ -119,6 +95,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     qRegisterMetaType<nav_msgs::msg::Odometry::SharedPtr>("nav_msgs::msg::Odometry::SharedPtr");
     qRegisterMetaType<std_msgs::msg::String::SharedPtr>("std_msgs::msg::String::SharedPtr");
     qRegisterMetaType<geometry_msgs::msg::Pose>("geometry_msgs::msg::Pose");
+    //qRegisterMetaType<rom_interfaces::srv::WhichMaps::Response::SharedPtr>("rom_interfaces::srv::WhichMaps::Response::SharedPtr");
+    qRegisterMetaType<std::shared_ptr<rom_interfaces::srv::WhichMaps::Response>>("std::shared_ptr<rom_interfaces::srv::WhichMaps::Response>");
+
     
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
 
@@ -288,6 +267,16 @@ void MainWindow::on_btnEstop_clicked()
 
 
 void MainWindow::onResponseReceived(int service_status) {
+
+// # -1 [service not ok], 1 [service ok], 
+// # 2 [maps exist], 3 [maps do not exist], 
+// # 4 [save map ok], 5 [save map not ok]
+// # 6 [select map ok], 7 [select map not ok], 
+
+// # 8 [mapping mode ok], 9 [mapping mode not ok],
+// # 10 [navi mode ok], 11 [navi mode not ok]
+// # 12 [remapping mode ok], 13 [remapping mode not ok]
+
     QString currentText = statusLabelPtr_->text();
 
     if (service_status == -1) {
@@ -295,6 +284,66 @@ void MainWindow::onResponseReceived(int service_status) {
     } else {
         //statusLabelPtr_->setText(QString("Result: %1").arg(sum));
         statusLabelPtr_->setText(currentText + "\n" + "Receiving response..\nIts ok.\n");
+
+        if (service_status == 2)
+        {
+            QString currentText = statusLabelPtr_->text();
+            statusLabelPtr_->setText(currentText + "\n" + "Map is exist.\n");
+            // trigger to select map.
+        }
+        else if (service_status == 3)
+        {
+            QString currentText = statusLabelPtr_->text();
+            statusLabelPtr_->setText(currentText + "\n" + "Map doesn't exist.\n");
+        }
+        else if (service_status == 4)
+        {
+            saveMapBtnPtr_->setStyleSheet("background-color: white;"); 
+            QString currentText = statusLabelPtr_->text();
+            statusLabelPtr_->setText(currentText + "\n" + "Save Map ok.\n");
+
+        }
+        else if (service_status == 5)
+        {
+            QString currentText = statusLabelPtr_->text();
+            statusLabelPtr_->setText(currentText + "\n" + "Save Map Not ok.\n");
+        }
+        else if (service_status == 6)
+        {
+            QString currentText = statusLabelPtr_->text();
+        }
+        else if (service_status == 7)
+        {
+            QString currentText = statusLabelPtr_->text();
+        }
+        else if (service_status == 8)
+        {
+            QString currentText = statusLabelPtr_->text();
+            statusLabelPtr_->setText(currentText + "\n" + "Mapping Mode Ready.\n");
+        }
+        else if (service_status == 9)
+        {
+            QString currentText = statusLabelPtr_->text();
+        }
+        else if (service_status == 10)
+        {
+            QString currentText = statusLabelPtr_->text();
+            statusLabelPtr_->setText(currentText + "\n" + "Navi Mode Ready.\n");
+        }
+        else if (service_status == 11)
+        {
+            QString currentText = statusLabelPtr_->text();
+        }
+        else if (service_status == 12)
+        {
+            QString currentText = statusLabelPtr_->text();
+            statusLabelPtr_->setText(currentText + "\n" + "Remapping Mode Ok.\n");
+        }
+        else if (service_status == 13)
+        {
+            QString currentText = statusLabelPtr_->text();
+        }
+
     }
     saveMapBtnPtr_->setStyleSheet("background-color: white;"); 
     //openMapBtnPtr_->setStyleSheet("background-color: none;");
@@ -329,7 +378,18 @@ void ServiceClient::spin() {
 
 
 void ServiceClient::sendRequest(const std::string& request_string, const std::string& optional_param = "") {
+
+// # -1 [service not ok], 1 [service ok], 
+// # 2 [maps exist], 3 [maps do not exist], 
+// # 4 [save map ok], 5 [save map not ok]
+// # 6 [select map ok], 7 [select map not ok], 
+
+// # 8 [mapping mode ok], 9 [mapping mode not ok],
+// # 10 [navi mode ok], 11 [navi mode not ok]
+// # 12 [remapping mode ok], 13 [remapping mode not ok]
+
     auto request = std::make_shared<rom_interfaces::srv::WhichMaps::Request>();
+    
 
     request->request_string = request_string;
 
@@ -352,6 +412,11 @@ void ServiceClient::sendRequest(const std::string& request_string, const std::st
     try {
         auto response = future.get();
         emit responseReceived(response->status);
+        if (response->status == 2)
+        {
+            emit responseDataReceived(response);
+        }
+        
     } catch (const std::exception &e) {
         emit responseReceived(-1); // Error: response failure
     }
@@ -362,20 +427,7 @@ void MainWindow::saveMapClicked()
 {
     showBusyDialog();
     setButtonsEnabled(false);
-    /*
-    statusLabelPtr_->setText("\nမြေပုံအား default_map အမည်ဖြင့်သိမ်းဆည်းခြင်းနေပါသည်။ ... \n");
-
-    saveMapBtnPtr_->setStyleSheet("background-color: green;");
-
-    std::string a = "save_map";
-    std::string b = "office";
-    QMetaObject::invokeMethod(service_client_, [a, b, this]() { service_client_->sendRequest(a, b); });
-
-    statusLabelPtr_->setText("Sending save map request...\nString: \"save_map\" \nmap_name: \"default_map\"\n");
-    */
-
-    //-----------------------------------------------------------------------------------------------------------
-    // Prompt the user to enter a map name
+    
     bool ok;
 
     QRegExp regex("^[^_]+$"); // Regular expression: no underscores allowed
@@ -403,13 +455,35 @@ void MainWindow::saveMapClicked()
         hideBusyDialog();
         setButtonsEnabled(true);
     }
-    //-----------------------------------------------------------------------------------------------------------
+    
 }
 
 
 void MainWindow::openMapClicked()
 {
-    statusLabelPtr_->setText("\nimplement မလုပ်ရသေးပါ။\n");
+
+        const std::string a = "which_maps_do_you_have";
+        const std::string b = "";
+        QMetaObject::invokeMethod(service_clientPtr_, [a, b, this]() { service_clientPtr_->sendRequest(a, b); });
+
+        statusLabelPtr_->setText("Inquery Which Maps Do You Have ...\nSending \"request\" ...\n");
+        //ui->mappingBtn->setStyleSheet("background-color: green;");
+        // ui->mappingBtn->setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1f406e,stop: 0.8 #87CEEB, stop: 1 #132742);");
+        // ui->navigationBtn->setStyleSheet("background-color: white;");
+        // ui->remappingBtn->setStyleSheet("background-color: white;");
+
+        showBusyDialog();
+        setButtonsEnabled(false);
+
+        // ui->saveMapBtn->show();
+        // ui->openMapBtn->hide();
+        // ui->selectMapBtn->hide();
+        // ui->saveMapBtn->setEnabled(true);
+        // ui->openMapBtn->setEnabled(false);
+        // ui->selectMapBtn->setEnabled(false);
+    
+
+    
 }
 
 
@@ -745,6 +819,62 @@ void MainWindow::onCmdServiceResponse(bool success){
     
 
 }
+
+
+void MainWindow::onResponseDataReceived(std::shared_ptr<rom_interfaces::srv::WhichMaps::Response> response)
+{
+    if (!response || response->total_maps <= 0 || response->map_names.empty()) 
+    {
+        qDebug() << "Invalid or empty response received!";
+        return;
+    }
+
+    // Create a new dialog for displaying the map names
+    QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle("Select a Map");
+    dialog->setModal(true);
+
+    // Populate the QListWidget with map names
+    QListWidget *listWidget = new QListWidget(dialog);
+    QStringList list;
+    for (int i = 0; i < response->total_maps; ++i) {
+        list.append(QString::fromStdString(response->map_names[i]));
+    }
+    listWidget->addItems(list);
+
+    // Add OK and Cancel buttons
+    QPushButton *okButton = new QPushButton("OK", dialog);
+    QPushButton *cancelButton = new QPushButton("Cancel", dialog);
+
+    // Layout setup
+    QVBoxLayout *layout = new QVBoxLayout(dialog);
+    layout->addWidget(listWidget);
+    layout->addWidget(okButton);
+    layout->addWidget(cancelButton);
+    dialog->setLayout(layout);
+
+    // Handle button actions
+    // connect(okButton, &QPushButton::clicked, [dialog, listWidget, this]() {
+    //     QListWidgetItem *selectedItem = listWidget->currentItem();
+    //     if (selectedItem) {
+    //         qDebug() << "Selected map:" << selectedItem->text();
+    //         QMessageBox::information(this, "Map Selected", "You selected: " + selectedItem->text());
+    //     } else {
+    //         QMessageBox::warning(this, "No Selection", "Please select a map.");
+    //     }
+    //     dialog->accept();
+    // });
+
+    // connect(cancelButton, &QPushButton::clicked, dialog, &QDialog::reject);
+
+    // Show the dialog
+    dialog->exec();
+
+    // Clean up
+    delete dialog;
+
+}
+
 
 void MainWindow::applyStyles()
 {

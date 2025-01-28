@@ -40,6 +40,7 @@ public:
 
 signals:
     void responseReceived(int status);
+    void responseDataReceived(std::shared_ptr<rom_interfaces::srv::WhichMaps::Response> response);
 
 private:
     rclcpp::Node::SharedPtr node;
@@ -99,6 +100,7 @@ class MainWindow : public QMainWindow
 
     private slots:
         void onResponseReceived(int sum);  
+        void onResponseDataReceived(std::shared_ptr<rom_interfaces::srv::WhichMaps::Response> response);
 
         // action goal
         void on_goBtn_clicked();
