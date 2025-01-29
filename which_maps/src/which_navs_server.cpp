@@ -77,18 +77,17 @@ void topic_callback(const std_msgs::msg::String::SharedPtr msg)
   /// ၅။ nav mode change ပါ။
   else if (request_string == "navi")
   {
-    if (current_mode == "navi" ) 
-    {
-      RCLCPP_INFO(rclcpp::get_logger("which_nav_switcher"), "Mode '%s' is already active.", current_mode.c_str());
-    }
-    else 
-    {
+    // if (current_mode == "navi" ) 
+    // {
+    //   RCLCPP_INFO(rclcpp::get_logger("which_nav_switcher"), "Mode '%s' is already active.", current_mode.c_str());
+    // }
+   
       shutdownLaunch();
       
       startLaunch(nav2_pkg, nav2_localization_launch);
       RCLCPP_INFO(rclcpp::get_logger("which_nav_switcher"), "Sending : Response Status OK");
       current_mode = "navi";
-    }
+    
   }
   
   
