@@ -44,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     saveMapBtnPtr_ = ui->saveMapBtn;
     openMapBtnPtr_ = ui->openMapBtn;
     selectMapBtnPtr_ = ui->selectMapBtn;
+    selectMapBtnPtr_->setText("Relocate");
+
 
     x_spinBoxPtr_ = ui->xspinBox;
     y_spinBoxPtr_ = ui->yspinBox;
