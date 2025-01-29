@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+#define ROM_DEBUG 1
 
 std::string package_name = "which_maps";
 bool map_topic_exists = true;
@@ -34,12 +35,22 @@ const std::string carto_localization_launch = "localization.launch.py";
     
 const std::string remapping_launch = "something.launch.py";
 
-// switch_mode functions
+std::string package_directory = "/home/mr_robot/data/maps/";
 
+
+// /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py
+// /ros2_ws/install/bobo_carto/share/bobo_carto/launch/localization.launch.py
+
+// /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml
+// /ros2_ws/install/bobo_nav2/share/bobo_nav2/config/nav2_params.yaml
+
+
+// switch_mode functions
 void startLaunch(const std::string &package, const std::string &launch_file) 
 {
+      #ifdef ROM_DEBUG
         RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Starting launch file: %s/%s", package.c_str(), launch_file.c_str());
-
+      #endif
         // Fork a proce  to run the launch file
         launch_pid = fork();
         if (launch_pid == 0) {
@@ -58,7 +69,9 @@ void startLaunch(const std::string &package, const std::string &launch_file)
 void shutdownLaunch() 
 {
         if (launch_pid > 0) {
+          #ifdef ROM_DEBUG
             RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Shutting down current launch process (PID: %d)...", launch_pid);
+          #endif
             kill(launch_pid, SIGINT);
             int status;
             waitpid(launch_pid, &status, 0);
@@ -90,7 +103,6 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   if(request->request_string == "which_maps_do_you_have"){
     // if(check existance of map directory)
     
-    std::string package_directory = "/data/maps/";
     //RCLCPP_INFO(rclcpp::get_logger("which_maps"), "%s", package_directory.c_str());
     int yaml_file_count = 0;
     //std::string[] name_array;
@@ -103,14 +115,20 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
             {
                 //std::cout << "YAML File: " << entry.path().filename() << std::endl;
                 response->map_names.push_back(entry.path().filename().c_str());
-                RCLCPP_INFO(rclcpp::get_logger("which_maps"), "%s", entry.path().filename().c_str());
+
+                #ifdef ROM_DEBUG
+                  RCLCPP_INFO(rclcpp::get_logger("which_maps"), "%s", entry.path().filename().c_str());
+                #endif
                 ++yaml_file_count;
             }
         }
         std::cout << "Total .yaml files: " << yaml_file_count << std::endl;
         response->status = 2; // ok
         response->total_maps = yaml_file_count;
-        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+
+        #ifdef ROM_DEBUG
+          RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+        #endif 
 
     } 
     catch (const std::filesystem::filesystem_error& e) 
@@ -118,7 +136,9 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
         std::cerr << "Error accessing directory: " << e.what() << std::endl;
         response->total_maps = 0;
         response->status = 3; // not ok
-        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
+        #ifdef ROM_DEBUG
+          RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
+        #endif 
     }
   }
 
@@ -130,8 +150,10 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
     
     if (map_topic_exists) 
     {
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "The /map topic exists.");
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "map: %s", map_name.c_str());
+      #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "The /map topic exists.");
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "map: %s", map_name.c_str());
+      #endif 
 
       // Save the map
       // command စစ်ဆေးရန်။
@@ -141,7 +163,9 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       int ret_code = std::system(cmd.c_str());
 
       if(ret_code == 0) {
-        RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 1 executed successfully.");
+        #ifdef ROM_DEBUG
+          RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 1 executed successfully.");
+        #endif 
 
         std::string cmd2 = std::string("ros2 run cartographer_ros cartographer_pbstream_to_ros_map ") +
                             "-pbstream_filename /home/mr_robot/data/maps/" + map_name + ".pbstream " +
@@ -154,13 +178,17 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
         if (ret_code2 == 0)
         {
-          RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 2 executed successfully.");
+          #ifdef ROM_DEBUG
+            RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 2 executed successfully.");
+          #endif 
 
           std::string cmd3 = "sed -i \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
           int ret_code3 = std::system(cmd3.c_str());
           if(ret_code3==0)
           {
-            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 3 OK"); 
+            #ifdef ROM_DEBUG
+              RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 3 OK");
+            #endif 
 
             std::string cmd4 = "sed -i \"s|maps/.*\\.yaml|maps/" + map_name + ".yaml|g\" /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
 
@@ -168,53 +196,69 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
             if(ret_code4==0) 
             { 
-              RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 4 OK"); 
+              #ifdef ROM_DEBUG
+                RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 4 OK"); 
+              #endif 
               std::string cmd5 = "sed -i \"s|^image: .*\\.pgm|image: " + map_name + ".pgm|\" /home/mr_robot/data/maps/" + map_name + ".yaml";
               int ret_code5 = std::system(cmd5.c_str());
               if(ret_code5==0) 
               { 
-                RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 5 Ok."); response->status = 4; 
+                #ifdef ROM_DEBUG
+                  RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 5 Ok."); response->status = 4;
+                #endif 
               }
               else 
               { 
-                RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 5 Fail"); response->status = 5; 
+                #ifdef ROM_DEBUG
+                  RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 5 Fail"); response->status = 5;
+                #endif 
+                
               } 
             }
             else             
             { 
-              RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 4 Fail"); 
+              #ifdef ROM_DEBUG
+                RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 4 Fail"); 
+              #endif
               response->status = 5; 
             }
           }
           else
           {
             response->status = 5; // not ok
-            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 3 Fail");
+            #ifdef ROM_DEBUG
+              RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 3 Fail");
+            #endif
             return;
           }
           
-          //response->status = 1; // ok
-          //RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+
         } 
         else 
         {
-          RCLCPP_ERROR(rclcpp::get_logger("which_map_server"), "Map saver command 2 failed with return code: %d", ret_code2);
+          #ifdef ROM_DEBUG
+            RCLCPP_ERROR(rclcpp::get_logger("which_map_server"), "Map saver command 2 failed with return code: %d", ret_code2);
+            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
+          #endif 
           response->status = 5; // not ok
-          RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
         }
       }
       else 
       {
-        RCLCPP_ERROR(rclcpp::get_logger("which_map_server"), "Map saver command 1 failed with return code: %d", ret_code);
+        #ifdef ROM_DEBUG
+          RCLCPP_ERROR(rclcpp::get_logger("which_map_server"), "Map saver command 1 failed with return code: %d", ret_code);
+          RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
+        #endif
         response->status = 5; // not ok
-        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
       }    
     } 
     else 
     {
+      #ifdef ROM_DEBUG
         RCLCPP_WARN(rclcpp::get_logger("which_maps_server"), "The /map topic does not exist.");
-        response->status = 5; // not ok
         RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
+      #endif
+      response->status = 5; // not ok
     }
 
     
@@ -224,18 +268,92 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   /// ၃။ မြေပုံရွေးပါ။
   else if (request->request_string == "select_map") // Select map ထည့်၇န်
   {   
-    // map selector
-
     std::string map_name = request->map_name_to_select;
     if(map_name == "")
     {
-      response->status = -1; // not ok
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
+      #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : No Map Name ");
+      #endif
+      response->status = 7; // not ok
+      // should return or not ???
     }
     else 
     {
-      response->status = 1; // ok
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      #endif
+
+      ////////////////////////////////////////////////////////////////////////////////////////
+      // ၁ ၊ name.pgm , name.yaml , name.pbstream ရှိမရှိစစ်ဆေးပါ။ မရှိရင် error (7)
+      
+
+      std::string pgm_file = package_directory + map_name + ".pgm";
+      std::string yaml_file = package_directory + map_name + ".yaml";
+      std::string pbstream_file = package_directory + map_name + ".pbstream";
+
+      #ifdef ROM_DEBUG
+        RCLCPP_INFO_STREAM(rclcpp::get_logger("logger_name"), pgm_file);
+      #endif
+
+      if (std::filesystem::exists(pgm_file) && std::filesystem::exists(yaml_file) && std::filesystem::exists(pbstream_file)) 
+      {
+        #ifdef ROM_DEBUG
+          RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), " : All required files exist for map:");
+        #endif
+        // Do Your Work
+        // ၂ ၊ nav2_param.yaml နဲ့ carto localization launch မှာ သက်ဆိုင်ရာ yaml နဲ့ pbstream ပြင်ပါ။ မရရင် error(7) 
+        std::string cmd1 = "sed -i \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
+        int ret_code1 = std::system(cmd1.c_str());
+        if(ret_code1==0)
+        {
+          // execute command 2 
+          std::string cmd2 = "sed -i \"s|maps/.*\\.yaml|maps/" + map_name + ".yaml|g\" /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
+          int ret_code2 = std::system(cmd2.c_str());
+          if(ret_code2==0)
+          {
+            #ifdef ROM_DEBUG
+              RCLCPP_INFO(rclcpp::get_logger("select_maps"), " : Map Select Ok, Relaunching ... ");
+            #endif
+
+             // ၃ ၊ carto နဲ့ navigation  ကို relaunch လုပ်ပါ။
+            shutdownLaunch();
+            startLaunch(cartographer_pkg, carto_localization_launch);
+            #ifdef ROM_DEBUG
+              RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), " Map Relaunch OK");
+            #endif
+            current_mode = "navi";
+      
+            trigger_msg.data = "navi";
+            global_publisher->publish(trigger_msg);
+            response->status = 6; // ok
+          }
+          else 
+          {
+            #ifdef ROM_DEBUG
+              RCLCPP_INFO(rclcpp::get_logger("select_maps"), " : Command 2 Execute Failed ");
+            #endif
+            response->status = 7; // not ok
+            // should return or not ??
+          }
+        }
+        else
+        {
+          #ifdef ROM_DEBUG
+            RCLCPP_INFO(rclcpp::get_logger("select_maps"), " : Command 1 Execute Failed ");
+          #endif
+          response->status = 7; // not ok
+          // should return or not ??
+        }
+      } 
+      else 
+      {
+        #ifdef ROM_DEBUG
+          RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), " : Not Exist ");
+        #endif
+        response->status = 7; // not ok
+        // should return or not ??
+      
+      } 
     }
   }
 
@@ -244,13 +362,18 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   {
     if (current_mode == "mapping" ) 
     {
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
+      #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
+      #endif
     }
     else 
     {
       shutdownLaunch();
-      
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+
+
+      #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      #endif
       response->status = 8; // ok
       startLaunch(cartographer_pkg, carto_mapping_launch );
       current_mode = "mapping";
@@ -265,14 +388,18 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   {
     if (current_mode == "navi" ) 
     {
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
+      #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", current_mode.c_str());
+      #endif
     }
     else 
     {
       shutdownLaunch();
       response->status = 10; // ok
       startLaunch(cartographer_pkg, carto_localization_launch);
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      #endif
       current_mode = "navi";
       
       trigger_msg.data = "navi";
@@ -286,14 +413,18 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   {
     if (current_mode == "remapping") 
     {
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
+      #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Mode '%s' is already active.", request->request_string.c_str());
+      #endif
     }
     else 
     {
       shutdownLaunch();
       startLaunch(cartographer_pkg, remapping_launch);
       response->status = 12; // ok
-      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+      #endif
       current_mode = "remapping";
 
       trigger_msg.data = "remapping";
@@ -306,8 +437,10 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   {
     response->total_maps = 0;
     response->status = -1; // not ok
-    RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
-    RCLCPP_WARN(rclcpp::get_logger("which_maps_server"), "Unknown mode '%s'.", request->request_string.c_str());
+    #ifdef ROM_DEBUG
+      RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
+      RCLCPP_WARN(rclcpp::get_logger("which_maps_server"), "Unknown mode '%s'.", request->request_string.c_str());
+    #endif
   }
 
   /// ၇။ ဘာမှမဟုတ်။
@@ -326,9 +459,10 @@ int main(int argc, char **argv)
   // latch publisher
   global_publisher = node->create_publisher<std_msgs::msg::String>("which_nav", rclcpp::QoS(1).transient_local());
 
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to answer maps.");
-
-  RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Fist Time trigger to Nav mode");
+  #ifdef ROM_DEBUG
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to answer maps.");
+    RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Fist Time trigger to Nav mode");
+  #endif
 
   startLaunch(cartographer_pkg, carto_localization_launch);
   

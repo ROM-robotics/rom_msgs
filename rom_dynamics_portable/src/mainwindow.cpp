@@ -74,7 +74,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
 
     connect(saveMapBtnPtr_, &QPushButton::clicked, this, &MainWindow::saveMapClicked);
     connect(openMapBtnPtr_, &QPushButton::clicked, this, &MainWindow::openMapClicked);
-    connect(selectMapBtnPtr_, &QPushButton::clicked, this, &MainWindow::selectMapClicked);
+    // connect(selectMapBtnPtr_, &QPushButton::clicked, this, &MainWindow::selectMapClicked);
+    connect(this, &MainWindow::selectMap, this, &MainWindow::selectMapClicked);
 
     connect(btnGoToGoal_, &QPushButton::clicked, this, &MainWindow::on_goBtn_clicked);
     connect(btnCancelGoal_, &QPushButton::clicked, this, &MainWindow::on_cancelBtn_clicked);
@@ -265,7 +266,6 @@ void MainWindow::on_btnEstop_clicked()
     statusLabelPtr_->setText("\nActivating E-Stop ...\n");
 }
 
-
 void MainWindow::onResponseReceived(int service_status) {
 
 // # -1 [service not ok], 1 [service ok], 
@@ -311,10 +311,12 @@ void MainWindow::onResponseReceived(int service_status) {
         else if (service_status == 6)
         {
             QString currentText = statusLabelPtr_->text();
+            statusLabelPtr_->setText(currentText + "\n" + "Select map ok.\n");
         }
         else if (service_status == 7)
         {
             QString currentText = statusLabelPtr_->text();
+            statusLabelPtr_->setText(currentText + "\n" + "Select map Not ok.\n");
         }
         else if (service_status == 8)
         {
@@ -393,6 +395,7 @@ void ServiceClient::sendRequest(const std::string& request_string, const std::st
 
     request->request_string = request_string;
 
+    // reconfigure for save_map and select_map
     if (request_string == "save_map") {
         request->map_name_to_save = optional_param;
     } 
@@ -400,23 +403,31 @@ void ServiceClient::sendRequest(const std::string& request_string, const std::st
         request->map_name_to_select = optional_param;
     }
     
-
+    // check service        
     if (!client_->wait_for_service(std::chrono::seconds(5))) {
         emit responseReceived(-1); // Error: service not available
         return;
     }
 
+    // send request
     auto future = client_->async_send_request(request);
     future.wait();
 
-    try {
+    // get response
+    try 
+    {
         auto response = future.get();
+
+        // response for label updating
         emit responseReceived(response->status);
+
+        // response for map exist or not
         if (response->status == 2)
         {
             emit responseDataReceived(response);
         }
         
+    // response for error
     } catch (const std::exception &e) {
         emit responseReceived(-1); // Error: response failure
     }
@@ -487,9 +498,28 @@ void MainWindow::openMapClicked()
 }
 
 
-void MainWindow::selectMapClicked()
+void MainWindow::selectMapClicked(std::string map_name)
 {
-    statusLabelPtr_->setText("\nimplement မလုပ်ရသေးပါ။\n");
+    QString statusText = QString(QString::fromStdString(map_name) + " ရွေးထားပါသည် ။ \n");
+    statusLabelPtr_->setText(statusText);
+    
+    // service client 
+    // string request_string # which_map_do_you_have | save_map | select_map | mapping | navi | remapping
+    // string map_name_to_save
+    // string map_name_to_select
+        const std::string a = "select_map";
+        std::string name_only = map_name.substr(0, map_name.find_last_of('.'));
+        const std::string b = name_only;
+        QMetaObject::invokeMethod(service_clientPtr_, [a, b, this]() { service_clientPtr_->sendRequest(a, b); });
+
+        QString updateText = QString(statusText + " sending select map request ... \n");
+        statusLabelPtr_->setText(updateText);
+     
+
+        showBusyDialog();
+        setButtonsEnabled(false);
+
+
 }
 
 
@@ -854,18 +884,24 @@ void MainWindow::onResponseDataReceived(std::shared_ptr<rom_interfaces::srv::Whi
     dialog->setLayout(layout);
 
     // Handle button actions
-    // connect(okButton, &QPushButton::clicked, [dialog, listWidget, this]() {
-    //     QListWidgetItem *selectedItem = listWidget->currentItem();
-    //     if (selectedItem) {
-    //         qDebug() << "Selected map:" << selectedItem->text();
-    //         QMessageBox::information(this, "Map Selected", "You selected: " + selectedItem->text());
-    //     } else {
-    //         QMessageBox::warning(this, "No Selection", "Please select a map.");
-    //     }
-    //     dialog->accept();
-    // });
+    connect(okButton, &QPushButton::clicked, [dialog, listWidget, this]() {
+        QListWidgetItem *selectedItem = listWidget->currentItem();
+        if (selectedItem) {
+            #ifdef ROM_Q_DEBUG 
+                qDebug() << "Selected map:" << selectedItem->text();
+            #endif
+            QMessageBox::information(this, "Map Selected", "You selected: " + selectedItem->text());
 
-    // connect(cancelButton, &QPushButton::clicked, dialog, &QDialog::reject);
+            // to trigger select map
+            emit selectMap( selectedItem->text().toStdString() );
+
+        } else {
+            QMessageBox::warning(this, "No Selection", "Please select a map.");
+        }
+        dialog->accept();
+    });
+
+    connect(cancelButton, &QPushButton::clicked, dialog, &QDialog::reject);
 
     // Show the dialog
     dialog->exec();

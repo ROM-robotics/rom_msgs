@@ -71,6 +71,8 @@ class MainWindow : public QMainWindow
     signals:
         void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr msg);
         void sendCancelGoal(const rclcpp_action::GoalUUID& goal_uuid);
+
+        void selectMap(std::string map_name);
     
     public slots:
         void displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg);
@@ -82,7 +84,7 @@ class MainWindow : public QMainWindow
 
         void saveMapClicked();
         void openMapClicked();
-        void selectMapClicked();
+        void selectMapClicked(std::string map_name);
 
         void labelEditForSetForward();
         void labelEditForSetRight();
