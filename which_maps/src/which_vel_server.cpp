@@ -3,6 +3,9 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "rom_interfaces/srv/which_vel.hpp" // Replace with your package's service file if custom
 
+const double linear_vel = 0.090;
+const double angular_vel = 0.2;
+
 //#define ROM_DEBUG 1
 class CmdVelServiceNode : public rclcpp::Node
 {
@@ -36,7 +39,7 @@ private:
         // Parse the command and set twist values accordingly
         if (command == "forward")
         {
-            twist.linear.x = 0.4;
+            twist.linear.x = linear_vel;
             twist.angular.z = 0.0;
             should_publish_ = true;
 
@@ -51,13 +54,13 @@ private:
         else if (command == "left")
         {
             twist.linear.x = 0.0;
-            twist.angular.z = 0.2;
+            twist.angular.z = angular_vel;
             should_publish_ = true;
         }
         else if (command == "right")
         {
             twist.linear.x = 0.0;
-            twist.angular.z = -0.2;
+            twist.angular.z = -1.0 * (angular_vel);
             should_publish_ = true;
         }
         else
