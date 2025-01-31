@@ -29,7 +29,7 @@ function(ament_cmake_uninstall_target_remove_empty_directories path)
 endfunction()
 
 # uninstall files installed using the standard install() function
-set(install_manifest "/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_portable/build/install_manifest.txt")
+set(install_manifest "/home/mr_robot/Desktop/Git/bobo_simulation/developer_packages_for_container/rom_msgs/rom_dynamics_portable/build/install_manifest.txt")
 if(NOT EXISTS "${install_manifest}")
   message(FATAL_ERROR "Cannot find install manifest: ${install_manifest}")
 endif()

@@ -16,7 +16,6 @@
 #define ROM_DEBUG 1
 
 std::string package_name = "which_maps";
-bool map_topic_exists = true;
 
 std::shared_ptr<rclcpp::Publisher<std_msgs::msg::String>> global_publisher;
 auto trigger_msg = std_msgs::msg::String();
@@ -145,11 +144,10 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
   
   /// ၂။ မြေပုံ save ပါ။
   else if (request->request_string == "save_map"){
+
     // map saver
     std::string map_name = request->map_name_to_save;
-    
-    if (map_topic_exists) 
-    {
+
       #ifdef ROM_DEBUG
         RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "The /map topic exists.");
         RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "map: %s", map_name.c_str());
@@ -171,8 +169,8 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
                             "-pbstream_filename /home/mr_robot/data/maps/" + map_name + ".pbstream " +
                             "-map_filename /home/mr_robot/data/maps/" + map_name + ".pgm " +
                             "-yaml_filename /home/mr_robot/data/maps/" + map_name + ".yaml && "  
-                            "mv /home/mr_robot/map.pgm /home/mr_robot/data/maps/"  + map_name + ".pgm && "
-                            "mv /home/mr_robot/map.yaml /home/mr_robot/data/maps/"  + map_name + ".yaml";
+                            "mv /home/mr_robot/devel_ws/map.pgm /home/mr_robot/data/maps/"  + map_name + ".pgm && "
+                            "mv /home/mr_robot/devel_ws/map.yaml /home/mr_robot/data/maps/"  + map_name + ".yaml";
         // second command
         int ret_code2 = std::system(cmd2.c_str());
 
@@ -202,9 +200,9 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
               std::string cmd5 = "sed -i \"s|^image: .*\\.pgm|image: " + map_name + ".pgm|\" /home/mr_robot/data/maps/" + map_name + ".yaml";
               int ret_code5 = std::system(cmd5.c_str());
               if(ret_code5==0) 
-              { 
+              { // ******************************* all done ***************************** //
                 #ifdef ROM_DEBUG
-                  RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 5 Ok."); response->status = 4;
+                  RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 5 Ok. all done."); response->status = 4;
                 #endif 
               }
               else 
@@ -251,17 +249,6 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
         #endif
         response->status = 5; // not ok
       }    
-    } 
-    else 
-    {
-      #ifdef ROM_DEBUG
-        RCLCPP_WARN(rclcpp::get_logger("which_maps_server"), "The /map topic does not exist.");
-        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status not OK");
-      #endif
-      response->status = 5; // not ok
-    }
-
-    
   }
 
 
@@ -272,7 +259,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
     if(map_name == "")
     {
       #ifdef ROM_DEBUG
-        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : No Map Name ");
+        RCLCPP_INFO(rclcpp::get_logger("Open Map"), "Sending : No Map Name ");
       #endif
       response->status = 7; // not ok
       // should return or not ???
@@ -280,7 +267,7 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
     else 
     {
       #ifdef ROM_DEBUG
-        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Sending : Response Status OK");
+        RCLCPP_INFO(rclcpp::get_logger("Open Map"), "Sending : Response Status OK");
       #endif
 
       ////////////////////////////////////////////////////////////////////////////////////////
@@ -292,13 +279,13 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
       std::string pbstream_file = package_directory + map_name + ".pbstream";
 
       #ifdef ROM_DEBUG
-        RCLCPP_INFO_STREAM(rclcpp::get_logger("logger_name"), pgm_file);
+        RCLCPP_INFO_STREAM(rclcpp::get_logger("Select Map"), pgm_file);
       #endif
 
       if (std::filesystem::exists(pgm_file) && std::filesystem::exists(yaml_file) && std::filesystem::exists(pbstream_file)) 
       {
         #ifdef ROM_DEBUG
-          RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), " : All required files exist for map:");
+          RCLCPP_INFO(rclcpp::get_logger("Select Map"), " : All required files exist for map:");
         #endif
         // Do Your Work
         // ၂ ၊ nav2_param.yaml နဲ့ carto localization launch မှာ သက်ဆိုင်ရာ yaml နဲ့ pbstream ပြင်ပါ။ မရရင် error(7) 
@@ -312,20 +299,76 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
           if(ret_code2==0)
           {
             #ifdef ROM_DEBUG
-              RCLCPP_INFO(rclcpp::get_logger("select_maps"), " : Map Select Ok, Relaunching ... ");
+              RCLCPP_INFO(rclcpp::get_logger("Select Map"), " : Map Select Ok, Relaunching ... ");
             #endif
 
-             // ၃ ၊ carto နဲ့ navigation  ကို relaunch လုပ်ပါ။
-            shutdownLaunch();
-            startLaunch(cartographer_pkg, carto_localization_launch);
-            #ifdef ROM_DEBUG
-              RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), " Map Relaunch OK");
-            #endif
+            // // ၃ ၊ carto နဲ့ navigation  ကို relaunch လုပ်ပါ။
+            // shutdownLaunch();
+            // startLaunch(cartographer_pkg, carto_localization_launch);
+            // #ifdef ROM_DEBUG
+            //   RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Carto Map Relaunch OK");
+            // #endif
+
+            /* publish navi မြေပုံကို service call နဲ့ ချိန်းနိုင်မယ်၊ nav2 node တွေကိုလည်း ပြန် restart မလိုရင် navi ကို publish မလုပ်နဲ့။
             current_mode = "navi";
-      
             trigger_msg.data = "navi";
             global_publisher->publish(trigger_msg);
-            response->status = 6; // ok
+            */
+
+            /* အဲ့ဒီ အစား အောက်ပါအတိုင်း မြေပုံချိန်းဖို့ service call မယ်။ */
+            std::string map_path = "/home/mr_robot/data/maps/";
+            std::string path_to_map = map_path + map_name + ".yaml";
+            
+            // std::string map_cmd = "ros2 service call /map_server/load_map nav2_msgs/srv/LoadMap \"{map_url: \'"+ path_to_map +"\'}\"";
+            std::string map_cmd = "ros2 service call /map_server/load_map nav2_msgs/srv/LoadMap \"{map_url: \'"+ path_to_map +"\'}\" > NUL 2>&1";
+            int map_ret_code = std::system(map_cmd.c_str());
+            if (map_ret_code == 0)
+            {
+              #ifdef ROM_DEBUG
+                RCLCPP_INFO(rclcpp::get_logger("select_maps Service Call Ok"), " : Map change service call OK ");
+              #endif
+
+              // clear costmap commands
+              //std::string clear_costmap_cmd = "ros2 service call /clear_costmap/clear_costmap std_srvs/srv/Empty \"{}\"";
+              std::string clear_costmap_cmd = "ros2 service call /global_costmap/clear_around_global_costmap nav2_msgs/srv/ClearCostmapAroundRobot && ros2 service call /local_costmap/clear_around_local_costmap nav2_msgs/srv/ClearCostmapAroundRobot";
+
+              int clear_costmap_cmd_ret = std::system(clear_costmap_cmd.c_str());
+              if (clear_costmap_cmd_ret == 0)
+              {
+                #ifdef ROM_DEBUG
+                  RCLCPP_INFO(rclcpp::get_logger("select_maps Service Call Ok"), " : Clear costmap service call OK ");
+                #endif
+
+                /***********************************************  OK  ***********************************************/
+                // ၃ ၊ carto နဲ့ navigation  ကို relaunch လုပ်ပါ။
+                shutdownLaunch();
+                startLaunch(cartographer_pkg, carto_localization_launch);
+                #ifdef ROM_DEBUG
+                  RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Carto Map Relaunch OK");
+                #endif
+
+                // OR amcl restart
+                /***********************************************  OK  ***********************************************/
+
+                response->status = 6; // ok
+              }
+              else 
+              {                  
+                #ifdef ROM_DEBUG
+                  RCLCPP_INFO(rclcpp::get_logger("select_maps"), " : Clear costmap service call Failed ");
+                #endif
+                response->status = 7; // not ok
+                // should return or not ??
+              }
+            }
+            else 
+            {
+              #ifdef ROM_DEBUG
+                RCLCPP_INFO(rclcpp::get_logger("select_maps"), " : Map change service call Failed ");
+              #endif
+              response->status = 7; // not ok
+              // should return or not ??
+            }
           }
           else 
           {

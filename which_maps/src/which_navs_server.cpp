@@ -15,8 +15,8 @@ pid_t launch_pid = -1;
 const std::string robot_name = std::getenv("ROM_ROBOT_MODEL");
 
 const std::string nav2_pkg = robot_name +"_nav2";                
-const std::string nav2_mapping_launch = "navigation.launch.py";
-const std::string nav2_localization_launch = "navigation_with_map_server.launch.py";
+const std::string nav2_mapping_launch = "navigation_mapping_composable.launch.py";
+const std::string nav2_localization_launch = "navigation_localization_composable.launch.py";
 const std::string remapping_launch = "something.launch.py";
 
 void startLaunch(const std::string &package, const std::string &launch_file) 
@@ -76,17 +76,18 @@ void topic_callback(const std_msgs::msg::String::SharedPtr msg)
   /// ၅။ nav mode change ပါ။
   else if (request_string == "navi")
   {
-    // if (current_mode == "navi" ) 
-    // {
-    //   RCLCPP_INFO(rclcpp::get_logger("which_nav_switcher"), "Mode '%s' is already active.", current_mode.c_str());
-    // }
-   
+    if (current_mode == "navi" ) 
+    {
+      RCLCPP_INFO(rclcpp::get_logger("which_nav_switcher"), "Mode '%s' is already active.", current_mode.c_str());
+    }
+    else 
+    {
       shutdownLaunch();
       
       startLaunch(nav2_pkg, nav2_localization_launch);
       RCLCPP_INFO(rclcpp::get_logger("which_nav_switcher"), "Sending : Response Status OK");
       current_mode = "navi";
-    
+    }
   }
   
   

@@ -46,7 +46,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     selectMapBtnPtr_ = ui->selectMapBtn;
     selectMapBtnPtr_->setText("Relocate");
 
-
     x_spinBoxPtr_ = ui->xspinBox;
     y_spinBoxPtr_ = ui->yspinBox;
     z_spinBoxPtr_ = ui->zspinBox;
@@ -892,7 +891,7 @@ void MainWindow::onResponseDataReceived(std::shared_ptr<rom_interfaces::srv::Whi
             #ifdef ROM_Q_DEBUG 
                 qDebug() << "Selected map:" << selectedItem->text();
             #endif
-            QMessageBox::information(this, "Map Selected", "You selected: " + selectedItem->text());
+            //QMessageBox::information(this, "Map Selected", "You selected: " + selectedItem->text());
 
             // to trigger select map
             emit selectMap( selectedItem->text().toStdString() );
