@@ -1,0 +1,93 @@
+cmake_minimum_required(VERSION 3.8)
+project(rom_dynamics_app)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
+# find dependencies
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(rom_interfaces REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(rclcpp_action REQUIRED)
+
+find_package(rviz_common REQUIRED)
+find_package(rviz_rendering REQUIRED)
+find_package(rviz_default_plugins REQUIRED)
+
+
+find_package(Qt5 REQUIRED COMPONENTS Widgets)
+#find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+#qt_standard_project_setup()
+
+#---------------- အင်ကလု ----------------#
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/ros2/header)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/ros2/source)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
+set(CMAKE_AUTOUIC_SEARCH_PATHS src)
+set(UI_FILES src/mainwindow.ui)
+qt5_wrap_ui(UI_HEADERS ${UI_FILES})
+
+qt_add_resources(ROM_DYNAMICS "resources"
+    FILES resources.qrc
+)
+
+# qt5_add_resources(resources_RCC resources.qrc)
+# target_sources(ROM_DYNAMICS PRIVATE ${resources_RCC})
+
+add_executable(ROM_DYNAMICS
+    src/main.cpp
+    src/mainwindow.h
+    src/mainwindow.cpp
+    ros2/header/cmd_service_client.h
+    ros2/source/cmd_service_client.cpp
+    ros2/header/pose_subscriber.h
+    ros2/source/pose_subscriber.cpp
+    ros2/header/rom_algorithm.h
+    ros2/header/mode_subscriber.h
+    ros2/source/mode_subscriber.cpp
+    ros2/header/navigate_to_pose_client.h
+    ros2/source/navigate_to_pose_client.cpp
+    ros2/header/map_subscriber.h
+    ros2/source/map_subscriber.cpp
+    ${UI_HEADERS}
+)
+
+
+
+
+target_link_libraries(ROM_DYNAMICS ${Qt5Core_LIBRARIES})
+target_link_libraries(ROM_DYNAMICS ${Qt5Widgets_LIBRARIES})
+ament_target_dependencies(ROM_DYNAMICS rclcpp rclcpp_action std_msgs geometry_msgs nav_msgs nav2_msgs tf2 tf2_geometry_msgs rom_interfaces)
+
+#---------------- END -----------------#
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  # the following line skips the linter which checks for copyrights
+  # comment the line when a copyright and license is added to all source files
+  set(ament_cmake_copyright_FOUND TRUE)
+  # the following line skips cpplint (only works in a git repo)
+  # comment the line when this package is in a git repo and when
+  # a copyright and license is added to all source files
+  set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()

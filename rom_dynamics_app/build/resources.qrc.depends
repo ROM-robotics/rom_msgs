@@ -1,0 +1,9 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/">
+    <file>ico/eraser.png</file>
+    <file>ico/waypoint.png</file>
+    <file>ico/normal.png</file>
+    <file>ico/stop.png</file>
+    <file>ico/zoom.png</file>
+</qresource>
+</RCC>
