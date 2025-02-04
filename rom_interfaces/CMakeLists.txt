@@ -16,7 +16,7 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Num.msg"
   "msg/Sphere.msg"
-  "srv/AddThreeInts.srv"
+  "srv/ConstructYaml.srv"
   "srv/WhichMaps.srv"
   "srv/WhichVel.srv"
   DEPENDENCIES geometry_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg

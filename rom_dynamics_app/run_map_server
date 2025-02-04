@@ -1,0 +1,4 @@
+!#/bin/bash
+cd ~/data/maps
+ros2 run nav2_map_server map_server --ros-args -p yaml_filename:=office1.yaml &
+ros2 lifecycle set /map_server configure && ros2 lifecycle set /map_server activate

@@ -69,3 +69,52 @@ void CmdServiceClient::setRight(){
 void CmdServiceClient::setStop(){
     sendCommand("stop");
 }
+
+
+ConstructYamlServiceClient::ConstructYamlServiceClient(const std::string &service_name, QObject *parent)
+    : QObject(parent), Node("construct_yaml_client"), service_name_(service_name)
+{
+    // Create the service client
+    goal_client_ = this->create_client<rom_interfaces::srv::ConstructYaml>(service_name);
+
+    
+}
+
+void ConstructYamlServiceClient::onSendWaypointsGoal(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list)
+{
+    #ifdef ROM_DEBUG 
+            RCLCPP_WARN(this->get_logger(), "getting wp_list in slot function.");
+        #endif
+    // Create a request
+    auto request = std::make_shared<rom_interfaces::srv::ConstructYaml::Request>();
+    // FOR loop ပါတ်ပြီး request ထဲထည့်ရန် 
+    // Iterate over waypoints and add to the request
+    for (const auto &pair : *wp_list)  // Dereferencing shared_ptr
+    {
+        const std::string &wp_name = pair.first;
+        const geometry_msgs::msg::Pose &pose = pair.second;
+        
+        request->pose_names.push_back(wp_name);
+        
+        request->poses.push_back(pose);
+    }
+
+    // Wait for the service to become available
+    while (!goal_client_->wait_for_service(std::chrono::seconds(1)))
+    {
+        #ifdef ROM_DEBUG 
+            RCLCPP_WARN(this->get_logger(), "Waiting for service '%s' to become available...", service_name_.c_str());
+        #endif
+            //emit serviceResponse(false);
+        return;
+    }
+    #ifdef ROM_DEBUG 
+        RCLCPP_INFO(this->get_logger(), "Service client ready for '%s'", service_name_.c_str());
+    #endif
+
+
+    // Send the request asynchronously
+    auto future = goal_client_->async_send_request(request);
+    future.wait();
+
+}

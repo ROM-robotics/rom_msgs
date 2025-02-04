@@ -704,11 +704,11 @@ color: white;</string>
 border: 2px solid #FF8C00;
 background-color: white;
 color: red;
-font-size: 36px;
+font-size: 26px;
 font-weight: bold;</string>
     </property>
     <property name="text">
-     <string>Cancel</string>
+     <string>Waypoints</string>
     </property>
     <property name="iconSize">
      <size>
@@ -832,7 +832,7 @@ font-size: 35px;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color: white;
-background-image: url(/home/mr_robot/Desktop/Git/migrate_qt/rom_dynamics_app/ico/eraser.png);
+background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);
 background-repeat: no-repeat; 
 background-position: center; 
 border: 2px solid #979ba1;</string>
@@ -859,7 +859,7 @@ border: 2px solid #979ba1;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color: white;
-background-image: url(/home/mr_robot/Desktop/Git/migrate_qt/rom_dynamics_app/ico/waypoint.png);
+background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);
 background-repeat: no-repeat; 
 background-position: center; 
 border: 2px solid #979ba1;</string>
@@ -886,7 +886,7 @@ border: 2px solid #979ba1;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color: white;
-background-image: url(/home/mr_robot/Desktop/Git/migrate_qt/rom_dynamics_app/ico/normal.png);
+background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);
 background-repeat: no-repeat; 
 background-position: center; 
 border: 3px solid white;</string>
@@ -913,7 +913,7 @@ border: 3px solid white;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color: white;
-background-image: url(/home/mr_robot/Desktop/Git/migrate_qt/rom_dynamics_app/ico/zoom.png);
+background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);
 background-repeat: no-repeat; 
 background-position: center; 
 border: 2px solid #979ba1;</string>
@@ -940,7 +940,7 @@ border: 2px solid #979ba1;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color: white;
-background-image: url(/home/mr_robot/Desktop/Git/migrate_qt/rom_dynamics_app/ico/wall.png);
+background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);
 background-repeat: no-repeat; 
 background-position: center; 
 border: 2px solid #979ba1;</string>

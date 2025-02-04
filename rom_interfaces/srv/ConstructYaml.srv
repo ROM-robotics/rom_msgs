@@ -1,0 +1,10 @@
+# ConstructYaml.msg
+
+# List of names for the poses
+string[] pose_names
+
+# Corresponding list of PoseStamped messages
+geometry_msgs/Pose[] poses
+
+int16 size
+---

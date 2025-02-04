@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     setvbuf(stdout, nullptr, _IONBF, BUFSIZ); // stdout IO NO buffer
     rclcpp::init(argc, argv);
     std::shared_ptr<CmdServiceClient> cmd_service_client = nullptr;
+    std::shared_ptr<ConstructYamlServiceClient> yaml_service_client = nullptr;
     std::shared_ptr<Subscriber> pose_subscriber = nullptr;
     std::shared_ptr<ModeSubscriber> mode_subscriber = nullptr;
     std::shared_ptr<NavigateToPoseClient> goal_action_client = nullptr;
@@ -30,11 +31,13 @@ int main(int argc, char *argv[])
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
     goal_action_client = std::make_shared<NavigateToPoseClient>("/navigate_to_pose");
     map_subscriber = std::make_shared<MapSubscriber>("/map");
+    yaml_service_client = std::make_shared<ConstructYamlServiceClient>("/construct_yaml");
     
     pose_mode_executor_mt->add_node(pose_subscriber);
     pose_mode_executor_mt->add_node(mode_subscriber);
 
     cmd_executor_st->add_node(cmd_service_client);
+    cmd_executor_st->add_node(yaml_service_client);
 
     action_executor_mt->add_node(goal_action_client);
     action_executor_mt->add_node(map_subscriber);
@@ -81,13 +84,19 @@ int main(int argc, char *argv[])
     QObject::connect(mainWindow.getUi()->btnStop, &QPushButton::clicked, &mainWindow, &MainWindow::labelEditForSetStop);
 
     QObject::connect(cmd_service_client.get(), &CmdServiceClient::serviceResponse, &mainWindow, &MainWindow::onCmdServiceResponse);
+    // construct yaml
+    QObject::connect(&mainWindow, &MainWindow::sendWaypointsGoal, yaml_service_client.get(), &ConstructYamlServiceClient::onSendWaypointsGoal);
+
+
+
 
     // Action Goal
     QObject::connect(&mainWindow, &MainWindow::sendNavigationGoal, goal_action_client.get(), &NavigateToPoseClient::onSendNavigationGoal);
     QObject::connect(goal_action_client.get(), &NavigateToPoseClient::navigationResult, &mainWindow, &MainWindow::onNavigationResult);
-    // Cancel Goal
-    QObject::connect(goal_action_client.get(), &NavigateToPoseClient::sendGoalId, &mainWindow, &MainWindow::onSendGoalId);
-    QObject::connect(&mainWindow, &MainWindow::sendCancelGoal, goal_action_client.get(), &NavigateToPoseClient::onSendCancelGoal);
+    
+    // Cancel Goal this need to change waypoints goal
+    //QObject::connect(goal_action_client.get(), &NavigateToPoseClient::sendGoalId, &mainWindow, &MainWindow::onSendGoalId);
+    //QObject::connect(&mainWindow, &MainWindow::sendCancelGoal, goal_action_client.get(), &NavigateToPoseClient::onSendCancelGoal);
     
     //map
     QObject::connect(map_subscriber.get(), &MapSubscriber::updateMap, &mainWindow, &MainWindow::onUpdateMap, Qt::QueuedConnection); // Connect the updateMap signal to onupdateMap, Qt::QueuedConnection);

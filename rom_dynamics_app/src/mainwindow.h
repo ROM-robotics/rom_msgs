@@ -26,6 +26,7 @@
 #include <QGraphicsView>
 #include <QMouseEvent>
 #include <QDebug>
+#include <unordered_map>
 // --------------------mapping app
 
 #define ROM_DEBUG 1
@@ -93,9 +94,11 @@ class MainWindow : public QMainWindow
 
     signals:
         void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr msg);
-        void sendCancelGoal(const rclcpp_action::GoalUUID& goal_uuid);
+        //void sendCancelGoal(const rclcpp_action::GoalUUID& goal_uuid);
 
         void selectMap(std::string map_name);
+
+        void sendWaypointsGoal(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list);
     
     public slots:
         void displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg);
@@ -115,7 +118,7 @@ class MainWindow : public QMainWindow
         void labelEditForSetStop();
 
         void onNavigationResult(const std::string& result_status);
-        void onSendGoalId(const rclcpp_action::GoalUUID& goal_uuid);
+        //void onSendGoalId(const rclcpp_action::GoalUUID& goal_uuid);
 
         void onCmdServiceResponse(bool success);
 
@@ -138,7 +141,7 @@ class MainWindow : public QMainWindow
 
         // action goal
         void on_goBtn_clicked();
-        void on_cancelBtn_clicked();
+        void on_waypointBtn_clicked();
         void on_rthBtn_clicked();
 
     protected:
@@ -154,11 +157,11 @@ class MainWindow : public QMainWindow
 
         // action goal
         QPushButton *btnGoToGoal_;
-        QPushButton *btnCancelGoal_;
+        QPushButton *btnWaypointGoals_;
         QPushButton *btnReturnToHome_;
 
-        rclcpp_action::GoalUUID active_goal_uuid_;
-        bool is_goal_active_ = false;
+        //rclcpp_action::GoalUUID active_goal_uuid_;
+        //bool is_goal_active_ = false;
 
         QSpinBox *x_spinBoxPtr_;
         QSpinBox *y_spinBoxPtr_;
@@ -191,9 +194,9 @@ class MainWindow : public QMainWindow
         // for mapping app--------------------------------
         
         // map
-        double map_origin_x_ = 0;
-        double map_origin_y_ = 0;
-        double map_resolution_ = 0;
+        double map_origin_x_ = 0.000;
+        double map_origin_y_ = 0.000;
+        double map_resolution_ = 0.000;
 
         // 5 modes
         bool zoom_mode_ = false;
@@ -212,6 +215,8 @@ class MainWindow : public QMainWindow
         QList<QGraphicsEllipseItem*> waypoints_;
         QList<QGraphicsTextItem*> waypoints_text_;
         QList<double> waypoints_direction_;
+        std::unordered_map<std::string, geometry_msgs::msg::Pose> waypoints_map_;
+
 
         // store virtual wall
         QList<QGraphicsLineItem*> virtual_lines_;

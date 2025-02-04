@@ -45,7 +45,7 @@ set(UI_FILES src/mainwindow.ui)
 qt5_wrap_ui(UI_HEADERS ${UI_FILES})
 
 qt_add_resources(ROM_DYNAMICS "resources"
-    FILES resources.qrc
+    FILES romrobot.qrc
 )
 
 # qt5_add_resources(resources_RCC resources.qrc)
