@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app
+CMAKE_SOURCE_DIR = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app/build
+CMAKE_BINARY_DIR = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/build
 
 # Utility rule file for uninstall.
 
@@ -78,6 +78,6 @@ CMakeFiles/uninstall.dir/clean:
 .PHONY : CMakeFiles/uninstall.dir/clean
 
 CMakeFiles/uninstall.dir/depend:
-	cd /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app/build /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app/build /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app/build/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/build /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/build /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/build/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/uninstall.dir/depend
 

@@ -11,7 +11,7 @@
 #include <iostream>
 #include <unordered_map>
 
-//#define ROM_DEBUG 1
+#define ROM_DEBUG 1
 
 // လိုမှ call ခေါ်သုံးပါ။
 class WaypointFollower : public rclcpp::Node {
@@ -105,7 +105,7 @@ private:
 
     void send_waypoints() {
         while (rclcpp::ok()) {
-            #ifndef ROM_DEBUG
+            
             if (!client_->wait_for_action_server(std::chrono::seconds(10))) {
                 RCLCPP_ERROR(this->get_logger(), "FollowWaypoints action server not available!");
                 return;
@@ -119,12 +119,38 @@ private:
             auto future_goal = client_->async_send_goal(goal_msg);
 
             auto result = rclcpp::spin_until_future_complete(this->get_node_base_interface(), future_goal);
-            if (result == rclcpp::FutureReturnCode::SUCCESS) {
-                RCLCPP_INFO(this->get_logger(), "Waypoints execution completed.");
-            } else {
+
+            if (result == rclcpp::FutureReturnCode::SUCCESS) 
+            {
+                auto goal_handle = future_goal.get();
+
+                if (!goal_handle) 
+                {
+                    RCLCPP_ERROR(this->get_logger(), "Goal was rejected by the action server.");
+                } 
+                else
+                {
+                    // Wait for the result
+                    auto result_future = client_->async_get_result(goal_handle);
+                    auto result_status = rclcpp::spin_until_future_complete(this->get_node_base_interface(), result_future);
+
+                    if (result_status == rclcpp::FutureReturnCode::SUCCESS) 
+                    {
+                        RCLCPP_INFO(this->get_logger(), "Waypoints execution completed.");
+                    } 
+                    else 
+                    {
+                        RCLCPP_ERROR(this->get_logger(), "Failed to receive result from action server.");
+                    }
+                }
+                //RCLCPP_INFO(this->get_logger(), "Waypoints execution completed.");
+            } 
+            else 
+            {
                 RCLCPP_ERROR(this->get_logger(), "Failed to send waypoints.");
             }
-            #else
+            #ifdef ROM_DEBUG
+
                 // yaml reading ကို စစ်ဆေးရန်အတွက်သာ
                 for (size_t i = 0; i < selected_waypoints_.size(); ++i) 
                 {
@@ -138,7 +164,7 @@ private:
                     // Log the message
                     RCLCPP_INFO(this->get_logger(), "%s", log_msg.str().c_str());
                 }
-            #endif
+            #endif 
 
             if (!loop_) break;
             RCLCPP_INFO(this->get_logger(), "Looping waypoints... Restarting in 5 seconds.");

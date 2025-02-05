@@ -1,7 +1,7 @@
 CMakeFiles/ROM_DYNAMICS.dir/src/mainwindow.cpp.o: \
- /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app/src/mainwindow.cpp \
+ /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/src/mainwindow.cpp \
  /usr/include/stdc-predef.h \
- /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app/src/mainwindow.h \
+ /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/src/mainwindow.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QtWidgets \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QtWidgetsDepends \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/QtCore \
@@ -897,7 +897,7 @@ CMakeFiles/ROM_DYNAMICS.dir/src/mainwindow.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QPushButton \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLineEdit \
- /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app/build/ui_mainwindow.h \
+ /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/build/ui_mainwindow.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QApplication \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QGraphicsView \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
@@ -1417,5 +1417,5 @@ CMakeFiles/ROM_DYNAMICS.dir/src/mainwindow.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QGraphicsView \
  /usr/include/x86_64-linux-gnu/qt5/QtGui/QMouseEvent \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/QDebug \
- /home/mr_robot/devel_ws/src/rom_msgs/rom_dynamics_app/ros2/header/rom_algorithm.h \
+ /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ros2/header/rom_algorithm.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/QObject

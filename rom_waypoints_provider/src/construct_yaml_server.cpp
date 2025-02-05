@@ -17,6 +17,8 @@ rclcpp::Publisher<rom_interfaces::msg::ConstructYaml>::SharedPtr publisher_;
 void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::Request> request,
           std::shared_ptr<rom_interfaces::srv::ConstructYaml::Response>      response)
 {
+  rom_interfaces::msg::ConstructYaml message;
+
   //check yaml, if exists delete
   if (std::filesystem::exists(yaml_path)) 
   {
@@ -64,6 +66,8 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
             file << "        y: " << request->poses[i].pose.orientation.y << "\n";
             file << "        z: " << request->poses[i].pose.orientation.z << "\n";
             file << "        w: " << request->poses[i].pose.orientation.w << "\n";
+
+            message.pose_names.push_back(request->pose_names[i]);
         }
 
   // close yaml file
@@ -73,13 +77,6 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
   #endif     
 
   // publish or gui apps
-  auto message = rom_interfaces::msg::ConstructYaml();
-    
-  for (size_t i = 0; i < request->pose_names.size(); ++i) 
-  {
-    message.pose_names[i] = request->pose_names[i];
-    message.poses[i] = request->poses[i];
-  }
   publisher_->publish(message);
 }
 
