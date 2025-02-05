@@ -972,7 +972,21 @@ void MainWindow::on_goBtn_clicked()
 {
     if(x_spinBoxPtr_->value() == 0 && y_spinBoxPtr_->value() == 0 && z_spinBoxPtr_->value() == 0)
     {
-        statusLabelPtr_->setText("\n   x , y, theta တန်ဖိုးများထည့်သွင်းပါ။\n");
+        statusLabelPtr_->setText("\n   x , y, theta တန်ဖိုးများမရှိပါ။\n waypoints လွှတ်ပြီ ...\n");
+
+        // emit selected waypoints signal;
+        std::vector<std::string> selected_wp_names;
+
+        // လောလောဆယ် Select မလုပ်ထားလို့ အားလုံးထည့်ထားတယ်။
+        selected_wp_names = wp_names_in_robot_server_;
+        
+        // some btn trigger loop_waypoints_ to true or false;
+        if(loop_waypoints_) { selected_wp_names.emplace_back("true");}
+
+        else { selected_wp_names.emplace_back("false");}
+        
+        emit sendWaypointsGoal(selected_wp_names);
+
         return;
     }
 
@@ -1017,7 +1031,7 @@ void MainWindow::on_goBtn_clicked()
 
 void MainWindow::on_waypointBtn_clicked()
 {
-    emit sendWaypointsGoal(std::make_shared<std::unordered_map<std::string, geometry_msgs::msg::Pose>>(waypoints_map_));
+    emit sendWaypoints(std::make_shared<std::unordered_map<std::string, geometry_msgs::msg::Pose>>(waypoints_map_));
 
 }
 
@@ -1784,7 +1798,7 @@ void MainWindow::applyStyleNormal()
 {
     ui->addWaypointBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(qrc:/ico/waypoint.png);"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -1819,5 +1833,21 @@ void MainWindow::applyStyleNormal()
     "}");
 }
 
+
+void MainWindow::onUpdateWpUI(std::vector<std::string> wp_names)
+{
+    
+    #ifdef ROM_DEBUG 
+        qDebug() << "[    on_goBtn_clicked        ] : sending pose";
+    #endif
+
+    // update ui with waypoint selectable buttons
+
+
+
+
+    // store waypoints of server
+    wp_names_in_robot_server_ = wp_names;
+}
 
 // file_path = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png

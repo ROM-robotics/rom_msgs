@@ -98,7 +98,9 @@ class MainWindow : public QMainWindow
 
         void selectMap(std::string map_name);
 
-        void sendWaypointsGoal(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list);
+        void sendWaypoints(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list);
+
+        void sendWaypointsGoal(std::vector<std::string> wp_names);
     
     public slots:
         void displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg);
@@ -121,6 +123,8 @@ class MainWindow : public QMainWindow
         //void onSendGoalId(const rclcpp_action::GoalUUID& goal_uuid);
 
         void onCmdServiceResponse(bool success);
+
+        void onUpdateWpUI(std::vector<std::string> wp_names);
 
         // -----------------------for mapping app
         void onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg);
@@ -216,6 +220,8 @@ class MainWindow : public QMainWindow
         QList<QGraphicsTextItem*> waypoints_text_;
         QList<double> waypoints_direction_;
         std::unordered_map<std::string, geometry_msgs::msg::Pose> waypoints_map_;
+        std::vector<std::string> wp_names_in_robot_server_;
+        bool loop_waypoints_ = false;
 
 
         // store virtual wall

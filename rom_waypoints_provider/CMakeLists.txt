@@ -32,19 +32,22 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-add_executable(send_waypoints src/send_waypoints.cpp)
-target_link_libraries(send_waypoints yaml-cpp)
-ament_target_dependencies(send_waypoints rclcpp rclcpp_action nav2_msgs geometry_msgs visualization_msgs yaml-cpp ament_index_cpp)
+add_executable(send_waypoints_goals src/send_waypoints_goals.cpp)
+target_link_libraries(send_waypoints_goals yaml-cpp)
+ament_target_dependencies(send_waypoints_goals rclcpp rclcpp_action nav2_msgs geometry_msgs visualization_msgs yaml-cpp ament_index_cpp)
 
 add_executable(construct_yaml_server src/construct_yaml_server.cpp)
 target_link_libraries(construct_yaml_server yaml-cpp)
 ament_target_dependencies(construct_yaml_server rclcpp rclcpp_action nav2_msgs geometry_msgs visualization_msgs yaml-cpp ament_index_cpp rom_interfaces)
 
-
+add_executable(send_waypoints_server src/send_waypoints_server.cpp)
+target_link_libraries(send_waypoints_server yaml-cpp)
+ament_target_dependencies(send_waypoints_server rclcpp rclcpp_action nav2_msgs geometry_msgs visualization_msgs yaml-cpp ament_index_cpp rom_interfaces)
 
 install(TARGETS 
-  send_waypoints 
+  send_waypoints_goals 
   construct_yaml_server
+  send_waypoints_server
 DESTINATION lib/${PROJECT_NAME})
 
 install(

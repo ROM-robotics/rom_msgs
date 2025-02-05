@@ -4,7 +4,7 @@
 string[] pose_names
 
 # Corresponding list of PoseStamped messages
-geometry_msgs/Pose[] poses
+geometry_msgs/PoseStamped[] poses
 
-int16 size
+bool loop
 ---

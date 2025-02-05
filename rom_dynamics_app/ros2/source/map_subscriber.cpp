@@ -19,4 +19,5 @@ void MapSubscriber::mapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr ms
     #endif
     emit updateMap(msg);
 }
-   
+
+

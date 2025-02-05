@@ -19,25 +19,32 @@ int main(int argc, char *argv[])
     std::shared_ptr<ModeSubscriber> mode_subscriber = nullptr;
     std::shared_ptr<NavigateToPoseClient> goal_action_client = nullptr;
     std::shared_ptr<MapSubscriber> map_subscriber = nullptr;
+    std::shared_ptr<WaypointListSubscriber> wp_subscriber = nullptr;
+    std::shared_ptr<SendWaypointsClient> send_wp_client = nullptr;
 
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> pose_mode_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> cmd_executor_st = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> action_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     //std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> map_executor_st = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
-
-    cmd_service_client = std::make_shared<CmdServiceClient>("which_vel");
     pose_subscriber = std::make_shared<Subscriber>("/odom"); 
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
+
+    cmd_service_client = std::make_shared<CmdServiceClient>("which_vel");
+    yaml_service_client = std::make_shared<ConstructYamlServiceClient>("/construct_yaml");
+    wp_subscriber = std::make_shared<WaypointListSubscriber>("/waypoints_list");
+    send_wp_client = std::make_shared<SendWaypointsClient>("/waypoints_selected");
+
     goal_action_client = std::make_shared<NavigateToPoseClient>("/navigate_to_pose");
     map_subscriber = std::make_shared<MapSubscriber>("/map");
-    yaml_service_client = std::make_shared<ConstructYamlServiceClient>("/construct_yaml");
     
     pose_mode_executor_mt->add_node(pose_subscriber);
     pose_mode_executor_mt->add_node(mode_subscriber);
 
     cmd_executor_st->add_node(cmd_service_client);
     cmd_executor_st->add_node(yaml_service_client);
+    cmd_executor_st->add_node(wp_subscriber);
+    cmd_executor_st->add_node(send_wp_client);
 
     action_executor_mt->add_node(goal_action_client);
     action_executor_mt->add_node(map_subscriber);
@@ -85,7 +92,7 @@ int main(int argc, char *argv[])
 
     QObject::connect(cmd_service_client.get(), &CmdServiceClient::serviceResponse, &mainWindow, &MainWindow::onCmdServiceResponse);
     // construct yaml
-    QObject::connect(&mainWindow, &MainWindow::sendWaypointsGoal, yaml_service_client.get(), &ConstructYamlServiceClient::onSendWaypointsGoal);
+    QObject::connect(&mainWindow, &MainWindow::sendWaypoints, yaml_service_client.get(), &ConstructYamlServiceClient::onSendWaypoints);
 
 
 
@@ -100,6 +107,12 @@ int main(int argc, char *argv[])
     
     //map
     QObject::connect(map_subscriber.get(), &MapSubscriber::updateMap, &mainWindow, &MainWindow::onUpdateMap, Qt::QueuedConnection); // Connect the updateMap signal to onupdateMap, Qt::QueuedConnection);
+    
+    // subscribe wp_lists
+    QObject::connect(wp_subscriber.get(), &WaypointListSubscriber::updateWpUI, &mainWindow, &MainWindow::onUpdateWpUI);
+
+    // send waypoints goal
+    QObject::connect(&mainWindow, &MainWindow::sendWaypointsGoal, send_wp_client.get(), &SendWaypointsClient::onSendWaypointsGoal);
     
     return a.exec();
 }

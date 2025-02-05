@@ -6,7 +6,6 @@
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <QImage>
 #include <QDebug>
-
 //#define ROM_DEBUG 1
 
 class MapSubscriber : public QObject, public rclcpp::Node {
@@ -24,5 +23,6 @@ private:
     rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_subscription_;
     void mapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg);
 };
+
 
 #endif // MAPHANDLER_H

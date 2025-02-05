@@ -14,6 +14,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/ConstructYaml.msg"
   "msg/Num.msg"
   "msg/Sphere.msg"
   "srv/ConstructYaml.srv"

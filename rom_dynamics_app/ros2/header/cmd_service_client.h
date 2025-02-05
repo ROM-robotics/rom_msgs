@@ -11,7 +11,9 @@
 #include <rclcpp/rclcpp.hpp>
 #include <rom_interfaces/srv/which_vel.hpp>
 #include <rom_interfaces/srv/construct_yaml.hpp>
-#include <QObject>
+#include "rom_interfaces/msg/construct_yaml.hpp"
+#include <QDebug>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 
 class CmdServiceClient : public QObject, public rclcpp::Node
 {
@@ -45,12 +47,44 @@ public:
 
 
 public slots:
-    void onSendWaypointsGoal(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list);
+    void onSendWaypoints(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list);
 
 private:
     rclcpp::Client<rom_interfaces::srv::ConstructYaml>::SharedPtr goal_client_;
     std::string service_name_;
 };
 
+class WaypointListSubscriber : public QObject, public rclcpp::Node {
+    Q_OBJECT
+
+public:
+    explicit WaypointListSubscriber(const std::string &topic_name);
+    //~WaypointListSubscriber() {}
+
+signals:
+    void updateWpUI(std::vector<std::string> wp_names);
+
+private:
+    rclcpp::Subscription<rom_interfaces::msg::ConstructYaml>::SharedPtr wp_subscription_;
+    void wpCallback(const rom_interfaces::msg::ConstructYaml::SharedPtr wplist);
+
+    std::vector<std::string> wp_names_;
+};
+
+class SendWaypointsClient : public QObject, public rclcpp::Node
+{
+    Q_OBJECT
+
+public:
+    explicit SendWaypointsClient(const std::string &service_name, QObject *parent = nullptr);
+
+
+public slots:
+    void onSendWaypointsGoal(std::vector<std::string> wp_names);
+
+private:
+    rclcpp::Client<rom_interfaces::srv::ConstructYaml>::SharedPtr wp_goal_client_;
+    std::string service_name_;
+};
 
 #endif // PUBLISHER_H
