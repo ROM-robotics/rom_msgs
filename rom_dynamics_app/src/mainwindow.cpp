@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     btnGoToGoal_ = ui->goBtn;
     btnWaypointGoals_ = ui->cancelBtn;
     btnReturnToHome_ = ui->rthBtn;
+    goAllBtnPtr_ = ui->goAllBtn;
 
     // mapping ---------------------------------------------------------------------------------------------
     
@@ -116,7 +117,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     qRegisterMetaType<nav_msgs::msg::OccupancyGrid::SharedPtr>("nav_msgs::msg::OccupancyGrid::SharedPtr");
     // waypoints list
     qRegisterMetaType<std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>>>("std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>>");
-    
+    qRegisterMetaType<std::vector<std::string>>("std::vector<std::string>");
+
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
 
     ui->saveMapBtn->hide();//setEnabled(false);
@@ -134,6 +136,7 @@ MainWindow::~MainWindow()
 
     delete service_clientPtr_;
     delete rosServiceClientThreadPtr_;
+
     removeBusyDialog(); 
 }
 
@@ -409,7 +412,10 @@ void ServiceClient::sendRequest(const std::string& request_string, const std::st
 
     auto request = std::make_shared<rom_interfaces::srv::WhichMaps::Request>();
     
-
+    #ifdef ROM_DEBUG
+        qDebug() << "mode change";
+    #endif
+    
     request->request_string = request_string;
 
     // reconfigure for save_map and select_map
@@ -711,7 +717,10 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
                     // add to std::map<string, geometry_msgs::msg::Pose> waypoints_map
                     geometry_msgs::msg::Pose pose;
+                    geometry_msgs::msg::Pose scene_pose;
+
                     pose.orientation.w = 1.0;  // Ensure a valid quaternion
+                    scene_pose.orientation.w = 1.0;
 
                     // convert scene coordinate to map coordinate
                     double x_in_map = mapX;
@@ -726,8 +735,12 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                     pose.orientation.z = z_in_quaternion;
                     pose.orientation.w = w_in_quaternion;
 
+                    scene_pose.position.x = scenePoint.x();
+                    scene_pose.position.y = scenePoint.y();
+
                     // append 
                     waypoints_map_[wp_name.toStdString()] = pose;
+                    waypoints_scene_[wp_name.toStdString()] = scene_pose;
 
                     // Add the rectangle to the scene
                     ui->graphicsView->scene()->addItem(circleItem);
@@ -750,6 +763,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                         waypoints_direction_.removeLast();
 
                         waypoints_map_.erase(textStd);
+                        waypoints_scene_.erase(textStd);
                         /************* emit data to transmit **************/
                         // emit waypoints
                     }
@@ -972,21 +986,8 @@ void MainWindow::on_goBtn_clicked()
 {
     if(x_spinBoxPtr_->value() == 0 && y_spinBoxPtr_->value() == 0 && z_spinBoxPtr_->value() == 0)
     {
-        statusLabelPtr_->setText("\n   x , y, theta တန်ဖိုးများမရှိပါ။\n waypoints လွှတ်ပြီ ...\n");
-
-        // emit selected waypoints signal;
-        std::vector<std::string> selected_wp_names;
-
-        // လောလောဆယ် Select မလုပ်ထားလို့ အားလုံးထည့်ထားတယ်။
-        selected_wp_names = wp_names_in_robot_server_;
-        
-        // some btn trigger loop_waypoints_ to true or false;
-        if(loop_waypoints_) { selected_wp_names.emplace_back("true");}
-
-        else { selected_wp_names.emplace_back("false");}
-        
-        emit sendWaypointsGoal(selected_wp_names);
-
+        statusLabelPtr_->setText("\n   x , y, theta တန်ဖိုးများမရှိပါ။\n");
+          
         return;
     }
 
@@ -1031,8 +1032,9 @@ void MainWindow::on_goBtn_clicked()
 
 void MainWindow::on_waypointBtn_clicked()
 {
-    emit sendWaypoints(std::make_shared<std::unordered_map<std::string, geometry_msgs::msg::Pose>>(waypoints_map_));
-
+    emit sendWaypoints(std::make_shared<std::unordered_map<std::string, geometry_msgs::msg::Pose>>(waypoints_map_),
+   std::make_shared<std::unordered_map<std::string, geometry_msgs::msg::Pose>>(waypoints_scene_));
+//void onSendWaypoints(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list);
 }
 
 
@@ -1139,8 +1141,10 @@ void MainWindow::toggleButtonWithAnimation(QPushButton* button, bool show) {
     animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void MainWindow::onCmdServiceResponse(bool success){
-    if(!success){
+void MainWindow::onCmdServiceResponse(bool success)
+{
+    if(!success)
+    {
         QString statusText = QString("Service not found !\n");
         QString updateText = currentText_ + statusText;
         statusLabelPtr_->setText(updateText);
@@ -1154,14 +1158,40 @@ void MainWindow::onCmdServiceResponse(bool success){
         // ui->btnLeft->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
         // ui->btnStop->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
 
-    }else {
+    }else 
+    {
         #ifdef ROM_DEBUG 
             qDebug() << "[    onCmdServiceResponse        ] : Service OK !";
         #endif
     }
+}
 
+
+void MainWindow::onWpServiceResponse(bool success){
+    //this->blockSignals(true);  
+    //this->blockSignals(false);  
+    if(!success)
+    {
+        QString statusText = QString("Waypoint Service not found !\n");
+        QString updateText = currentText_ + statusText;
+        statusLabelPtr_->setText(updateText);
+
+        #ifdef ROM_DEBUG 
+            qDebug() << "[    onWpServiceResponse        ] : Service not found";
+        #endif
+
+        // ui->btnForward->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+        // ui->btnRight->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+        // ui->btnLeft->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+        // ui->btnStop->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
+
+    }else 
+    {
+        #ifdef ROM_DEBUG 
+            qDebug() << "[    onWpServiceResponse        ] : Service OK !";
+        #endif
+    }
     
-
 }
 
 
@@ -1437,6 +1467,32 @@ void MainWindow::applyStyles()
     "       stop: 0 #FFD700, "            // Golden Yellow
     "       stop: 0.4 #FF8C00, "         // Darker Orange
     "       stop: 1 #FF6347"             // Tomato Red (darker outer glow)
+    "   );"
+    "   color: white;"
+    "}"
+    );
+    goAllBtnPtr_->setStyleSheet(
+    "QPushButton {"
+    "   border-radius: 35px;"
+    "   border: 2px solid #FF8C00;" 
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, "
+    "       stop: 0.0 #FFD700, "
+    "       stop: 0.4 #B8860B,"
+    "       stop: 0.7 #8B4513, "
+    "       stop: 1.0 #4B3621  "         
+    "   );"
+    "   color: black;"
+    "   font-size: 24px;"
+    "   font-weight: bold;"
+    "}"
+    "QPushButton:hover {"
+    "   background: qlineargradient("
+    "       x1: 0, y1: 0, x2: 1, y2: 1, "
+    "       stop: 0.0 #FFD700, "
+    "       stop: 0.4 #DAA520, "
+    "       stop: 0.7 #A0522D,"
+    "       stop: 1.0 #000000"             
     "   );"
     "   color: white;"
     "}"
@@ -1842,12 +1898,60 @@ void MainWindow::onUpdateWpUI(std::vector<std::string> wp_names)
     #endif
 
     // update ui with waypoint selectable buttons
+    // ၁။ store waypoints of robot computer in `wp_names_in_robot_server_` variables
+        wp_names_in_robot_server_ = wp_names;
+
+    // ၂။ wp_names ကို button များဖြင့်ပြရန်
+    
+
+    // ၃။ အဲ့ဒီ button တွေမှာ signal slot ထည့်ရန်
+
+
+    // ဒီ code ကို အခြားနေရာပို့ပြီး အသုံးပြုရန်
+    // ၃။ button များကို select လုပ်ရန်နှင့် loop ရွေးရန်
+    // selected_wp_in_robot_server_ 
 
 
 
+    
+}
 
-    // store waypoints of server
-    wp_names_in_robot_server_ = wp_names;
+void MainWindow::onGoAllBtnClicked(bool status)
+{
+     #ifdef ROM_DEBUG 
+        qDebug() << "[    MainWindow::onGoAllBtnClicked()      ] : ";
+    #endif
+    UNUSED(status);
+    statusLabelPtr_->setText("\n waypoints လွှတ်ပြီ ...\n");
+
+               
+        // emit selected waypoints signal;
+        std::vector<std::string> selected_wp_names;
+
+        // လောလောဆယ် Select မလုပ်ထားလို့ robot server မှာ wp များမရသေးး အဆင်ပြေသလို ထည့်ထားတယ်။
+        selected_wp_in_robot_server_.push_back("hello");
+        selected_wp_in_robot_server_.push_back("world");
+        selected_wp_names = selected_wp_in_robot_server_;
+        
+        // btn trigger loop_waypoints_ to true or false; default အားဖြင့် false
+        if(loop_waypoints_)
+        { 
+            selected_wp_names.emplace_back("true");
+        }
+        else 
+        { 
+            selected_wp_names.emplace_back("false");
+        }
+        
+        
+        if (!selected_wp_names.empty()) 
+        {
+            //this->blockSignals(false);  
+            //qDebug() << "Emitting sendWaypointsGoal...";    
+            emit sendWaypointsGoal(selected_wp_names);
+            //qDebug() << "sendWaypointsGoal emitted";
+            //this->blockSignals(true);    
+        }
 }
 
 // file_path = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png

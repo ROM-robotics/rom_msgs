@@ -6,7 +6,7 @@
 #include <QDebug>
 
 
-NavigateToPoseClient::NavigateToPoseClient(const std::string &action_name) : Node("goal_action_client_node")
+NavigateToPoseClient::NavigateToPoseClient(const std::string &action_name) : Node("qt_goal_action_client_node")
 {
     goal_msg_ = std::make_shared<nav2_msgs::action::NavigateToPose::Goal>();
 

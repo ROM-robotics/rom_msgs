@@ -1,9 +1,10 @@
 #include "cmd_service_client.h"
+#include <QThread>
 
 #define ROM_DEBUG 1
 
 CmdServiceClient::CmdServiceClient(const std::string &service_name, QObject *parent)
-    : QObject(parent), Node("cmd_service_client"), service_name_(service_name)
+    : QObject(parent), Node("qt_cmd_service_client"), service_name_(service_name)
 {
     // Create the service client
     client_ = this->create_client<rom_interfaces::srv::WhichVel>(service_name);
@@ -72,7 +73,7 @@ void CmdServiceClient::setStop(){
 
 
 ConstructYamlServiceClient::ConstructYamlServiceClient(const std::string &service_name, QObject *parent)
-    : QObject(parent), Node("construct_yaml_client"), service_name_(service_name)
+    : QObject(parent), Node("qt_construct_yaml_client"), service_name_(service_name)
 {
     // Create the service client
     goal_client_ = this->create_client<rom_interfaces::srv::ConstructYaml>(service_name);
@@ -80,13 +81,15 @@ ConstructYamlServiceClient::ConstructYamlServiceClient(const std::string &servic
     
 }
 
-void ConstructYamlServiceClient::onSendWaypoints(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list)
+void ConstructYamlServiceClient::onSendWaypoints(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list,
+                                            std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> scene_wp_list)
 {
     #ifdef ROM_DEBUG 
             RCLCPP_WARN(this->get_logger(), "getting wp_list in slot function.");
         #endif
     // Create a request
     auto request = std::make_shared<rom_interfaces::srv::ConstructYaml::Request>();
+
     // FOR loop ပါတ်ပြီး request ထဲထည့်ရန် 
     // Iterate over waypoints and add to the request
     for (const auto &pair : *wp_list)  // Dereferencing shared_ptr
@@ -102,6 +105,19 @@ void ConstructYamlServiceClient::onSendWaypoints(std::shared_ptr<std::unordered_
         pose_stamped.pose = pose;
         
         request->poses.push_back(pose_stamped);
+    }
+    for (const auto &pair : *scene_wp_list)  // Dereferencing shared_ptr
+    {
+        const std::string &wp_name = pair.first;
+        const geometry_msgs::msg::Pose &pose = pair.second;
+        
+        request->pose_names.push_back(wp_name);
+
+        geometry_msgs::msg::Pose scene_pose;
+
+        scene_pose = pose;
+        
+        request->scene_poses.push_back(scene_pose);
     }
 
     // Wait for the service to become available
@@ -125,7 +141,7 @@ void ConstructYamlServiceClient::onSendWaypoints(std::shared_ptr<std::unordered_
 }
 
 
-WaypointListSubscriber::WaypointListSubscriber(const std::string &topic_name) :  Node("wp_receiver") 
+WaypointListSubscriber::WaypointListSubscriber(const std::string &topic_name) :  Node("qt_wp_receiver") 
 {
 
     rclcpp::QoS qos_profile(rclcpp::KeepLast(5)); 
@@ -152,23 +168,32 @@ void WaypointListSubscriber::wpCallback(const rom_interfaces::msg::ConstructYaml
 
 
 SendWaypointsClient::SendWaypointsClient(const std::string &service_name, QObject *parent)
-    : QObject(parent), Node("send_wp_client"), service_name_(service_name)
+    : QObject(parent), Node("qt_send_wp_client"), service_name_(service_name)
 {
     // Create the service client
-    wp_goal_client_ = this->create_client<rom_interfaces::srv::ConstructYaml>(service_name);
-
-    
+    wp_goal_client_ = this->create_client<rom_interfaces::srv::ConstructYaml>(service_name);   
 }
 
+// void SendWaypointsClient::onSendWaypointsGoalzz()
+// {
+//     #ifdef ROM_DEBUG 
+//             qDebug() << "getting wp_list goals in slot function.";
+//             qDebug() << "MainWindow Thread:" << QThread::currentThread();
+//     #endif
+// }
 void SendWaypointsClient::onSendWaypointsGoal(std::vector<std::string> wp_names)
 {
+    std::lock_guard<std::mutex> lock(mutex_); 
+    
     #ifdef ROM_DEBUG 
-            RCLCPP_WARN(this->get_logger(), "getting wp_list goals in slot function.");
+            qDebug() << "getting wp_list goals in slot function.";
+            //qDebug() << "MainWindow Thread:" << QThread::currentThread();
     #endif
+    //this->blockSignals(false);  
     // Create a request
     auto request = std::make_shared<rom_interfaces::srv::ConstructYaml::Request>();
 
-
+    
     if(wp_names.size()<1) { return; }
 
     bool state;
@@ -179,27 +204,48 @@ void SendWaypointsClient::onSendWaypointsGoal(std::vector<std::string> wp_names)
 
     request->loop = state;
 
-    for (size_t i = 0; i < wp_names.size()-1; ++i) 
+    // add pose_names[]
+    for (size_t i = 0; i < (wp_names.size()-1); i++) 
     {
-        request->pose_names[i] = wp_names[i];
+        request->pose_names.push_back(wp_names[i]);
+
+        #ifdef ROM_DEBUG 
+            qDebug() <<  "request->pose_names.push_back( " << wp_names[i].c_str() << ")"; 
+        #endif
     }
 
     // Wait for the service to become available
     while (!wp_goal_client_->wait_for_service(std::chrono::seconds(1)))
     {
         #ifdef ROM_DEBUG 
-            RCLCPP_WARN(this->get_logger(), "Waiting for service '%s' to become available...", service_name_.c_str());
+            qDebug() <<  "Waiting for service " << service_name_.c_str() << " to become available..."; 
         #endif
             //emit serviceResponse(false);
         return;
     }
     #ifdef ROM_DEBUG 
-        RCLCPP_INFO(this->get_logger(), "Service client ready for '%s'", service_name_.c_str());
+        qDebug() <<  "Service client ready for  " << service_name_.c_str(); 
     #endif
-
-
     // Send the request asynchronously
     auto future = wp_goal_client_->async_send_request(request);
     future.wait();
 
+    // try
+    // {
+    //     auto response = future.get();
+    //     //emit commandResponse(response->success);
+    //     #ifdef ROM_DEBUG 
+    //         RCLCPP_INFO(this->get_logger(), " sent successfully: %s",
+    //                 response->status ? "true" : "false");
+    //     #endif
+    // }
+    // catch (const std::exception &e)
+    // {
+    //     //emit commandResponse(false);
+    //     #ifdef ROM_DEBUG
+    //         RCLCPP_ERROR(this->get_logger(), "Failed to call service: %s", e.what());
+    //     #endif
+    // }
+    
+   emit serviceWpResponse(false);
 }

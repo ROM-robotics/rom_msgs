@@ -19,6 +19,7 @@
 #include <nav_msgs/msg/odometry.hpp>
 
 #include <rom_interfaces/srv/which_maps.hpp>
+#include <rom_interfaces/srv/construct_yaml.hpp>
 #include <QPropertyAnimation>
 #include <QEasingCurve>
 
@@ -60,6 +61,8 @@ private:
     void spin();
 };
 
+
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -92,15 +95,18 @@ class MainWindow : public QMainWindow
         void setDragMode(bool state);
         // ------------------- map app
 
+        void romSendWpGoals();
+
     signals:
         void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr msg);
         //void sendCancelGoal(const rclcpp_action::GoalUUID& goal_uuid);
 
         void selectMap(std::string map_name);
 
-        void sendWaypoints(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list);
-
+        void sendWaypoints(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list, std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> scene_wp_list);
+    
         void sendWaypointsGoal(std::vector<std::string> wp_names);
+        
     
     public slots:
         void displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg);
@@ -123,6 +129,7 @@ class MainWindow : public QMainWindow
         //void onSendGoalId(const rclcpp_action::GoalUUID& goal_uuid);
 
         void onCmdServiceResponse(bool success);
+        void onWpServiceResponse(bool success);
 
         void onUpdateWpUI(std::vector<std::string> wp_names);
 
@@ -134,6 +141,8 @@ class MainWindow : public QMainWindow
         void onEraserButtonClicked();
         void onNormalButtonClicked();
         // -----------------------end for mapping app
+
+        void onGoAllBtnClicked(bool statys);
         
     private slots:
         void on_shutdownBtn_clicked();
@@ -163,6 +172,7 @@ class MainWindow : public QMainWindow
         QPushButton *btnGoToGoal_;
         QPushButton *btnWaypointGoals_;
         QPushButton *btnReturnToHome_;
+        QPushButton *goAllBtnPtr_;
 
         //rclcpp_action::GoalUUID active_goal_uuid_;
         //bool is_goal_active_ = false;
@@ -220,7 +230,9 @@ class MainWindow : public QMainWindow
         QList<QGraphicsTextItem*> waypoints_text_;
         QList<double> waypoints_direction_;
         std::unordered_map<std::string, geometry_msgs::msg::Pose> waypoints_map_;
+        std::unordered_map<std::string, geometry_msgs::msg::Pose> waypoints_scene_;
         std::vector<std::string> wp_names_in_robot_server_;
+        std::vector<std::string> selected_wp_in_robot_server_;
         bool loop_waypoints_ = false;
 
 

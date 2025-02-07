@@ -7,7 +7,7 @@
 #include <QObject>
 #include <QtWidgets/QApplication>
 
-
+#include <mutex>
 #include <rclcpp/rclcpp.hpp>
 #include <rom_interfaces/srv/which_vel.hpp>
 #include <rom_interfaces/srv/construct_yaml.hpp>
@@ -47,7 +47,7 @@ public:
 
 
 public slots:
-    void onSendWaypoints(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list);
+    void onSendWaypoints(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list, std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> scene_wp_list);
 
 private:
     rclcpp::Client<rom_interfaces::srv::ConstructYaml>::SharedPtr goal_client_;
@@ -78,11 +78,16 @@ class SendWaypointsClient : public QObject, public rclcpp::Node
 public:
     explicit SendWaypointsClient(const std::string &service_name, QObject *parent = nullptr);
 
-
+signals:
+    void serviceWpResponse(bool success);
+    
 public slots:
     void onSendWaypointsGoal(std::vector<std::string> wp_names);
+    //void onSendWaypointsGoalzz();
 
 private:
+    std::mutex mutex_;
+    
     rclcpp::Client<rom_interfaces::srv::ConstructYaml>::SharedPtr wp_goal_client_;
     std::string service_name_;
 };

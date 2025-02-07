@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> pose_mode_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> cmd_executor_st = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> action_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
-    //std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> map_executor_st = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+    std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> waypoint_executor_st = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
     pose_subscriber = std::make_shared<Subscriber>("/odom"); 
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
@@ -44,14 +44,15 @@ int main(int argc, char *argv[])
     cmd_executor_st->add_node(cmd_service_client);
     cmd_executor_st->add_node(yaml_service_client);
     cmd_executor_st->add_node(wp_subscriber);
-    cmd_executor_st->add_node(send_wp_client);
+
+    waypoint_executor_st->add_node(send_wp_client);
 
     action_executor_mt->add_node(goal_action_client);
     action_executor_mt->add_node(map_subscriber);
     
     std::thread pose_mode_executor_thread([pose_mode_executor_mt](){pose_mode_executor_mt->spin();});
     std::thread cmd_executor_thread([cmd_executor_st](){cmd_executor_st->spin();});
-    
+    std::thread waypoint_executor_thread([waypoint_executor_st](){waypoint_executor_st->spin();});
     
 
     // QT APPLICATION //
@@ -112,8 +113,11 @@ int main(int argc, char *argv[])
     QObject::connect(wp_subscriber.get(), &WaypointListSubscriber::updateWpUI, &mainWindow, &MainWindow::onUpdateWpUI);
 
     // send waypoints goal
-    QObject::connect(&mainWindow, &MainWindow::sendWaypointsGoal, send_wp_client.get(), &SendWaypointsClient::onSendWaypointsGoal);
-    
+    //QObject::connect(mainWindow.getUi()->goAllBtn, &QPushButton::clicked, send_wp_client.get(), &SendWaypointsClient::onSendWaypointsGoalzz, Qt::UniqueConnection);
+    QObject::connect(mainWindow.getUi()->goAllBtn, &QPushButton::clicked, &mainWindow, &MainWindow::onGoAllBtnClicked);
+    QObject::connect(&mainWindow, &MainWindow::sendWaypointsGoal, send_wp_client.get(), &SendWaypointsClient::onSendWaypointsGoal, Qt::UniqueConnection);
+    QObject::connect(send_wp_client.get(), &SendWaypointsClient::serviceWpResponse, &mainWindow, &MainWindow::onWpServiceResponse, Qt::UniqueConnection);
+
     return a.exec();
 }
 

@@ -1,6 +1,6 @@
 waypoints:
   - name: start1
-    frame_id: map
+    frame_id: hello
     pose:
       position:
         x: 1
@@ -11,7 +11,7 @@ waypoints:
         y: 0
         z: 0
         w: 1
-  - name: start2
+  - name: world
     frame_id: map
     pose:
       position:

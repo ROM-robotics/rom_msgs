@@ -1,6 +1,6 @@
 #include <map_subscriber.h>
 
-MapSubscriber::MapSubscriber(const std::string &topic_name) :  Node("map_receiver") 
+MapSubscriber::MapSubscriber(const std::string &topic_name) :  Node("qt_map_receiver") 
 {
 
     rclcpp::QoS qos_profile(rclcpp::KeepLast(5)); 

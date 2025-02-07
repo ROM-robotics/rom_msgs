@@ -392,8 +392,8 @@ font-size: 36px;</string>
    <widget class="QPushButton" name="btnStop">
     <property name="geometry">
      <rect>
-      <x>1281</x>
-      <y>860</y>
+      <x>1451</x>
+      <y>735</y>
       <width>101</width>
       <height>101</height>
      </rect>
@@ -415,8 +415,8 @@ font-size: 36px;</string>
    <widget class="QPushButton" name="btnForward">
     <property name="geometry">
      <rect>
-      <x>1280</x>
-      <y>734</y>
+      <x>1169</x>
+      <y>735</y>
       <width>101</width>
       <height>101</height>
      </rect>
@@ -438,8 +438,8 @@ font-size: 36px;</string>
    <widget class="QPushButton" name="btnLeft">
     <property name="geometry">
      <rect>
-      <x>1141</x>
-      <y>860</y>
+      <x>1030</x>
+      <y>735</y>
       <width>101</width>
       <height>101</height>
      </rect>
@@ -461,8 +461,8 @@ font-size: 36px;</string>
    <widget class="QPushButton" name="btnRight">
     <property name="geometry">
      <rect>
-      <x>1421</x>
-      <y>860</y>
+      <x>1310</x>
+      <y>735</y>
       <width>101</width>
       <height>101</height>
      </rect>
@@ -534,7 +534,7 @@ color: orange;</string>
     <property name="geometry">
      <rect>
       <x>1060</x>
-      <y>1060</y>
+      <y>1050</y>
       <width>71</width>
       <height>71</height>
      </rect>
@@ -548,7 +548,6 @@ color: orange;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">border-radius: 35px;
-border: 1px solid gray;
 border: 2px solid #1B1F4F;
 color: green;
 font-size: 35px;</string>
@@ -687,7 +686,7 @@ color: white;</string>
     <property name="geometry">
      <rect>
       <x>1420</x>
-      <y>1020</y>
+      <y>1003</y>
       <width>141</width>
       <height>141</height>
      </rect>
@@ -721,7 +720,7 @@ font-weight: bold;</string>
     <property name="geometry">
      <rect>
       <x>1250</x>
-      <y>1040</y>
+      <y>1030</y>
       <width>101</width>
       <height>101</height>
      </rect>
@@ -947,6 +946,57 @@ border: 2px solid #979ba1;</string>
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="goAllBtn">
+    <property name="geometry">
+     <rect>
+      <x>1480</x>
+      <y>890</y>
+      <width>71</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radius: 35px;
+border: 1px solid #FF8C00;
+color: red;
+font-size: 24px;</string>
+    </property>
+    <property name="text">
+     <string>GoAll</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>16</width>
+      <height>16</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="geometry">
+     <rect>
+      <x>1482</x>
+      <y>1155</y>
+      <width>111</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: green;
+font-size: 26px;
+padding: 1px 0px 8px p1x;
+background-color: black;</string>
+    </property>
+    <property name="text">
+     <string>loop</string>
     </property>
    </widget>
   </widget>

@@ -50,6 +50,7 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
     #endif
     return;
   }
+
   // write data to yaml files
   file << "waypoints:\n";
         for (size_t i = 0; i < request->pose_names.size(); ++i) 
@@ -68,6 +69,8 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
             file << "        w: " << request->poses[i].pose.orientation.w << "\n";
 
             message.pose_names.push_back(request->pose_names[i]);
+            message.poses[i].position.x = request->scene_poses[i].position.x;
+            message.poses[i].position.y = request->scene_poses[i].position.y;
         }
 
   // close yaml file

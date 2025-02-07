@@ -24,7 +24,7 @@ pid_t launch_pid = -1;
 // Package and launch file names
 const std::string robot_name = std::getenv("ROM_ROBOT_MODEL");
 
-const std::string my_nav2_package = "rom_waypoint_provider";                 
+const std::string my_nav2_package = "rom_waypoints_provider";                 
 const std::string execu_name = "send_waypoints_goals";
 
 std::vector<std::string> wp_names_;
@@ -51,13 +51,13 @@ void startLaunch(const std::string &package, const std::string &execu_file, cons
   std::string result = joinVector(waypoints);
 
       #ifdef ROM_DEBUG
-        RCLCPP_INFO(rclcpp::get_logger("waypoint_server"), "Starting ros2 run : %s/%s", package.c_str(), execu_file.c_str());
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Starting ros2 run %s %s %s %s", package.c_str(), execu_file.c_str(),result.c_str(), loop.c_str());
       #endif
         // Fork a process  to run the launch file
         launch_pid = fork();
         if (launch_pid == 0) {
             // In child process
-            execlp("ros2", "ros2", "run", package.c_str(), execu_file.c_str(), result, state, (char *)NULL);
+            execlp("ros2", "ros2", "run", package.c_str(), execu_file.c_str(), result, loop, (char *)NULL);
             perror("execlp failed");
             std::exit(EXIT_FAILURE);
         }
@@ -72,7 +72,7 @@ void shutdownLaunch()
 {
         if (launch_pid > 0) {
           #ifdef ROM_DEBUG
-            RCLCPP_INFO(rclcpp::get_logger("waypoint_server"), "Shutting down current ros2 run process (PID: %d)...", launch_pid);
+            RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Shutting down current ros2 run process (PID: %d)...", launch_pid);
           #endif
             kill(launch_pid, SIGINT);
             int status;
@@ -85,26 +85,48 @@ void shutdownLaunch()
 void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::Request> request,
           std::shared_ptr<rom_interfaces::srv::ConstructYaml::Response> response)
 {
-  if(request->pose_names.size()<1) { return; }
+  if(request->pose_names.size()<1) 
+  {
+    #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "There is no Waypoints Goals");
+    #endif
+    return; 
+  }
 
   state = request->loop;
+
+  // copy data from qt
+  wp_names_.clear();
   for (size_t i = 0; i < request->pose_names.size(); ++i) 
   {
     wp_names_.emplace_back(request->pose_names[i]);
+    RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "LOOPING");
+  }
+  
+  //startLaunch(my_nav2_package,execu_name,wp_names_,state);
+  // if not already launch
+  if (state)  // မဆိုင်ဘူးထင်တယ်။
+  {
+    shutdownLaunch();
+    startLaunch(my_nav2_package,execu_name,wp_names_,state);
+    #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "New Launch");
+    #endif
+    return;
+  }
+  else { // if already launch
+    shutdownLaunch();
+    startLaunch(my_nav2_package,execu_name,wp_names_,state);
+    #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Restart Launch");
+    #endif
   }
 
-  if (launch_pid < 0) 
-  {
-    startLaunch(my_nav2_package,execu_name,wp_names_,state);
-  }
-  else {
-    shutdownLaunch(); 
-    startLaunch(my_nav2_package,execu_name,wp_names_,state);
-  }
-    #ifdef ROM_DEBUG
-        RCLCPP_INFO(rclcpp::get_logger("Selected_Waypoints"), "Selected_Waypoints Activate");
-    #endif
-  
+    
+  #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Selected_Waypoints Activate");
+  #endif
+  response->status = 1;
   
 }
 
@@ -117,7 +139,7 @@ int main(int argc, char **argv)
   rclcpp::Service<rom_interfaces::srv::ConstructYaml>::SharedPtr service = node->create_service<rom_interfaces::srv::ConstructYaml>("waypoints_selected", &waypoints_select);
 
   #ifdef ROM_DEBUG
-    RCLCPP_INFO(rclcpp::get_logger("waypoint_server"), "Ready to selected waypoints.");
+    RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Ready to selected waypoints.");
    
   #endif
 
