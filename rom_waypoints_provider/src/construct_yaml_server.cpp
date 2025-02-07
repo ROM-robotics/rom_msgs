@@ -20,29 +20,17 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
   rom_interfaces::msg::ConstructYaml message;
 
   //check yaml, if exists delete
-  if (std::filesystem::exists(yaml_path)) 
+  if (!(std::filesystem::exists(yaml_path))) 
   {
     #ifdef ROM_DEBUG
-      RCLCPP_INFO_STREAM(rclcpp::get_logger("yaml constructor"), "File exists: ");
+      RCLCPP_INFO_STREAM(rclcpp::get_logger("yaml constructor"), "File doesn't exists: ");
     #endif
-    
-    if (std::filesystem::remove(yaml_path)) 
-    {
-      #ifdef ROM_DEBUG
-        RCLCPP_INFO_STREAM(rclcpp::get_logger("yaml constructor"), "File deleted successfully.");
-      #endif
-    } 
-    else 
-    {
-      #ifdef ROM_DEBUG
-        RCLCPP_INFO_STREAM(rclcpp::get_logger("yaml constructor"), "Error deleting file!");
-      #endif
-      return; // Exit with error
-    }
+    return;
   }
 
   // create waypoints.yaml in your specific packages
-  std::ofstream file(yaml_path);
+  //std::ofstream file(yaml_path);
+  std::ofstream file(yaml_path, std::ios::trunc);
   if (!file.is_open()) 
   {
     #ifdef ROM_DEBUG
@@ -68,13 +56,16 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
             file << "        z: " << request->poses[i].pose.orientation.z << "\n";
             file << "        w: " << request->poses[i].pose.orientation.w << "\n";
 
-            message.pose_names.push_back(request->pose_names[i]);
-            message.poses[i] = request->scene_poses[i];
-            //message.poses[i].position.y = request->scene_poses[i].position.y;
-            // rotation????
+          #ifdef ROM_DEBUG
+            RCLCPP_ERROR(rclcpp::get_logger("yaml constructor"), "%s", request->pose_names[i].c_str());
+          #endif
+            //message.pose_names.push_back(request->pose_names[i]);
+            //message.poses.push_back(request->scene_poses[i]);
+            
         }
 
   // close yaml file
+  file.flush();
   file.close();
   #ifdef ROM_DEBUG
     RCLCPP_INFO_STREAM(rclcpp::get_logger("yaml constructor"), "waypoints.yaml created successfully!");

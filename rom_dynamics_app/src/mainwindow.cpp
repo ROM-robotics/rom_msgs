@@ -767,10 +767,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                         std::string textStd = text.toStdString();
                         delete textItem; 
 
+                        waypoints_.removeLast();
+                        waypoints_text_.removeLast();
                         waypoints_direction_.removeLast();
 
-                        waypoints_map_.erase(textStd);
+                        waypoints_map_.erase(textStd); // should removeLast or not
                         waypoints_scene_.erase(textStd);
+                        
                         /************* emit data to transmit **************/
                         // emit waypoints
                     }
