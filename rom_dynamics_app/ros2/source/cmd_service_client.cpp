@@ -108,10 +108,7 @@ void ConstructYamlServiceClient::onSendWaypoints(std::shared_ptr<std::unordered_
     }
     for (const auto &pair : *scene_wp_list)  // Dereferencing shared_ptr ( return )
     {
-        const std::string &wp_name = pair.first;
         const geometry_msgs::msg::Pose &pose = pair.second;
-        
-        request->pose_names.push_back(wp_name);
 
         geometry_msgs::msg::Pose scene_pose;
 
