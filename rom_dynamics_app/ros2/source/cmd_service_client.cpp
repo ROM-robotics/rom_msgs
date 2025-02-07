@@ -158,12 +158,14 @@ void WaypointListSubscriber::wpCallback(const rom_interfaces::msg::ConstructYaml
     #ifdef ROM_DEBUG
         qDebug() << "emit updateMap(msg)";
     #endif
-    for (size_t i = 0; i < wp_list->pose_names.size(); ++i) 
-    {
-        wp_names_.emplace_back(wp_list->pose_names[i]);
-    }
+
+    // for (size_t i = 0; i < wp_list->pose_names.size(); ++i) 
+    // {
+        wplistPtr_ = wp_list;
+    //}
+
     //emit updateWpUI(wp_list);
-    emit updateWpUI(wp_names_);
+    emit updateWpUI(wplistPtr_);
 }  
 
 
@@ -174,13 +176,6 @@ SendWaypointsClient::SendWaypointsClient(const std::string &service_name, QObjec
     wp_goal_client_ = this->create_client<rom_interfaces::srv::ConstructYaml>(service_name);   
 }
 
-// void SendWaypointsClient::onSendWaypointsGoalzz()
-// {
-//     #ifdef ROM_DEBUG 
-//             qDebug() << "getting wp_list goals in slot function.";
-//             qDebug() << "MainWindow Thread:" << QThread::currentThread();
-//     #endif
-// }
 void SendWaypointsClient::onSendWaypointsGoal(std::vector<std::string> wp_names)
 {
     std::lock_guard<std::mutex> lock(mutex_); 

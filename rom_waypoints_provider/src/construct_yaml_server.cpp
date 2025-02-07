@@ -51,7 +51,7 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
     return;
   }
 
-  // write data to yaml files
+  // write data to yaml files and message for publisher
   file << "waypoints:\n";
         for (size_t i = 0; i < request->pose_names.size(); ++i) 
         {
@@ -79,7 +79,7 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
     RCLCPP_INFO_STREAM(rclcpp::get_logger("yaml constructor"), "waypoints.yaml created successfully!");
   #endif     
 
-  // publish or gui apps
+  // publish for other qt apps
   publisher_->publish(message);
 }
 
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
   yaml_path = package_path + "/config/waypoints.yaml";
 
   // publisher
-  auto qos = rclcpp::QoS(10); // Keep last 10 messages
+  auto qos = rclcpp::QoS(1); // Keep last 10 messages
   qos.transient_local(); // Set durability to TRANSIENT_LOCAL
 
   publisher_ = node->create_publisher<rom_interfaces::msg::ConstructYaml>("waypoints_list", qos);

@@ -20,6 +20,7 @@
 
 #include <rom_interfaces/srv/which_maps.hpp>
 #include <rom_interfaces/srv/construct_yaml.hpp>
+#include <rom_interfaces/msg/construct_yaml.hpp>
 #include <QPropertyAnimation>
 #include <QEasingCurve>
 
@@ -131,7 +132,7 @@ class MainWindow : public QMainWindow
         void onCmdServiceResponse(bool success);
         void onWpServiceResponse(bool success);
 
-        void onUpdateWpUI(std::vector<std::string> wp_names);
+        void onUpdateWpUI(rom_interfaces::msg::ConstructYaml::SharedPtr wplist_ptr);
 
         // -----------------------for mapping app
         void onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg);
@@ -231,8 +232,7 @@ class MainWindow : public QMainWindow
         QList<double> waypoints_direction_;
         std::unordered_map<std::string, geometry_msgs::msg::Pose> waypoints_map_;
         std::unordered_map<std::string, geometry_msgs::msg::Pose> waypoints_scene_;
-        std::vector<std::string> wp_names_in_robot_server_;
-        std::vector<std::string> selected_wp_in_robot_server_;
+        
         bool loop_waypoints_ = false;
 
 

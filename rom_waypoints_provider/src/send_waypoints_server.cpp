@@ -103,18 +103,18 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
     RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "LOOPING");
   }
   
-  //startLaunch(my_nav2_package,execu_name,wp_names_,state);
+  
   // if not already launch
-  if (state)  // မဆိုင်ဘူးထင်တယ်။
+  if (state)  // မဆိုင်ဘူးထင်တယ်။======================================================== bool loop logic in qt
   {
-    shutdownLaunch();
     startLaunch(my_nav2_package,execu_name,wp_names_,state);
     #ifdef ROM_DEBUG
         RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "New Launch");
     #endif
     return;
   }
-  else { // if already launch
+  else 
+  { // if already launch
     shutdownLaunch();
     startLaunch(my_nav2_package,execu_name,wp_names_,state);
     #ifdef ROM_DEBUG

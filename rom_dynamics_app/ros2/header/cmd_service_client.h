@@ -62,13 +62,14 @@ public:
     //~WaypointListSubscriber() {}
 
 signals:
-    void updateWpUI(std::vector<std::string> wp_names);
+    void updateWpUI(rom_interfaces::msg::ConstructYaml::SharedPtr wplist_ptr);
 
 private:
     rclcpp::Subscription<rom_interfaces::msg::ConstructYaml>::SharedPtr wp_subscription_;
     void wpCallback(const rom_interfaces::msg::ConstructYaml::SharedPtr wplist);
 
     std::vector<std::string> wp_names_;
+    rom_interfaces::msg::ConstructYaml::SharedPtr wplistPtr_;
 };
 
 class SendWaypointsClient : public QObject, public rclcpp::Node

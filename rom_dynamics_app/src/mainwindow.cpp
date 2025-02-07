@@ -658,6 +658,10 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 double mapX = (scenePoint.x() * this->map_resolution_) + this->map_origin_x_;
                 double mapY = (scenePoint.y() * this->map_resolution_) + this->map_origin_y_;
 
+                /* reverse */
+                //double sceneX = (mapX - this->map_origin_x_) / this->map_resolution_;
+                //double sceneY = (mapY - this->map_origin_y_) / this->map_resolution_;
+
                 // y-axis qt နဲ့ map မတူခဲ့ရင် ဒါသုံး
                 /*
                 double mapX = (scenePoint.x() * this->map_resolution_) + this->map_origin_x_;
@@ -737,6 +741,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
                     scene_pose.position.x = scenePoint.x();
                     scene_pose.position.y = scenePoint.y();
+                    scene_pose.orientation.x = wp_heading; // temp store ( degree )
+                    scene_pose.orientation.z = z_in_quaternion;
+                    scene_pose.orientation.w = w_in_quaternion;
 
                     // append 
                     waypoints_map_[wp_name.toStdString()] = pose;
@@ -1890,30 +1897,64 @@ void MainWindow::applyStyleNormal()
 }
 
 
-void MainWindow::onUpdateWpUI(std::vector<std::string> wp_names)
+void MainWindow::onUpdateWpUI(rom_interfaces::msg::ConstructYaml::SharedPtr wplist_ptr)
 {
     
     #ifdef ROM_DEBUG 
         qDebug() << "[    on_goBtn_clicked        ] : sending pose";
     #endif
 
-    // update ui with waypoint selectable buttons
-    // ၁။ store waypoints of robot computer in `wp_names_in_robot_server_` variables
-        wp_names_in_robot_server_ = wp_names;
+    // delete original waypoints on scene
+    // delete  lists
+    // add data to lists
+    // update Ui
 
-    // ၂။ wp_names ကို button များဖြင့်ပြရန်
-    
+    // LISTS
+        // waypoints_;
+        // waypoints_text_;
+        // waypoints_direction_;
+        // std::unordered_map<std::string, geometry_msgs::msg::Pose> 
+        // waypoints_map_;
+        // waypoints_scene_;
 
-    // ၃။ အဲ့ဒီ button တွေမှာ signal slot ထည့်ရန်
+        waypoints_.clear();
+        waypoints_text_.clear();
+        waypoints_direction_.clear();
+        waypoints_map_.clear();
+        waypoints_scene_.clear();
 
+        int radius = 10;
+                  
 
-    // ဒီ code ကို အခြားနေရာပို့ပြီး အသုံးပြုရန်
-    // ၃။ button များကို select လုပ်ရန်နှင့် loop ရွေးရန်
-    // selected_wp_in_robot_server_ 
+        for (size_t i=0; i<wplist_ptr->pose_names.size(); i++)
+        {
+                QGraphicsTextItem *textItem = ui->graphicsView->scene()->addText(QString::fromStdString(wplist_ptr->pose_names[i]));
+                        textItem->setFont(QFont("Arial", 16));  // Set font and size
+                        textItem->setDefaultTextColor(QColor("#067832"));  // Set text color
+                        textItem->setPos(wplist_ptr->poses[i].position.x -50,wplist_ptr->poses[i].position.y -65);
 
+                QRectF circle(wplist_ptr->poses[i].position.x - radius, wplist_ptr->poses[i].position.y - radius, radius * 3, radius * 3);
+                
+                    QGraphicsEllipseItem* circleItem = new QGraphicsEllipseItem(circle);
+                    // Set properties
+                    circleItem->setPen(QPen(Qt::red, 2));
 
+                ui->graphicsView->scene()->addItem(circleItem);
 
-    
+                waypoints_.append(circleItem);
+                waypoints_text_.append(textItem);
+                waypoints_direction_.append(wplist_ptr->poses[i].orientation.x);
+
+                double mapX = (wplist_ptr->poses[i].position.x * this->map_resolution_) + this->map_origin_x_;
+                double mapY = (wplist_ptr->poses[i].position.y * this->map_resolution_) + this->map_origin_y_;
+
+                waypoints_map_[wplist_ptr->pose_names[i]] = wplist_ptr->poses[i];
+                waypoints_map_[wplist_ptr->pose_names[i]].position.x = mapX;
+                waypoints_map_[wplist_ptr->pose_names[i]].position.y = mapY;
+                waypoints_map_[wplist_ptr->pose_names[i]].orientation.x = 0.000;  // clear degree
+
+                waypoints_scene_[wplist_ptr->pose_names[i]] = wplist_ptr->poses[i];
+        }
 }
 
 void MainWindow::onGoAllBtnClicked(bool status)
@@ -1923,15 +1964,14 @@ void MainWindow::onGoAllBtnClicked(bool status)
     #endif
     UNUSED(status);
     statusLabelPtr_->setText("\n waypoints လွှတ်ပြီ ...\n");
-
-               
-        // emit selected waypoints signal;
+    
         std::vector<std::string> selected_wp_names;
 
-        // လောလောဆယ် Select မလုပ်ထားလို့ robot server မှာ wp များမရသေးး အဆင်ပြေသလို ထည့်ထားတယ်။
-        selected_wp_in_robot_server_.push_back("hello");
-        selected_wp_in_robot_server_.push_back("world");
-        selected_wp_names = selected_wp_in_robot_server_;
+        // ပုံမှန်အားဖြင့်တော့ waypoints အကုန်လုံးပဲ။ waypoints ရွေးပေးချင်ရင် ဒီမှာ hack ။
+        for(int i = 0; i < waypoints_text_.size(); i++)
+        {
+            selected_wp_names.push_back( waypoints_text_[i]->toPlainText().toStdString() );
+        }
         
         // btn trigger loop_waypoints_ to true or false; default အားဖြင့် false
         if(loop_waypoints_)
