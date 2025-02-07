@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> action_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> waypoint_executor_st = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
-    pose_subscriber = std::make_shared<Subscriber>("/odom"); 
+    pose_subscriber = std::make_shared<Subscriber>("/robot_pose"); 
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
 
     cmd_service_client = std::make_shared<CmdServiceClient>("which_vel");

@@ -6,6 +6,7 @@
 
 #include <QObject>
 #include <QtWidgets/QApplication>
+#include <geometry_msgs/msg/pose2_d.hpp>
 
 class Subscriber : public QObject, public rclcpp::Node
 {
@@ -15,11 +16,11 @@ class Subscriber : public QObject, public rclcpp::Node
         explicit Subscriber(const std::string &topic_name);
 
     signals:
-        void logReceived(const nav_msgs::msg::Odometry::SharedPtr msg);
+        void logReceived(const geometry_msgs::msg::Pose2D::SharedPtr msg);
 
     private:
-        rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subscription_;
-        void poseCallback(const nav_msgs::msg::Odometry::SharedPtr msg);
+        rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr subscription_;
+        void poseCallback(const geometry_msgs::msg::Pose2D::SharedPtr msg);
 };
 
 #endif // SUBSCRIBER_H

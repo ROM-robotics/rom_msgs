@@ -119,6 +119,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     qRegisterMetaType<std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>>>("std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>>");
     qRegisterMetaType<std::vector<std::string>>("std::vector<std::string>");
     qRegisterMetaType<rom_interfaces::msg::ConstructYaml::SharedPtr>("rom_interfaces::msg::ConstructYaml::SharedPtr");
+    qRegisterMetaType<geometry_msgs::msg::Pose2D::SharedPtr>("geometry_msgs::msg::Pose2D::SharedPtr");
 
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
 
@@ -142,17 +143,19 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg) 
+void MainWindow::displayCurrentPose(const geometry_msgs::msg::Pose2D::SharedPtr msg) 
 {
-    double x = (msg->pose.pose.position.x * meter_to_foot_constant);
-    double y = (msg->pose.pose.position.y * meter_to_foot_constant);
+    double x = (msg->x * meter_to_foot_constant);
+    double y = (msg->y * meter_to_foot_constant);
 
-    double theta = quaternion_to_euler_yaw(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
-    double theta_degree = theta * radian_to_degree_constant;
+    //double theta = quaternion_to_euler_yaw(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
+    double theta_degree = msg->theta;
 
     ui->xValueLabel->setText(QString("%1").arg(x, 0, 'f', 1));
     ui->yValueLabel->setText(QString("%1").arg(y, 0, 'f', 1));
     ui->phiValueLabel->setText(QString("%1").arg(theta_degree, 0, 'f', 1));
+
+    // robot pose ကို scene ထဲမှာပြရန်
 }
 
 void MainWindow::changeCurrentMode(const std_msgs::msg::String::SharedPtr msg)
@@ -1983,7 +1986,7 @@ void MainWindow::onUpdateWpUI(rom_interfaces::msg::ConstructYaml::SharedPtr wpli
 
 void MainWindow::onGoAllBtnClicked(bool status)
 {
-     #ifdef ROM_DEBUG 
+    #ifdef ROM_DEBUG 
         qDebug() << "[    MainWindow::onGoAllBtnClicked()      ] : ";
     #endif
     UNUSED(status);
@@ -1992,9 +1995,13 @@ void MainWindow::onGoAllBtnClicked(bool status)
         std::vector<std::string> selected_wp_names;
 
         // ပုံမှန်အားဖြင့်တော့ waypoints အကုန်လုံးပဲ။ waypoints ရွေးပေးချင်ရင် ဒီမှာ hack ။
-        for(int i = 0; i < waypoints_text_.size(); i++)
+        for (const auto &pair : waypoints_map_)
         {
-            selected_wp_names.push_back( waypoints_text_[i]->toPlainText().toStdString() );
+            selected_wp_names.push_back( pair.first );
+
+            #ifdef ROM_DEBUG 
+                qDebug() << "[    MainWindow::onGoAllBtnClicked()      ] : " << pair.first.c_str();
+            #endif
         }
         
         loop_waypoints_ = ui->loopCheckBox->isChecked();

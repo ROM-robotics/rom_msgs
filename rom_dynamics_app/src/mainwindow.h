@@ -31,6 +31,8 @@
 #include <unordered_map>
 // --------------------mapping app
 
+#include <geometry_msgs/msg/pose2_d.hpp>
+
 #define ROM_DEBUG 1
 
 QT_BEGIN_NAMESPACE
@@ -110,7 +112,7 @@ class MainWindow : public QMainWindow
         
     
     public slots:
-        void displayCurrentPose(const nav_msgs::msg::Odometry::SharedPtr msg);
+        void displayCurrentPose(const geometry_msgs::msg::Pose2D::SharedPtr msg);
         void changeCurrentMode(const std_msgs::msg::String::SharedPtr msg);
         
         void sendMappingMode();
