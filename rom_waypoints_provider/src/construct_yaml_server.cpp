@@ -69,8 +69,9 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
             file << "        w: " << request->poses[i].pose.orientation.w << "\n";
 
             message.pose_names.push_back(request->pose_names[i]);
-            message.poses[i].position.x = request->scene_poses[i].position.x;
-            message.poses[i].position.y = request->scene_poses[i].position.y;
+            message.poses[i] = request->scene_poses[i];
+            //message.poses[i].position.y = request->scene_poses[i].position.y;
+            // rotation????
         }
 
   // close yaml file

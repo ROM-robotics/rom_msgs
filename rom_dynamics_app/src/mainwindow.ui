@@ -980,7 +980,7 @@ font-size: 24px;</string>
      </size>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox">
+   <widget class="QCheckBox" name="loopCheckBox">
     <property name="geometry">
      <rect>
       <x>1482</x>

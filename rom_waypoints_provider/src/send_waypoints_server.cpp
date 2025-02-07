@@ -105,7 +105,7 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
   
   
   // if not already launch
-  if (state)  // မဆိုင်ဘူးထင်တယ်။======================================================== bool loop logic in qt
+  if (launch_pid<0)  // မဆိုင်ဘူးထင်တယ်။======================================================== 
   {
     startLaunch(my_nav2_package,execu_name,wp_names_,state);
     #ifdef ROM_DEBUG
@@ -126,7 +126,7 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
   #ifdef ROM_DEBUG
         RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Selected_Waypoints Activate");
   #endif
-  response->status = 1;
+  response->status = true;
   
 }
 

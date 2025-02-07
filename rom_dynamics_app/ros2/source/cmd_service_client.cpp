@@ -106,7 +106,7 @@ void ConstructYamlServiceClient::onSendWaypoints(std::shared_ptr<std::unordered_
         
         request->poses.push_back(pose_stamped);
     }
-    for (const auto &pair : *scene_wp_list)  // Dereferencing shared_ptr
+    for (const auto &pair : *scene_wp_list)  // Dereferencing shared_ptr ( return )
     {
         const std::string &wp_name = pair.first;
         const geometry_msgs::msg::Pose &pose = pair.second;
@@ -242,5 +242,5 @@ void SendWaypointsClient::onSendWaypointsGoal(std::vector<std::string> wp_names)
     //     #endif
     // }
     
-   emit serviceWpResponse(false);
+   emit serviceWpResponse(true);
 }

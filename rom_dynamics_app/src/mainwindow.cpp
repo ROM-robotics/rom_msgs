@@ -1913,6 +1913,7 @@ void MainWindow::onUpdateWpUI(rom_interfaces::msg::ConstructYaml::SharedPtr wpli
         // waypoints_;
         // waypoints_text_;
         // waypoints_direction_;
+
         // std::unordered_map<std::string, geometry_msgs::msg::Pose> 
         // waypoints_map_;
         // waypoints_scene_;
@@ -1948,12 +1949,26 @@ void MainWindow::onUpdateWpUI(rom_interfaces::msg::ConstructYaml::SharedPtr wpli
                 double mapX = (wplist_ptr->poses[i].position.x * this->map_resolution_) + this->map_origin_x_;
                 double mapY = (wplist_ptr->poses[i].position.y * this->map_resolution_) + this->map_origin_y_;
 
-                waypoints_map_[wplist_ptr->pose_names[i]] = wplist_ptr->poses[i];
-                waypoints_map_[wplist_ptr->pose_names[i]].position.x = mapX;
-                waypoints_map_[wplist_ptr->pose_names[i]].position.y = mapY;
-                waypoints_map_[wplist_ptr->pose_names[i]].orientation.x = 0.000;  // clear degree
+                geometry_msgs::msg::Pose tmp;
 
+                tmp.position.x = mapX;
+                tmp.position.y = mapY;
+
+                    double wp_heading = wplist_ptr->poses[i].orientation.x;
+                    double z_in_quaternion;
+                    double w_in_quaternion;
+
+                    double yaw_in_map = (wp_heading*0.017453292519943295);
+                    yaw_to_quaternion(yaw_in_map, z_in_quaternion, w_in_quaternion);
+                    
+                    tmp.orientation.z = z_in_quaternion;
+                    tmp.orientation.w = w_in_quaternion;
+                
+                waypoints_map_[wplist_ptr->pose_names[i]] = tmp;
+                    
+                // gui
                 waypoints_scene_[wplist_ptr->pose_names[i]] = wplist_ptr->poses[i];
+                waypoints_scene_[wplist_ptr->pose_names[i]].orientation.x = 0.000; 
         }
 }
 
@@ -1973,6 +1988,8 @@ void MainWindow::onGoAllBtnClicked(bool status)
             selected_wp_names.push_back( waypoints_text_[i]->toPlainText().toStdString() );
         }
         
+        loop_waypoints_ = ui->loopCheckBox->isChecked();
+
         // btn trigger loop_waypoints_ to true or false; default အားဖြင့် false
         if(loop_waypoints_)
         { 
