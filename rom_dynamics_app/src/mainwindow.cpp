@@ -118,6 +118,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     // waypoints list
     qRegisterMetaType<std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>>>("std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>>");
     qRegisterMetaType<std::vector<std::string>>("std::vector<std::string>");
+    qRegisterMetaType<rom_interfaces::msg::ConstructYaml::SharedPtr>("rom_interfaces::msg::ConstructYaml::SharedPtr");
 
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
 
@@ -1928,13 +1929,15 @@ void MainWindow::onUpdateWpUI(rom_interfaces::msg::ConstructYaml::SharedPtr wpli
         waypoints_scene_.clear();
 
         int radius = 10;
-                  
+        #ifdef ROM_DEBUG
+            qDebug() << "topic received from onUpdateWpUI()";
+        #endif
 
         for (size_t i=0; i<wplist_ptr->pose_names.size(); i++)
         {
                 QGraphicsTextItem *textItem = ui->graphicsView->scene()->addText(QString::fromStdString(wplist_ptr->pose_names[i]));
                         textItem->setFont(QFont("Arial", 16));  // Set font and size
-                        textItem->setDefaultTextColor(QColor("#067832"));  // Set text color
+                        textItem->setDefaultTextColor(QColor("#000000"));  // Set text color
                         textItem->setPos(wplist_ptr->poses[i].position.x -50,wplist_ptr->poses[i].position.y -65);
 
                 QRectF circle(wplist_ptr->poses[i].position.x - radius, wplist_ptr->poses[i].position.y - radius, radius * 3, radius * 3);

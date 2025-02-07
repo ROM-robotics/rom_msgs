@@ -153,7 +153,7 @@ WaypointListSubscriber::WaypointListSubscriber(const std::string &topic_name) : 
 void WaypointListSubscriber::wpCallback(const rom_interfaces::msg::ConstructYaml::SharedPtr wp_list) 
 {
     #ifdef ROM_DEBUG
-        qDebug() << "emit updateMap(msg)";
+        qDebug() << "emit updateWpUI(wplistPtr_)";
     #endif
 
     // for (size_t i = 0; i < wp_list->pose_names.size(); ++i) 

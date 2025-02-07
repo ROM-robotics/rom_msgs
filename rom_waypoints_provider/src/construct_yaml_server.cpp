@@ -59,14 +59,14 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
           #ifdef ROM_DEBUG
             RCLCPP_ERROR(rclcpp::get_logger("yaml constructor"), "%s", request->pose_names[i].c_str());
           #endif
-            //message.pose_names.push_back(request->pose_names[i]);
-            //message.poses.push_back(request->scene_poses[i]);
-            
+            message.pose_names.push_back(request->pose_names[i]);
+            message.poses.push_back(request->scene_poses[i]);  
         }
 
   // close yaml file
   file.flush();
   file.close();
+  
   #ifdef ROM_DEBUG
     RCLCPP_INFO_STREAM(rclcpp::get_logger("yaml constructor"), "waypoints.yaml created successfully!");
   #endif     
