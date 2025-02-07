@@ -899,6 +899,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                     waypoints_.clear();
                     waypoints_text_.clear();
                     waypoints_direction_.clear();
+
+                    waypoints_map_.clear();
+                    waypoints_scene_.clear();
                 }
 
                 /************* emit data to transmit **************/
