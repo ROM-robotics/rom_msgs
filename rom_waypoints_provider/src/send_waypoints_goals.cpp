@@ -82,15 +82,20 @@ private:
         }
     }
 
-    std::vector<geometry_msgs::msg::PoseStamped> filter_waypoints(std::vector<std::string> selected_names) {
+    std::vector<geometry_msgs::msg::PoseStamped> filter_waypoints(std::vector<std::string> selected_names) 
+    {
         std::vector<geometry_msgs::msg::PoseStamped> filtered;
-
-        if (selected_names.empty()) {
+        /*
+        if (selected_names.empty()) 
+        {
             RCLCPP_WARN(this->get_logger(), "No specific waypoints selected. Using all.");
             for (const auto &[name, pose] : waypoint_map_) {
                 filtered.push_back(pose);
             }
-        } else {
+        } 
+        else 
+        {
+            // ဒါက selected_names ထဲ က key တွေနဲ့ loop ပတ်ထည့်တာ
             for (const auto &name : selected_names) {
                 if (waypoint_map_.count(name)) {
                     filtered.push_back(waypoint_map_[name]);
@@ -99,14 +104,22 @@ private:
                 }
             }
         }
-
+        */
+        for (const auto &pair: waypoint_map_) 
+        {  
+            filtered.push_back(waypoint_map_[pair.first]);
+            RCLCPP_WARN(this->get_logger(), "Waypoint '%s' found!", pair.first.c_str());
+        }
         return filtered;
     }
 
-    void send_waypoints() {
-        while (rclcpp::ok()) {
+    void send_waypoints() 
+    {
+        while (rclcpp::ok()) 
+        {
             
-            if (!client_->wait_for_action_server(std::chrono::seconds(10))) {
+            if (!client_->wait_for_action_server(std::chrono::seconds(10))) 
+            {
                 RCLCPP_ERROR(this->get_logger(), "FollowWaypoints action server not available!");
                 return;
             }
@@ -205,6 +218,7 @@ int main(int argc, char **argv)
     // Parse CLI arguments
     bool loop = false;
     std::vector<std::string> selected_waypoints;
+
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         if (arg == "--loop") {

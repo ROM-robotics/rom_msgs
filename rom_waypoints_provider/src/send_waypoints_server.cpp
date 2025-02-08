@@ -45,19 +45,20 @@ std::string joinVector(const std::vector<std::string>& waypoints, const std::str
 void startLaunch(const std::string &package, const std::string &execu_file, const std::vector<std::string> waypoints,const bool &state = false) 
 {
   std::string loop;
-  if(state) { loop = "--loop"; }
+  if(state) { loop = " --loop"; }
   else{ loop= ""; }
 
-  std::string result = joinVector(waypoints);
+  //std::string result = joinVector(waypoints);
 
       #ifdef ROM_DEBUG
-        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Starting ros2 run %s %s %s %s", package.c_str(), execu_file.c_str(),result.c_str(), loop.c_str());
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Starting ros2 run %s %s %s", package.c_str(), execu_file.c_str(), loop.c_str());
+        //RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Starting ros2 run %s %s %s %s", package.c_str(), execu_file.c_str(),result.c_str(), loop.c_str());
       #endif
         // Fork a process  to run the launch file
         launch_pid = fork();
         if (launch_pid == 0) {
             // In child process
-            execlp("ros2", "ros2", "run", package.c_str(), execu_file.c_str(), result, loop, (char *)NULL);
+            execlp("ros2", "ros2", "run", package.c_str(), execu_file.c_str(), loop, (char *)NULL);
             perror("execlp failed");
             std::exit(EXIT_FAILURE);
         }
