@@ -17,6 +17,7 @@
 #include <std_msgs/msg/string.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <nav_msgs/msg/odometry.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
 
 #include <rom_interfaces/srv/which_maps.hpp>
 #include <rom_interfaces/srv/construct_yaml.hpp>
@@ -149,6 +150,8 @@ class MainWindow : public QMainWindow
         // -----------------------end for mapping app
 
         void onGoAllBtnClicked(bool statys);
+
+        void onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan);
         
     private slots:
         void on_shutdownBtn_clicked();
@@ -173,6 +176,8 @@ class MainWindow : public QMainWindow
     
     private:
         std::shared_ptr<Ui::MainWindow> ui = nullptr;
+
+        QGraphicsEllipseItem *robotItemPtr_ = nullptr;
 
         // action goal
         QPushButton *btnGoToGoal_;

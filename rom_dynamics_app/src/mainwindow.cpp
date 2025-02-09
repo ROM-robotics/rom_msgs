@@ -113,7 +113,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     qRegisterMetaType<nav_msgs::msg::Odometry::SharedPtr>("nav_msgs::msg::Odometry::SharedPtr");
     qRegisterMetaType<std_msgs::msg::String::SharedPtr>("std_msgs::msg::String::SharedPtr");
     qRegisterMetaType<geometry_msgs::msg::Pose>("geometry_msgs::msg::Pose");
-    //qRegisterMetaType<rom_interfaces::srv::WhichMaps::Response::SharedPtr>("rom_interfaces::srv::WhichMaps::Response::SharedPtr");
+    // qRegisterMetaType<rom_interfaces::srv::WhichMaps::Response::SharedPtr>("rom_interfaces::srv::WhichMaps::Response::SharedPtr");
     qRegisterMetaType<std::shared_ptr<rom_interfaces::srv::WhichMaps::Response>>("std::shared_ptr<rom_interfaces::srv::WhichMaps::Response>");
     // map
     qRegisterMetaType<nav_msgs::msg::OccupancyGrid::SharedPtr>("nav_msgs::msg::OccupancyGrid::SharedPtr");
@@ -122,7 +122,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     qRegisterMetaType<std::vector<std::string>>("std::vector<std::string>");
     qRegisterMetaType<rom_interfaces::msg::ConstructYaml::SharedPtr>("rom_interfaces::msg::ConstructYaml::SharedPtr");
     qRegisterMetaType<geometry_msgs::msg::Pose2D::SharedPtr>("geometry_msgs::msg::Pose2D::SharedPtr");
-
+    // laser scan
+    qRegisterMetaType<sensor_msgs::msg::LaserScan::SharedPtr>("sensor_msgs::msg::LaserScan::SharedPtr");
+    
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
 
     ui->saveMapBtn->hide();//setEnabled(false);
@@ -147,17 +149,46 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayCurrentPose(const geometry_msgs::msg::Pose2D::SharedPtr msg) 
 {
-    double x = (msg->x * meter_to_foot_constant);
-    double y = (msg->y * meter_to_foot_constant);
+    double x_meter = msg->x;
+    double y_meter = msg->y;
+
+    double x_feet = (x_meter * meter_to_foot_constant);
+    double y_feet = (y_meter * meter_to_foot_constant);
 
     //double theta = quaternion_to_euler_yaw(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
     double theta_degree = msg->theta;
 
-    ui->xValueLabel->setText(QString("%1").arg(x, 0, 'f', 1));
-    ui->yValueLabel->setText(QString("%1").arg(y, 0, 'f', 1));
+    /* Display */
+    ui->xValueLabel->setText(QString("%1").arg(x_feet, 0, 'f', 1));
+    ui->yValueLabel->setText(QString("%1").arg(y_feet, 0, 'f', 1));
     ui->phiValueLabel->setText(QString("%1").arg(theta_degree, 0, 'f', 1));
 
     // robot pose ကို scene ထဲမှာပြရန်
+    // Convert world coordinates to scene coordinates (adjust as needed)
+    double sceneX = (x_meter - this->map_origin_x_) / this->map_resolution_;  // scaleFactor converts meters to scene pixels
+    double sceneY = (y_meter - this->map_origin_y_) / this->map_resolution_; // * -1  Negative Y for correct Qt scene orientation
+
+    if (!robotItemPtr_) 
+    {
+        // Create robot representation if not already created
+        int robotSize = 20;
+        robotItemPtr_ = new QGraphicsEllipseItem(
+            QRectF(sceneX - robotSize / 2, sceneY - robotSize / 2, robotSize, robotSize));
+        robotItemPtr_->setPen(QPen(Qt::blue, 2));
+        robotItemPtr_->setBrush(QBrush(Qt::blue));
+        
+        // Add to scene
+        ui->graphicsView->scene()->addItem(robotItemPtr_);
+    } 
+    else 
+    {
+        // Update robot position
+        robotItemPtr_->setPos(sceneX - robotItemPtr_->boundingRect().width() / 2, 
+                          sceneY - robotItemPtr_->boundingRect().height() / 2);
+    }
+
+    // Apply rotation
+    robotItemPtr_->setRotation(theta_degree);
 }
 
 void MainWindow::changeCurrentMode(const std_msgs::msg::String::SharedPtr msg)
@@ -1760,7 +1791,7 @@ void MainWindow::applyStyleWaypoint()
     "}");
     service_mode_btn_ptr_->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_50.png);"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -1805,7 +1836,7 @@ void MainWindow::applyStyleWall()
     "}");
     service_mode_btn_ptr_->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_50.png);"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -1850,7 +1881,7 @@ void MainWindow::applyStyleEraser()
     "}");
     service_mode_btn_ptr_->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_50.png);"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -1895,7 +1926,7 @@ void MainWindow::applyStyleZoom()
     "}");
     service_mode_btn_ptr_->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_50.png);"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -1940,7 +1971,7 @@ void MainWindow::applyStyleNormal()
     "}");
     service_mode_btn_ptr_->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_50.png);"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -2165,4 +2196,10 @@ void MainWindow::onGoAllBtnClicked(bool status)
         }
 }
 
+void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan)
+{
+    #ifdef ROM_DEBUG 
+        qDebug() << "[ MainWindow::onUpdateLaser ] : get laser";
+    #endif
+}
 // file_path = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png

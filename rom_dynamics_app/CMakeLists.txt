@@ -19,6 +19,7 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(rom_interfaces REQUIRED)
 find_package(tf2 REQUIRED)
@@ -74,7 +75,7 @@ add_executable(ROM_DYNAMICS
 
 target_link_libraries(ROM_DYNAMICS ${Qt5Core_LIBRARIES})
 target_link_libraries(ROM_DYNAMICS ${Qt5Widgets_LIBRARIES})
-ament_target_dependencies(ROM_DYNAMICS rclcpp rclcpp_action std_msgs geometry_msgs nav_msgs nav2_msgs tf2 tf2_geometry_msgs rom_interfaces)
+ament_target_dependencies(ROM_DYNAMICS rclcpp rclcpp_action std_msgs geometry_msgs sensor_msgs nav_msgs nav2_msgs tf2 tf2_geometry_msgs rom_interfaces)
 
 #---------------- END -----------------#
 

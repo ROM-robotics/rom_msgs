@@ -387,7 +387,7 @@ font-size: 36px;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color: white;
-background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_100.png);
+background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);
 background-repeat: no-repeat; 
 background-position: center; 
 border: 2px solid #979ba1;</string>

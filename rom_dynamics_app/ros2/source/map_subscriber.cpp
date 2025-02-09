@@ -20,4 +20,18 @@ void MapSubscriber::mapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr ms
     emit updateMap(msg);
 }
 
+LaserSubscriber::LaserSubscriber(const std::string &topic_name) :  Node("qt_laser_receiver") 
+{
+    laser_subscriber_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
+        topic_name, 4, std::bind(&LaserSubscriber::laserCallback, this, std::placeholders::_1));
+}
+
+
+void LaserSubscriber::laserCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg) 
+{
+    #ifdef ROM_DEBUG
+        qDebug() << "[  LaserSubscriber::laserCallback  ]: emit updateLaser(msg)";
+    #endif
+    emit updateLaser(msg);
+}
 

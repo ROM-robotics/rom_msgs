@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<MapSubscriber> map_subscriber = nullptr;
     std::shared_ptr<WaypointListSubscriber> wp_subscriber = nullptr;
     std::shared_ptr<SendWaypointsClient> send_wp_client = nullptr;
+    std::shared_ptr<LaserSubscriber> laser_subscriber = nullptr;
 
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> pose_mode_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> cmd_executor_st = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
@@ -29,6 +30,7 @@ int main(int argc, char *argv[])
 
     pose_subscriber = std::make_shared<Subscriber>("/robot_pose"); 
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
+    laser_subscriber = std::make_shared<LaserSubscriber>("/scan");
 
     cmd_service_client = std::make_shared<CmdServiceClient>("which_vel");
     yaml_service_client = std::make_shared<ConstructYamlServiceClient>("/construct_yaml");
@@ -40,6 +42,7 @@ int main(int argc, char *argv[])
     
     pose_mode_executor_mt->add_node(pose_subscriber);
     pose_mode_executor_mt->add_node(mode_subscriber);
+    pose_mode_executor_mt->add_node(laser_subscriber);
 
     cmd_executor_st->add_node(cmd_service_client);
     cmd_executor_st->add_node(yaml_service_client);
@@ -101,19 +104,22 @@ int main(int argc, char *argv[])
     QObject::connect(goal_action_client.get(), &NavigateToPoseClient::navigationResult, &mainWindow, &MainWindow::onNavigationResult);
     
     // Cancel Goal this need to change waypoints goal
-    //QObject::connect(goal_action_client.get(), &NavigateToPoseClient::sendGoalId, &mainWindow, &MainWindow::onSendGoalId);
-    //QObject::connect(&mainWindow, &MainWindow::sendCancelGoal, goal_action_client.get(), &NavigateToPoseClient::onSendCancelGoal);
+    // QObject::connect(goal_action_client.get(), &NavigateToPoseClient::sendGoalId, &mainWindow, &MainWindow::onSendGoalId);
+    // QObject::connect(&mainWindow, &MainWindow::sendCancelGoal, goal_action_client.get(), &NavigateToPoseClient::onSendCancelGoal);
     
-    //map
+    // map
     QObject::connect(map_subscriber.get(), &MapSubscriber::updateMap, &mainWindow, &MainWindow::onUpdateMap, Qt::QueuedConnection); // Connect the updateMap signal to onupdateMap, Qt::QueuedConnection);
-    // map ready
-    QObject::connect(&mainWindow, &MainWindow::mapReadyForWaypointsSubscriber, wp_subscriber.get(), &WaypointListSubscriber::onMapReadyForWaypointsSubscriber);
+    // map ready for adding pose
+    //QObject::connect(&mainWindow, &MainWindow::mapReadyForWaypointsSubscriber, wp_subscriber.get(), &WaypointListSubscriber::onMapReadyForWaypointsSubscriber);
+    
+    // laser scan
+    QObject::connect(laser_subscriber.get(), &LaserSubscriber::updateLaser, &mainWindow, &MainWindow::onUpdateLaser, Qt::QueuedConnection); 
     
     // subscribe wp_lists
     QObject::connect(wp_subscriber.get(), &WaypointListSubscriber::updateWpUI, &mainWindow, &MainWindow::onUpdateWpUI);
 
     // send waypoints goal
-    //QObject::connect(mainWindow.getUi()->goAllBtn, &QPushButton::clicked, send_wp_client.get(), &SendWaypointsClient::onSendWaypointsGoalzz, Qt::UniqueConnection);
+    // QObject::connect(mainWindow.getUi()->goAllBtn, &QPushButton::clicked, send_wp_client.get(), &SendWaypointsClient::onSendWaypointsGoalzz, Qt::UniqueConnection);
     QObject::connect(mainWindow.getUi()->goAllBtn, &QPushButton::clicked, &mainWindow, &MainWindow::onGoAllBtnClicked);
     QObject::connect(&mainWindow, &MainWindow::sendWaypointsGoal, send_wp_client.get(), &SendWaypointsClient::onSendWaypointsGoal, Qt::UniqueConnection);
     QObject::connect(send_wp_client.get(), &SendWaypointsClient::serviceWpResponse, &mainWindow, &MainWindow::onWpServiceResponse, Qt::UniqueConnection);
