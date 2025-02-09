@@ -1,8 +1,8 @@
 #ifndef ROM_ALGORITHM_H
 #define ROM_ALGORITHM_H
 
-#ifndef UNUSED
-#define UNUSED(x) (void)(x)
+#ifndef ROM_DYNAMICS_UNUSED
+#define ROM_DYNAMICS_UNUSED(x) (void)(x)
 #endif
 
 #include <rclcpp/rclcpp.hpp>

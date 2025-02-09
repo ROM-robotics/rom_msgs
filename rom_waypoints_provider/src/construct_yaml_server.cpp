@@ -9,6 +9,10 @@
 
 #define ROM_DEBUG 1
 
+#ifndef ROM_DYNAMICS_UNUSED
+#define ROM_DYNAMICS_UNUSED(x) (void)(x)
+#endif
+
 std::string package_path;
 std::string yaml_path;
 
@@ -17,6 +21,8 @@ rclcpp::Publisher<rom_interfaces::msg::ConstructYaml>::SharedPtr publisher_;
 void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::Request> request,
           std::shared_ptr<rom_interfaces::srv::ConstructYaml::Response>      response)
 {
+  ROM_DYNAMICS_UNUSED(response);
+  
   rom_interfaces::msg::ConstructYaml message;
 
   //check yaml, if exists delete
@@ -57,7 +63,7 @@ void construct_yaml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYam
             file << "        w: " << request->poses[i].pose.orientation.w << "\n";
 
           #ifdef ROM_DEBUG
-            RCLCPP_ERROR(rclcpp::get_logger("yaml constructor"), "%s", request->pose_names[i].c_str());
+            RCLCPP_INFO(rclcpp::get_logger("yaml constructor"), "%s", request->pose_names[i].c_str());
           #endif
             message.pose_names.push_back(request->pose_names[i]);
             message.poses.push_back(request->scene_poses[i]);  

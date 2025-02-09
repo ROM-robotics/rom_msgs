@@ -96,8 +96,6 @@ int main(int argc, char *argv[])
     QObject::connect(&mainWindow, &MainWindow::sendWaypoints, yaml_service_client.get(), &ConstructYamlServiceClient::onSendWaypoints);
 
 
-
-
     // Action Goal
     QObject::connect(&mainWindow, &MainWindow::sendNavigationGoal, goal_action_client.get(), &NavigateToPoseClient::onSendNavigationGoal);
     QObject::connect(goal_action_client.get(), &NavigateToPoseClient::navigationResult, &mainWindow, &MainWindow::onNavigationResult);
@@ -108,6 +106,8 @@ int main(int argc, char *argv[])
     
     //map
     QObject::connect(map_subscriber.get(), &MapSubscriber::updateMap, &mainWindow, &MainWindow::onUpdateMap, Qt::QueuedConnection); // Connect the updateMap signal to onupdateMap, Qt::QueuedConnection);
+    // map ready
+    QObject::connect(&mainWindow, &MainWindow::mapReadyForWaypointsSubscriber, wp_subscriber.get(), &WaypointListSubscriber::onMapReadyForWaypointsSubscriber);
     
     // subscribe wp_lists
     QObject::connect(wp_subscriber.get(), &WaypointListSubscriber::updateWpUI, &mainWindow, &MainWindow::onUpdateWpUI);

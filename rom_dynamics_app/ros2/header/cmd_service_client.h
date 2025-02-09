@@ -60,6 +60,8 @@ class WaypointListSubscriber : public QObject, public rclcpp::Node {
 public:
     explicit WaypointListSubscriber(const std::string &topic_name);
     //~WaypointListSubscriber() {}
+public slots:
+    void onMapReadyForWaypointsSubscriber();
 
 signals:
     void updateWpUI(rom_interfaces::msg::ConstructYaml::SharedPtr wplist_ptr);

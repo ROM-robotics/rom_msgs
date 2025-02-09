@@ -161,7 +161,7 @@ color: white;</string>
      <string>Open Maps</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="selectMapBtn">
+   <widget class="QPushButton" name="relocateBtn">
     <property name="geometry">
      <rect>
       <x>810</x>
@@ -181,7 +181,7 @@ color: white;</string>
      <string notr="true">background-color: white;</string>
     </property>
     <property name="text">
-     <string>Select Map</string>
+     <string>Relocate</string>
     </property>
    </widget>
    <widget class="QPushButton" name="saveMapBtn">
@@ -369,7 +369,7 @@ font-size: 36px;</string>
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnEstop">
+   <widget class="QPushButton" name="serviceBtn">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -385,8 +385,15 @@ font-size: 36px;</string>
       <bold>true</bold>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">color: white;
+background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_100.png);
+background-repeat: no-repeat; 
+background-position: center; 
+border: 2px solid #979ba1;</string>
+    </property>
     <property name="text">
-     <string>E-Stop</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="btnStop">
@@ -704,10 +711,12 @@ border: 2px solid #FF8C00;
 background-color: white;
 color: red;
 font-size: 26px;
-font-weight: bold;</string>
+font-weight: bold;
+padding: 0px 6px 16px 0px;</string>
     </property>
     <property name="text">
-     <string>Waypoints</string>
+     <string>Save
+ Waypoints</string>
     </property>
     <property name="iconSize">
      <size>
@@ -971,7 +980,7 @@ color: red;
 font-size: 24px;</string>
     </property>
     <property name="text">
-     <string>GoAll</string>
+     <string>Goals</string>
     </property>
     <property name="iconSize">
      <size>
@@ -997,6 +1006,29 @@ background-color: black;</string>
     </property>
     <property name="text">
      <string>loop</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="grootBtn">
+    <property name="geometry">
+     <rect>
+      <x>1270</x>
+      <y>26</y>
+      <width>161</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: white;</string>
+    </property>
+    <property name="text">
+     <string>Groot</string>
     </property>
    </widget>
   </widget>

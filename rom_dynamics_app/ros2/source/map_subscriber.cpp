@@ -15,7 +15,7 @@ MapSubscriber::MapSubscriber(const std::string &topic_name) :  Node("qt_map_rece
 void MapSubscriber::mapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg) 
 {
     #ifdef ROM_DEBUG
-        qDebug() << "emit updateMap(msg)";
+        qDebug() << "[  MapSubscriber::mapCallback  ]: emit updateMap(msg)";
     #endif
     emit updateMap(msg);
 }

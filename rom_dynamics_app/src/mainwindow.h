@@ -89,6 +89,7 @@ class MainWindow : public QMainWindow
         void applyStyleEraser();
         void applyStyleZoom();
         void applyStyleNormal();
+        void applyStyleServiceMode();
 
         // ------------------- map app
         //void mousePressEvent(QMouseEvent *event); check protected
@@ -110,6 +111,7 @@ class MainWindow : public QMainWindow
     
         void sendWaypointsGoal(std::vector<std::string> wp_names);
         
+        void mapReadyForWaypointsSubscriber();
     
     public slots:
         void displayCurrentPose(const geometry_msgs::msg::Pose2D::SharedPtr msg);
@@ -143,13 +145,14 @@ class MainWindow : public QMainWindow
         void onWallButtonClicked();
         void onEraserButtonClicked();
         void onNormalButtonClicked();
+        void onServiceModeButtonClicked();
         // -----------------------end for mapping app
 
         void onGoAllBtnClicked(bool statys);
         
     private slots:
         void on_shutdownBtn_clicked();
-        void on_btnEstop_clicked();
+        //void on_btnEstop_clicked();
 
     private slots:
         void onResponseReceived(int sum);  
@@ -193,7 +196,7 @@ class MainWindow : public QMainWindow
         std::string current_mode_;
         QPushButton *saveMapBtnPtr_;
         QPushButton *openMapBtnPtr_;
-        QPushButton *selectMapBtnPtr_;
+        QPushButton *relocateBtnPtr_;
 
         QLabel* statusLabelPtr_ = nullptr;
 
@@ -215,11 +218,12 @@ class MainWindow : public QMainWindow
         double map_origin_y_ = 0.000;
         double map_resolution_ = 0.000;
 
-        // 5 modes
+        // 6 modes
         bool zoom_mode_ = false;
         bool waypoints_mode_   = false;
         bool virtual_wall_mode_ = false;
         bool eraser_mode_ = false;
+        bool service_mode_ = false;
         bool normal_mode_ = true;
 
         QPushButton *zoom_btn_ptr_;
@@ -227,6 +231,7 @@ class MainWindow : public QMainWindow
         QPushButton *virtual_wall_btn_ptr_;
         QPushButton *eraser_btn_ptr_;
         QPushButton *normal_btn_ptr_;
+        QPushButton *service_mode_btn_ptr_;
 
         // store waypoints
         QList<QGraphicsEllipseItem*> waypoints_;

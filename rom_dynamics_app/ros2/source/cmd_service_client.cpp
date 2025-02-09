@@ -23,7 +23,8 @@ void CmdServiceClient::sendCommand(const QString &command)
     {
         #ifdef ROM_DEBUG 
             RCLCPP_WARN(this->get_logger(), "Waiting for service '%s' to become available...", service_name_.c_str());
-        #endif
+            qDebug() << "[  CmdServiceClient::sendCommand   ] : Waiting for service ......";
+            #endif
         emit serviceResponse(false);
         return;
     }
@@ -43,9 +44,10 @@ void CmdServiceClient::sendCommand(const QString &command)
         auto response = future.get();
         //emit commandResponse(response->success);
         #ifdef ROM_DEBUG 
-            RCLCPP_INFO(this->get_logger(), "Command '%s' sent successfully: %s",
-                    command.toStdString().c_str(),
-                    response->status ? "true" : "false");
+            // RCLCPP_INFO(this->get_logger(), "Command '%s' sent successfully: %s",
+            //         command.toStdString().c_str(),
+            //         response->status ? "true" : "false");
+            qDebug() << "[  CmdServiceClient::sendCommand   ] : Command '%s' sent successfully.";
         #endif
     }
     catch (const std::exception &e)
@@ -53,6 +55,7 @@ void CmdServiceClient::sendCommand(const QString &command)
         //emit commandResponse(false);
         #ifdef ROM_DEBUG
             RCLCPP_ERROR(this->get_logger(), "Failed to call service: %s", e.what());
+            qDebug() << "[  CmdServiceClient::sendCommand   ] : Failed to call service.";
         #endif
     }
 }
@@ -85,8 +88,9 @@ void ConstructYamlServiceClient::onSendWaypoints(std::shared_ptr<std::unordered_
                                             std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> scene_wp_list)
 {
     #ifdef ROM_DEBUG 
-            RCLCPP_WARN(this->get_logger(), "getting wp_list in slot function.");
-        #endif
+        //RCLCPP_WARN(this->get_logger(), "[ onSendWaypoints ] getting wp_list");
+        qDebug() << "[ ConstructYamlServiceClient::onSendWaypoints ] getting wp_list";
+    #endif
     // Create a request
     auto request = std::make_shared<rom_interfaces::srv::ConstructYaml::Request>();
 
@@ -121,13 +125,15 @@ void ConstructYamlServiceClient::onSendWaypoints(std::shared_ptr<std::unordered_
     while (!goal_client_->wait_for_service(std::chrono::seconds(1)))
     {
         #ifdef ROM_DEBUG 
-            RCLCPP_WARN(this->get_logger(), "Waiting for service '%s' to become available...", service_name_.c_str());
-        #endif
+            //RCLCPP_WARN(this->get_logger(), "Waiting for service '%s' to become available...", service_name_.c_str());
+            qDebug() << "[ ConstructYamlServiceClient::onSendWaypoints ] : Waiting for service ...";
+            #endif
             //emit serviceResponse(false);
         return;
     }
     #ifdef ROM_DEBUG 
-        RCLCPP_INFO(this->get_logger(), "Service client ready for '%s'", service_name_.c_str());
+        //RCLCPP_INFO(this->get_logger(), "Service client ready for '%s'", service_name_.c_str());
+        qDebug() << "[ ConstructYamlServiceClient::onSendWaypoints ] : Service client ready";
     #endif
 
 
@@ -141,7 +147,7 @@ void ConstructYamlServiceClient::onSendWaypoints(std::shared_ptr<std::unordered_
 WaypointListSubscriber::WaypointListSubscriber(const std::string &topic_name) :  Node("qt_wp_receiver") 
 {
 
-    rclcpp::QoS qos_profile(rclcpp::KeepLast(5)); 
+    rclcpp::QoS qos_profile(rclcpp::KeepLast(1)); 
     qos_profile.reliability(RMW_QOS_POLICY_RELIABILITY_RELIABLE);
     qos_profile.durability(RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL);
 
@@ -153,18 +159,31 @@ WaypointListSubscriber::WaypointListSubscriber(const std::string &topic_name) : 
 void WaypointListSubscriber::wpCallback(const rom_interfaces::msg::ConstructYaml::SharedPtr wp_list) 
 {
     #ifdef ROM_DEBUG
-        qDebug() << "emit updateWpUI(wplistPtr_)";
+        qDebug() << "[  WaypointListSubscriber::wpCallback  ]: get wp_list, but not emit.";
     #endif
 
     // for (size_t i = 0; i < wp_list->pose_names.size(); ++i) 
     // {
-        wplistPtr_ = wp_list;
+        
     //}
+    wplistPtr_.reset();
+    wplistPtr_ = wp_list;
 
-    //emit updateWpUI(wp_list);
-    emit updateWpUI(wplistPtr_);
+    // just copy
+    
+
+    // QMetaObject::invokeMethod(this, [this]() {
+    //     emit updateWpUI(this->wplistPtr_);
+    // }, Qt::QueuedConnection);
 }  
 
+void WaypointListSubscriber::onMapReadyForWaypointsSubscriber()
+{
+    #ifdef ROM_DEBUG
+        qDebug() << "[ WaypointListSubscriber::onMapReadyForWaypointsSubscriber ]: emit updateWpUI(wplistPtr_)";
+    #endif
+    emit updateWpUI(wplistPtr_);
+}
 
 SendWaypointsClient::SendWaypointsClient(const std::string &service_name, QObject *parent)
     : QObject(parent), Node("qt_send_wp_client"), service_name_(service_name)
@@ -178,7 +197,7 @@ void SendWaypointsClient::onSendWaypointsGoal(std::vector<std::string> wp_names)
     std::lock_guard<std::mutex> lock(mutex_); 
     
     #ifdef ROM_DEBUG 
-            qDebug() << "getting wp_list goals in slot function.";
+            qDebug() << "[ SendWaypointsClient::onSendWaypointsGoal ]: getting wp_list goals in slot function.";
             //qDebug() << "MainWindow Thread:" << QThread::currentThread();
     #endif
     //this->blockSignals(false);  
@@ -189,20 +208,23 @@ void SendWaypointsClient::onSendWaypointsGoal(std::vector<std::string> wp_names)
     if(wp_names.size()<1) { return; }
 
     bool state;
-    std::string last_element = wp_names.back();
+    std::string last_element = wp_names.back(); // get true/false 
+    wp_names.pop_back();                        // and delete
 
-    if(last_element=="true") { state = true; }
-    else if(last_element=="false") { state = false; }
+    std::string second_last_element = wp_names.back(); // get command string
+    wp_names.pop_back();                               //  and delete 
+    request->command = second_last_element;
 
+    if(last_element=="true") { state = true; } else if(last_element=="false") { state = false; }
     request->loop = state;
 
     // add pose_names[]
-    for (size_t i = 0; i < (wp_names.size()-1); i++) 
+    for (size_t i = 0; i < (wp_names.size()); i++) 
     {
         request->pose_names.push_back(wp_names[i]);
 
         #ifdef ROM_DEBUG 
-            qDebug() <<  "request->pose_names.push_back( " << wp_names[i].c_str() << ")"; 
+            qDebug() <<  "[ SendWaypointsClient::onSendWaypointsGoal ]: request->pose_names.push_back( " << wp_names[i].c_str() << ")"; 
         #endif
     }
 
@@ -210,13 +232,13 @@ void SendWaypointsClient::onSendWaypointsGoal(std::vector<std::string> wp_names)
     while (!wp_goal_client_->wait_for_service(std::chrono::seconds(1)))
     {
         #ifdef ROM_DEBUG 
-            qDebug() <<  "Waiting for service " << service_name_.c_str() << " to become available..."; 
+            qDebug() <<  "[ SendWaypointsClient::onSendWaypointsGoal ]: Waiting for service " << service_name_.c_str() << " to become available..."; 
         #endif
             //emit serviceResponse(false);
         return;
     }
     #ifdef ROM_DEBUG 
-        qDebug() <<  "Service client ready for  " << service_name_.c_str(); 
+        qDebug() <<  "[ SendWaypointsClient::onSendWaypointsGoal ]: Service client ready for  " << service_name_.c_str(); 
     #endif
     // Send the request asynchronously
     auto future = wp_goal_client_->async_send_request(request);

@@ -58,7 +58,7 @@ DESTINATION lib/${PROJECT_NAME})
 install(
   DIRECTORY 
     config
-    # launch
+    launch
   DESTINATION share/${PROJECT_NAME}  # Destination directory in install space
 )
 

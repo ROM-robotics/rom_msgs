@@ -7,5 +7,6 @@ string[] pose_names
 geometry_msgs/PoseStamped[] poses
 geometry_msgs/Pose[] scene_poses
 bool loop
+string command      #all_goals, all_goals_loop, custom_goals, custom_goals_loop
 ---
-bool status      # 1 [ok] | -1 [not ok]
+bool status         # 1 [ok] | -1 [not ok]

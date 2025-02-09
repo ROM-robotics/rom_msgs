@@ -19,7 +19,7 @@ void NavigateToPoseClient::onSendNavigationGoal(const geometry_msgs::msg::Pose::
     if (!action_client_->wait_for_action_server(std::chrono::seconds(3)))
     {
         #ifdef ROM_DEBUG
-            qDebug() << "[ onSendNavigationGoal()slot ] : Action server not available!";
+            qDebug() << "[ NavigateToPoseClient::onSendNavigationGoal ] : Action server not available!";
         #endif
         
         QMetaObject::invokeMethod(this, [this]() {
@@ -30,7 +30,7 @@ void NavigateToPoseClient::onSendNavigationGoal(const geometry_msgs::msg::Pose::
         return;
     }
     #ifdef ROM_DEBUG
-        qDebug() << "[ onSendNavigationGoal() slot] : get pose ";
+        qDebug() << "[ oNavigateToPoseClient::onSendNavigationGoal  ] : get pose ";
     #endif
 
     // Setting the goal message
@@ -57,7 +57,7 @@ void NavigateToPoseClient::onSendNavigationGoal(const geometry_msgs::msg::Pose::
         goal_handle_ = future_goal_handle.get();
 
         #ifdef ROM_DEBUG
-            qDebug() << "Goal Accepted";
+            qDebug() << "[  NavigateToPoseClient::onSendNavigationGoal  ]: Goal Accepted";
         #endif
 
         rclcpp_action::GoalUUID goal_uuid = goal_handle_->get_goal_id();
@@ -71,7 +71,7 @@ void NavigateToPoseClient::onSendNavigationGoal(const geometry_msgs::msg::Pose::
     else
     {
         #ifdef ROM_DEBUG
-            qDebug() << "Goal Rejected";
+            qDebug() << "[  NavigateToPoseClient::onSendNavigationGoal  ]: Goal Rejected";
         #endif
     }
 }
@@ -101,30 +101,30 @@ void NavigateToPoseClient::handleResult(const rclcpp_action::ClientGoalHandle<na
     case rclcpp_action::ResultCode::SUCCEEDED:
         status = "Goal succeeded!";
         #ifdef ROM_DEBUG
-            qDebug() << "Goal succeeded! for rom dynamics";
+            qDebug() << "[  NavigateToPoseClient::handleResult  ] : Goal succeeded! for rom dynamics";
         #endif
         break;
     case rclcpp_action::ResultCode::ABORTED:
         status = "Goal aborted!";
         #ifdef ROM_DEBUG
-            qDebug() << "Goal aborted! for rom dynamics";
+            qDebug() << "[  NavigateToPoseClient::handleResult  ] : Goal aborted! for rom dynamics";
         #endif
         break;
     case rclcpp_action::ResultCode::CANCELED:
         status = "Goal canceled!";
         #ifdef ROM_DEBUG
-            qDebug() << "Goal canceled! for rom dynamics";
+            qDebug() << "[  NavigateToPoseClient::handleResult  ] : Goal canceled! for rom dynamics";
         #endif
         break;
     default:
         status = "Unknown result code!";
         #ifdef ROM_DEBUG
-            qDebug() << "Unknown result code! for rom dynamics";
+            qDebug() << "[  NavigateToPoseClient::handleResult  ] : Unknown result code! for rom dynamics";
         #endif
         break;
     }
     #ifdef ROM_DEBUG
-        qDebug() << "[   handleResult() callback  ] : get result from action server ";
+        qDebug() << "[  NavigateToPoseClient::handleResult  ] : get result from action server ";
     #endif
 
     QMetaObject::invokeMethod(this, [this, status]() {
@@ -142,7 +142,7 @@ void NavigateToPoseClient::onSendCancelGoal(const rclcpp_action::GoalUUID& goal_
     if (active_goal_uuid_.empty()) 
     {
         #ifdef ROM_DEBUG
-            qDebug() << "No active goal to cancel";
+            qDebug() << "[  NavigateToPoseClient::onSendCancelGoal  ] : No active goal to cancel";
         #endif
         
         QMetaObject::invokeMethod(this, [this]() {
@@ -160,7 +160,7 @@ void NavigateToPoseClient::onSendCancelGoal(const rclcpp_action::GoalUUID& goal_
     if (future_cancel.get()) 
     {
         #ifdef ROM_DEBUG
-            qDebug() << "Successfully canceled goal";
+            qDebug() << "[  NavigateToPoseClient::onSendCancelGoal  ] : Successfully canceled goal";
         #endif
         QMetaObject::invokeMethod(this, [this]() {
             emit navigationResult("Successfully canceled goal");
@@ -169,7 +169,7 @@ void NavigateToPoseClient::onSendCancelGoal(const rclcpp_action::GoalUUID& goal_
     else 
     {
         #ifdef ROM_DEBUG
-            qDebug() << "Failed to cancel goal";
+            qDebug() << "[  NavigateToPoseClient::onSendCancelGoal  ] : Failed to cancel goal";
         #endif
         QMetaObject::invokeMethod(this, [this]() {
             emit navigationResult("Failed to cancel goal");

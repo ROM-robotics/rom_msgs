@@ -18,18 +18,30 @@
 
 #define ROM_DEBUG 1
 
+#ifndef ROM_DYNAMICS_UNUSED
+#define ROM_DYNAMICS_UNUSED(x) (void)(x)
+#endif
 // switch mode parameters
 pid_t launch_pid = -1;
 
 // Package and launch file names
-const std::string robot_name = std::getenv("ROM_ROBOT_MODEL");
-
-const std::string my_nav2_package = "rom_waypoints_provider";                 
-const std::string execu_name = "send_waypoints_goals";
+const std::string wp_package = "rom_waypoints_provider";                 
+const std::string launch_all_goals = "send_waypoints_all_goals.launch.py";
+const std::string launch_cus_goals = "send_waypoints_custom_goals.launch.py";
+const std::string launch_all_goals_loop = "send_waypoints_all_goals_loop.launch.py";
+const std::string launch_cus_goals_loop = "send_waypoints_custom_goals_loop.launch.py";
 
 std::vector<std::string> wp_names_;
-bool state=false;
+std::string data;
 
+bool state=false;
+std::string nav_command="all_goals";
+
+//bool all_goals, all_goals_loop, custom_goals, custom_goals_loop = false;
+void all_goals();
+void all_goals_loop();
+void custom_goals();
+void custom_goals_loop();
 std::string joinVector(const std::vector<std::string>& waypoints, const std::string& delimiter = " ") {
     std::ostringstream oss;
     for (size_t i = 0; i < waypoints.size(); ++i) {
@@ -42,30 +54,30 @@ std::string joinVector(const std::vector<std::string>& waypoints, const std::str
 }
 
 // switch_mode functions
-void startLaunch(const std::string &package, const std::string &execu_file, const std::vector<std::string> waypoints,const bool &state = false) 
+void startLaunch(const std::string &package, const std::string &launch_file, const std::string data_wp = "") 
 {
-  std::string loop;
-  if(state) { loop = " --loop"; }
-  else{ loop= ""; }
-
-  //std::string result = joinVector(waypoints);
-
       #ifdef ROM_DEBUG
-        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Starting ros2 run %s %s %s", package.c_str(), execu_file.c_str(), loop.c_str());
-        //RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Starting ros2 run %s %s %s %s", package.c_str(), execu_file.c_str(),result.c_str(), loop.c_str());
+        RCLCPP_INFO(rclcpp::get_logger("wp_server"), "Starting launch file: %s/%s", package.c_str(), launch_file.c_str());
       #endif
-        // Fork a process  to run the launch file
+        // Fork a proce  to run the launch file
         launch_pid = fork();
         if (launch_pid == 0) {
             // In child process
-            execlp("ros2", "ros2", "run", package.c_str(), execu_file.c_str(), loop, (char *)NULL);
+            if(!data_wp.empty())
+            {
+                execlp("ros2", "ros2", "launch", package.c_str(), launch_file.c_str(), data_wp, (char *)NULL);
+            }
+            else
+            {
+                execlp("ros2", "ros2", "launch", package.c_str(), launch_file.c_str(), (char *)NULL);
+            }
             perror("execlp failed");
             std::exit(EXIT_FAILURE);
         }
 
         if (launch_pid < 0) {
             perror("fork failed");
-            throw std::runtime_error("Failed to start ros2 run process");
+            throw std::runtime_error("Failed to start launch process");
         }
 }
 
@@ -73,7 +85,7 @@ void shutdownLaunch()
 {
         if (launch_pid > 0) {
           #ifdef ROM_DEBUG
-            RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Shutting down current ros2 run process (PID: %d)...", launch_pid);
+            RCLCPP_INFO(rclcpp::get_logger("wp_server"), "Shutting down current launch process (PID: %d)...", launch_pid);
           #endif
             kill(launch_pid, SIGINT);
             int status;
@@ -86,49 +98,55 @@ void shutdownLaunch()
 void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::Request> request,
           std::shared_ptr<rom_interfaces::srv::ConstructYaml::Response> response)
 {
-  if(request->pose_names.size()<1) 
-  {
-    #ifdef ROM_DEBUG
-        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "There is no Waypoints Goals");
-    #endif
-    return; 
-  }
-
-  state = request->loop;
-
-  // copy data from qt
-  wp_names_.clear();
-  for (size_t i = 0; i < request->pose_names.size(); ++i) 
-  {
-    wp_names_.emplace_back(request->pose_names[i]);
-    RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "LOOPING");
-  }
-  
-  
-  // if not already launch
-  if (launch_pid<0)  // မဆိုင်ဘူးထင်တယ်။======================================================== 
-  {
-    startLaunch(my_nav2_package,execu_name,wp_names_,state);
-    #ifdef ROM_DEBUG
-        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "New Launch");
-    #endif
-    return;
-  }
-  else 
-  { // if already launch
-    shutdownLaunch();
-    startLaunch(my_nav2_package,execu_name,wp_names_,state);
-    #ifdef ROM_DEBUG
-        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Restart Launch");
-    #endif
-  }
-
+    ROM_DYNAMICS_UNUSED(response);
     
-  #ifdef ROM_DEBUG
-        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Selected_Waypoints Activate");
-  #endif
-  response->status = true;
+    if(request->pose_names.size()<1) 
+    {
+      #ifdef ROM_DEBUG
+          RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "There is no Waypoints Goals");
+      #endif
+      return; 
+    }
   
+    state = request->loop;
+    nav_command = request->command;
+
+    if(nav_command == "all_goals" && state == true)
+    {
+        all_goals_loop();
+    }
+    else if(nav_command == "all_goals" && state == false)
+    {
+        all_goals();
+    }
+    else if(nav_command == "custom_goals" && state == true)
+    {
+        // copy data from qt
+        wp_names_.clear();
+        data.clear();
+        for (size_t i = 0; i < request->pose_names.size(); ++i) 
+        {
+            wp_names_.emplace_back(request->pose_names[i]);
+            RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "request->pose_names[i] : %s",wp_names_[i].c_str());
+        }
+        data = joinVector(wp_names_);
+
+        custom_goals_loop();
+    }
+    else if(nav_command == "custom_goals" && state == false)
+    {
+        // copy data from qt
+        wp_names_.clear();
+        data.clear();
+        for (size_t i = 0; i < request->pose_names.size(); ++i) 
+        {
+            wp_names_.emplace_back(request->pose_names[i]);
+            RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "request->pose_names[i] : %s",wp_names_[i].c_str());
+        }
+        data = joinVector(wp_names_);
+
+        custom_goals();
+    }
 }
 
 int main(int argc, char **argv)
@@ -146,4 +164,33 @@ int main(int argc, char **argv)
 
   rclcpp::spin(node);
   rclcpp::shutdown();
+}
+
+// shutdown launch ခေါ်ဖို့လိုမလို စဥ်းစားပါ။ first time trigger
+void all_goals()
+{
+    RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "all_goals()");
+    // shutdownLaunch();
+    // startLaunch(wp_package,launch_all_goals);
+}
+
+void all_goals_loop()
+{
+    RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "all_goals_loop()");
+    // shutdownLaunch();
+    // startLaunch(wp_package,launch_all_goals_loop);
+}
+
+void custom_goals()
+{
+    RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "custom_goals()");
+    // shutdownLaunch();
+    // startLaunch(wp_package,launch_all_goals, data);
+}
+
+void custom_goals_loop()
+{
+    RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "custom_goals_loop()");
+    // shutdownLaunch();
+    // startLaunch(wp_package,launch_all_goals, data);
 }

@@ -223,6 +223,7 @@ int main(int argc, char **argv)
         std::string arg = argv[i];
         if (arg == "--loop") {
             loop = true;
+            RCLCPP_INFO(rclcpp::get_logger("send_wp_goals_loop"), "Loop True");
         } else {
             selected_waypoints.push_back(arg);
         }

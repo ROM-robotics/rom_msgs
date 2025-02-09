@@ -41,8 +41,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
 
     saveMapBtnPtr_ = ui->saveMapBtn;
     openMapBtnPtr_ = ui->openMapBtn;
-    selectMapBtnPtr_ = ui->selectMapBtn;
-    selectMapBtnPtr_->setText("Relocate");
+    relocateBtnPtr_ = ui->relocateBtn;
+    //relocateBtnPtr_->setText("Relocate");
 
     x_spinBoxPtr_ = ui->xspinBox;
     y_spinBoxPtr_ = ui->yspinBox;
@@ -69,12 +69,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     virtual_wall_btn_ptr_ = ui->addWallBtn;
     eraser_btn_ptr_ = ui->eraserBtn;
     normal_btn_ptr_ = ui->normalBtn;
+    service_mode_btn_ptr_ = ui->serviceBtn;
 
     connect(zoom_btn_ptr_, &QPushButton::clicked, this, &MainWindow::onZoomButtonClicked);
     connect(waypoints_btn_ptr_, &QPushButton::clicked, this, &MainWindow::onWayPointsButtonClicked);
     connect(virtual_wall_btn_ptr_, &QPushButton::clicked, this, &MainWindow::onWallButtonClicked);
     connect(eraser_btn_ptr_, &QPushButton::clicked, this, &MainWindow::onEraserButtonClicked);
     connect(normal_btn_ptr_, &QPushButton::clicked, this, &MainWindow::onNormalButtonClicked);
+    connect(service_mode_btn_ptr_, &QPushButton::clicked, this, &MainWindow::onServiceModeButtonClicked);
 
     // mapping end ------------------------------------------------------------------------------------------`    
 
@@ -89,7 +91,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
 
     connect(saveMapBtnPtr_, &QPushButton::clicked, this, &MainWindow::saveMapClicked);
     connect(openMapBtnPtr_, &QPushButton::clicked, this, &MainWindow::openMapClicked);
-    // connect(selectMapBtnPtr_, &QPushButton::clicked, this, &MainWindow::selectMapClicked);
+    // connect(relocateBtnPtr_, &QPushButton::clicked, this, &MainWindow::selectMapClicked);
     connect(this, &MainWindow::selectMap, this, &MainWindow::selectMapClicked);
 
     connect(btnGoToGoal_, &QPushButton::clicked, this, &MainWindow::on_goBtn_clicked);
@@ -125,7 +127,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
 
     ui->saveMapBtn->hide();//setEnabled(false);
     ui->openMapBtn->show();//setEnabled(true);
-    ui->selectMapBtn->show();//setEnabled(true);
+    ui->relocateBtn->show();//setEnabled(true);
 }
 
 
@@ -207,10 +209,10 @@ void MainWindow::sendMappingMode() {
 
         ui->saveMapBtn->show();
         ui->openMapBtn->hide();
-        ui->selectMapBtn->hide();
+        ui->relocateBtn->hide();
         // ui->saveMapBtn->setEnabled(true);
         // ui->openMapBtn->setEnabled(false);
-        // ui->selectMapBtn->setEnabled(false);
+        // ui->relocateBtn->setEnabled(false);
     }
 }
 
@@ -237,10 +239,10 @@ void MainWindow::sendNavigationMode() {
 
         ui->saveMapBtn->hide();
         ui->openMapBtn->show();
-        ui->selectMapBtn->show();
+        ui->relocateBtn->show();
         // ui->saveMapBtn->setEnabled(false);
         // ui->openMapBtn->setEnabled(true);
-        // ui->selectMapBtn->setEnabled(true);
+        // ui->relocateBtn->setEnabled(true);
     }
 }
 
@@ -267,10 +269,10 @@ void MainWindow::sendRemappingMode() {
 
         ui->saveMapBtn->show();
         ui->openMapBtn->show();
-        ui->selectMapBtn->show();
+        ui->relocateBtn->show();
         // ui->saveMapBtn->setEnabled(true);
         // ui->openMapBtn->setEnabled(true);
-        // ui->selectMapBtn->setEnabled(true);
+        // ui->relocateBtn->setEnabled(true);
     }
 }
 
@@ -285,10 +287,10 @@ void MainWindow::on_shutdownBtn_clicked()
 }
 
 
-void MainWindow::on_btnEstop_clicked()
-{
-    statusLabelPtr_->setText("\nActivating E-Stop ...\n");
-}
+// void MainWindow::on_btnEstop_clicked()
+// {
+//     statusLabelPtr_->setText("\nActivating E-Stop ...\n");
+// }
 
 void MainWindow::onResponseReceived(int service_status) {
 
@@ -373,7 +375,7 @@ void MainWindow::onResponseReceived(int service_status) {
     }
     saveMapBtnPtr_->setStyleSheet("background-color: white;"); 
     //openMapBtnPtr_->setStyleSheet("background-color: none;");
-    //selectMapBtnPtr_->setStyleSheet("background-color: none;");
+    //relocateBtnPtr_->setStyleSheet("background-color: none;");
 
     hideBusyDialog();
     setButtonsEnabled(true);
@@ -417,7 +419,7 @@ void ServiceClient::sendRequest(const std::string& request_string, const std::st
     auto request = std::make_shared<rom_interfaces::srv::WhichMaps::Request>();
     
     #ifdef ROM_DEBUG
-        qDebug() << "mode change";
+        qDebug() << "[  ServiceClient::sendRequest  ] : mode change";
     #endif
     
     request->request_string = request_string;
@@ -515,10 +517,10 @@ void MainWindow::openMapClicked()
 
         // ui->saveMapBtn->show();
         // ui->openMapBtn->hide();
-        // ui->selectMapBtn->hide();
+        // ui->relocateBtn->hide();
         // ui->saveMapBtn->setEnabled(true);
         // ui->openMapBtn->setEnabled(false);
-        // ui->selectMapBtn->setEnabled(false);
+        // ui->relocateBtn->setEnabled(false);
     
 
     
@@ -839,7 +841,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                         // virtual_lines_ ကို transmit လုပ်ပေးရမယ်။
                     }
                     #ifdef ROM_DEBUG
-                        //qDebug() << "obstacleStartPoint_event_pos : " << obstacleStartPoint_event_pos;
+                        //qDebug() << "[    MainWindow::mousePressEvent ]: obstacleStartPoint_event_pos : " << obstacleStartPoint_event_pos;
                     #endif
                     return;
                 }
@@ -1027,7 +1029,6 @@ void MainWindow::on_goBtn_clicked()
     
     // btnWaypointGoals_->setEnabled(true);
     // btnReturnToHome_->setEnabled(true);
-    // ui->btnEstop->setEnabled(true);
     
     auto pose = geometry_msgs::msg::Pose::SharedPtr(new geometry_msgs::msg::Pose());
     pose->position.x = x;
@@ -1035,7 +1036,7 @@ void MainWindow::on_goBtn_clicked()
 
     yaw_to_quaternion(theta, pose->orientation.z, pose->orientation.w);
     #ifdef ROM_DEBUG 
-        qDebug() << "[    on_goBtn_clicked        ] : sending pose";
+        qDebug() << "[  MainWindow::on_goBtn_clicked  ] : sending pose";
     #endif
 
     //emit sendNavigationGoal(pose);
@@ -1074,7 +1075,6 @@ void MainWindow::on_rthBtn_clicked()
     setButtonsEnabled(false);
     
     // btnWaypointGoals_->setEnabled(true);
-    // ui->btnEstop->setEnabled(true);
     
     auto pose = geometry_msgs::msg::Pose::SharedPtr(new geometry_msgs::msg::Pose());
     pose->position.x = x;
@@ -1100,7 +1100,7 @@ void MainWindow::onNavigationResult(const std::string& result_status)
     statusLabelPtr_->setText(updateText);
 
     #ifdef ROM_DEBUG 
-        qDebug() << "[ onNavigationResult() slot  ] : get Navigation Result " << QString::fromStdString(result_status);
+        qDebug() << "[ MainWindow::onNavigationResult  ] : get Navigation Result " << QString::fromStdString(result_status);
     #endif
     
     setButtonsEnabled(true);
@@ -1167,7 +1167,7 @@ void MainWindow::onCmdServiceResponse(bool success)
         statusLabelPtr_->setText(updateText);
 
         #ifdef ROM_DEBUG 
-            qDebug() << "[    onCmdServiceResponse        ] : Service not found";
+            qDebug() << "[  MainWindow::onCmdServiceResponse  ] : Service not found";
         #endif
 
         // ui->btnForward->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
@@ -1178,7 +1178,7 @@ void MainWindow::onCmdServiceResponse(bool success)
     }else 
     {
         #ifdef ROM_DEBUG 
-            qDebug() << "[    onCmdServiceResponse        ] : Service OK !";
+            qDebug() << "[  MainWindow::onCmdServiceResponse  ] : Service OK !";
         #endif
     }
 }
@@ -1194,7 +1194,7 @@ void MainWindow::onWpServiceResponse(bool success){
         statusLabelPtr_->setText(updateText);
 
         #ifdef ROM_DEBUG 
-            qDebug() << "[    onWpServiceResponse        ] : Service not found";
+            qDebug() << "[  MainWindow::onWpServiceResponse   ] : Service not found";
         #endif
 
         // ui->btnForward->setStyleSheet("color: #979ba1; background-color: none; border: 2px solid gray;");
@@ -1205,7 +1205,7 @@ void MainWindow::onWpServiceResponse(bool success){
     }else 
     {
         #ifdef ROM_DEBUG 
-            qDebug() << "[    onWpServiceResponse        ] : Service OK !";
+            qDebug() << "[  MainWindow::onWpServiceResponse   ] : Service OK !";
         #endif
     }
     
@@ -1217,7 +1217,7 @@ void MainWindow::onResponseDataReceived(std::shared_ptr<rom_interfaces::srv::Whi
     if (!response || response->total_maps <= 0 || response->map_names.empty()) 
     {
         #ifdef ROM_DEBUG
-            qDebug() << "Invalid or empty response received!";
+            qDebug() << "[  MainWindow::onResponseDataReceived  ] : Invalid or empty response received!";
         #endif
         return;
     }
@@ -1251,7 +1251,7 @@ void MainWindow::onResponseDataReceived(std::shared_ptr<rom_interfaces::srv::Whi
         QListWidgetItem *selectedItem = listWidget->currentItem();
         if (selectedItem) {
             #ifdef ROM_DEBUG 
-                qDebug() << "Selected map:" << selectedItem->text();
+                qDebug() << "[  MainWindow::onResponseDataReceived  ] : Selected map:" << selectedItem->text();
             #endif
             //QMessageBox::information(this, "Map Selected", "You selected: " + selectedItem->text());
 
@@ -1307,11 +1307,6 @@ void MainWindow::applyStyles()
     ui->shutdownBtn->setStyleSheet(
     "QPushButton:pressed {"
     "    background-color: rgb(255, 200, 200);"        // Background color when pressed
-    "}"
-    );
-    ui->btnEstop->setStyleSheet(
-    "QPushButton:pressed {"
-    "    background-color: rgb(255, 200, 200);"       
     "}"
     );
     ui->btnStop->setStyleSheet(
@@ -1373,7 +1368,7 @@ void MainWindow::applyStyles()
     "    background-color: rgb(200, 255, 200);"       
     "}"
     );
-    ui->selectMapBtn->setStyleSheet(
+    ui->relocateBtn->setStyleSheet(
     "QPushButton {"
     "   background-color: white;"
     "}"
@@ -1514,18 +1509,6 @@ void MainWindow::applyStyles()
     "   color: white;"
     "}"
     );
-    ui->btnEstop->setStyleSheet(
-    "QPushButton {"
-    "   border: 1px solid gray;"
-    "   background-color: white;"
-    "   color: black;"
-    "   font-weight: bold;"
-    "}"
-     "QPushButton:hover {"
-     "   background-color: black;"
-     "   color: white;"
-     "}"
-    );
 
     ui->xspinBox->setStyleSheet(
     "QSpinBox {"
@@ -1558,7 +1541,7 @@ void MainWindow::applyStyles()
 void MainWindow::onZoomButtonClicked()
 {
     #ifdef ROM_DEBUG
-        qDebug() << "zoom btn clicked";
+        qDebug() << "[  MainWindow::onZoomButtonClicked ] : zoom mode btn clicked";
     #endif
     ui->statusLabel->setText("Zoom Button Clicked.");
     zoom_mode_ = true;
@@ -1566,13 +1549,14 @@ void MainWindow::onZoomButtonClicked()
     virtual_wall_mode_ = false;
     eraser_mode_ = false;
     normal_mode_ = false;
+    service_mode_ = false;
 
     applyStyleZoom();
 }
 void MainWindow::onWayPointsButtonClicked()
 {
     #ifdef ROM_DEBUG
-        qDebug() << "waypoint btn clicked";
+        qDebug() << "[  MainWindow::onWayPointsButtonClicked    ] : waypoint mode btn clicked";
     #endif
     ui->statusLabel->setText("Waypoints Button Clicked.");
     zoom_mode_ = false;
@@ -1580,13 +1564,14 @@ void MainWindow::onWayPointsButtonClicked()
     virtual_wall_mode_ = false;
     eraser_mode_ = false;
     normal_mode_ = false;
+    service_mode_ = false;
 
     applyStyleWaypoint();
 }
 void MainWindow::onWallButtonClicked()
 {
     #ifdef ROM_DEBUG
-        qDebug() << "wall btn clicked";
+        qDebug() << "[  MainWindow::onWallButtonClicked ]: wall mode btn clicked";
     #endif
     ui->statusLabel->setText("Wall Button Clicked.");
     zoom_mode_ = false;
@@ -1594,13 +1579,14 @@ void MainWindow::onWallButtonClicked()
     virtual_wall_mode_ = true;
     eraser_mode_ = false;
     normal_mode_ = false;
+    service_mode_ = false;
 
     applyStyleWall();
 }
 void MainWindow::onEraserButtonClicked()
 {
     #ifdef ROM_DEBUG
-        qDebug() << "Eraser btn clicked";
+        qDebug() << "[  MainWindow::onEraserButtonClicked   ]: Eraser mode btn clicked";
     #endif
     ui->statusLabel->setText("Eraser Button Clicked.");
     zoom_mode_ = false;
@@ -1608,13 +1594,14 @@ void MainWindow::onEraserButtonClicked()
     virtual_wall_mode_ = false;
     eraser_mode_ = true;
     normal_mode_ = false;
+    service_mode_ = false;
 
     applyStyleEraser();
 }
 void MainWindow::onNormalButtonClicked()
 {
     #ifdef ROM_DEBUG
-        qDebug() << "Normal btn clicked";
+        qDebug() << "[  MainWindow::onNormalButtonClicked   ]: Normal mode btn clicked";
     #endif
     ui->statusLabel->setText("Normal Button Clicked.");
     zoom_mode_ = false;
@@ -1622,15 +1609,32 @@ void MainWindow::onNormalButtonClicked()
     virtual_wall_mode_ = false;
     eraser_mode_ = false;
     normal_mode_ = true;
+    service_mode_ = false;
 
     applyStyleNormal();
 }
 
+void MainWindow::onServiceModeButtonClicked()
+{
+    #ifdef ROM_DEBUG
+        qDebug() << "[  MainWindow::onServiceModeButtonClicked   ]: Service mode btn clicked";
+    #endif
+    ui->statusLabel->setText("Service mode Clicked.");
+
+    zoom_mode_ = false;
+    waypoints_mode_   = false;
+    virtual_wall_mode_ = false;
+    eraser_mode_ = false;
+    service_mode_ = true;
+    normal_mode_ = false;
+
+    applyStyleServiceMode();
+}
 
 void MainWindow::onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg) 
 {
     #ifdef ROM_DEBUG
-        qDebug() << "onUpdateMap slot function";
+        qDebug() << "[  MainWindow::onUpdateMap ]: onUpdateMap slot function";
     #endif
 
     ui->graphicsView->viewport()->update();
@@ -1659,8 +1663,10 @@ void MainWindow::onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
     
     ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
     #ifdef ROM_DEBUG
-        qDebug() << "onUpdateMap finished";
+        qDebug() << "[  MainWindow::onUpdateMap ]: onUpdateMap finished";
     #endif
+
+    emit mapReadyForWaypointsSubscriber();
 }
 
 bool MainWindow::checkGraphicViewAndScene()
@@ -1752,6 +1758,13 @@ void MainWindow::applyStyleWaypoint()
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
+    service_mode_btn_ptr_->setStyleSheet(
+    "QPushButton {"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_50.png);"
+    "   background-repeat: no-repeat;"
+    "   background-position: center;"
+    "   border: 2px solid #979ba1;"
+    "}");
 }
 void MainWindow::applyStyleWall()
 {
@@ -1786,6 +1799,13 @@ void MainWindow::applyStyleWall()
     ui->normalBtn->setStyleSheet(
     "QPushButton {"
     "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
+    "   background-repeat: no-repeat;"
+    "   background-position: center;"
+    "   border: 2px solid #979ba1;"
+    "}");
+    service_mode_btn_ptr_->setStyleSheet(
+    "QPushButton {"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_50.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -1828,6 +1848,13 @@ void MainWindow::applyStyleEraser()
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
+    service_mode_btn_ptr_->setStyleSheet(
+    "QPushButton {"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_50.png);"
+    "   background-repeat: no-repeat;"
+    "   background-position: center;"
+    "   border: 2px solid #979ba1;"
+    "}");
 }
 void MainWindow::applyStyleZoom()
 {
@@ -1862,6 +1889,13 @@ void MainWindow::applyStyleZoom()
     ui->normalBtn->setStyleSheet(
     "QPushButton {"
     "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
+    "   background-repeat: no-repeat;"
+    "   background-position: center;"
+    "   border: 2px solid #979ba1;"
+    "}");
+    service_mode_btn_ptr_->setStyleSheet(
+    "QPushButton {"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_50.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -1904,15 +1938,79 @@ void MainWindow::applyStyleNormal()
     "   background-position: center;"
     "   border: 3px solid white;"
     "}");
+    service_mode_btn_ptr_->setStyleSheet(
+    "QPushButton {"
+    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_50.png);"
+    "   background-repeat: no-repeat;"
+    "   background-position: center;"
+    "   border: 2px solid #979ba1;"
+    "}");
 }
 
-
+void MainWindow::applyStyleServiceMode()
+{
+    ui->addWaypointBtn->setStyleSheet(
+        "QPushButton {"
+        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
+        "   background-repeat: no-repeat;"
+        "   background-position: center;"
+        "   border: 2px solid #979ba1;"
+        "}");
+        ui->addWallBtn->setStyleSheet(
+        "QPushButton {"
+        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
+        "   background-repeat: no-repeat;"
+        "   background-position: center;"
+        "   border: 2px solid #979ba1;"
+        "}");
+        ui->eraserBtn->setStyleSheet(
+        "QPushButton {"
+        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
+        "   background-repeat: no-repeat;"
+        "   background-position: center;"
+        "   border: 2px solid #979ba1;"
+        "}");
+        ui->zoomBtn->setStyleSheet(
+        "QPushButton {"
+        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
+        "   background-repeat: no-repeat;"
+        "   background-position: center;"
+        "   border: 2px solid #979ba1;"
+        "}");
+        ui->normalBtn->setStyleSheet(
+        "QPushButton {"
+        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
+        "   background-repeat: no-repeat;"
+        "   background-position: center;"
+        "   border: 2px solid #979ba1;"
+        "}");
+        service_mode_btn_ptr_->setStyleSheet(
+        "QPushButton {"
+        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_100.png);"
+        "   background-repeat: no-repeat;"
+        "   background-position: center;"
+        "   border: 3px solid white;"
+        "}");
+}
 void MainWindow::onUpdateWpUI(rom_interfaces::msg::ConstructYaml::SharedPtr wplist_ptr)
 {
+    if (!wplist_ptr) {
+        #ifdef ROM_DEBUG
+            qDebug() << "[  MainWindow::onUpdateWpUI    ] : wplist_ptr is null!";
+        #endif
+        return;
+    } else if (wplist_ptr->poses.empty()) {
+        #ifdef ROM_DEBUG
+            qDebug() << "[  MainWindow::onUpdateWpUI    ] : wplist_ptr is initialized but contains no data!";
+        #endif
+        return;
+    } else {
+        #ifdef ROM_DEBUG
+            qDebug() << "[  MainWindow::onUpdateWpUI    ] : topic received from onUpdateWpUI()";
+        #endif
+    }
     
-    #ifdef ROM_DEBUG 
-        qDebug() << "[    on_goBtn_clicked        ] : sending pose";
-    #endif
+    
 
     // delete original waypoints on scene
     // delete  lists
@@ -1934,53 +2032,91 @@ void MainWindow::onUpdateWpUI(rom_interfaces::msg::ConstructYaml::SharedPtr wpli
         waypoints_map_.clear();
         waypoints_scene_.clear();
 
-        int radius = 10;
-        #ifdef ROM_DEBUG
-            qDebug() << "topic received from onUpdateWpUI()";
+        #ifdef ROM_DEBUG 
+        qDebug() << "[  MainWindow::onUpdateWpUI    ] : updating wplist_ptr ....";
         #endif
+
+        for (QGraphicsItem* item : ui->graphicsView->scene()->items()) 
+        {
+            if (dynamic_cast<QGraphicsEllipseItem*>(item)) 
+            {  // Check if it's a Rect Point
+                ui->graphicsView->scene()->removeItem(item);
+                delete item;
+            }
+            else if (dynamic_cast<QGraphicsTextItem*>(item)) 
+            {  // Check if it's a Rect Point
+                ui->graphicsView->scene()->removeItem(item);
+                delete item;
+            }
+            // else if (dynamic_cast<QGraphicsLineItem*>(item)) 
+            // {  // Check if it's a line
+            //     ui->graphicsView->scene()->removeItem(item);
+            //     delete item;
+            // }
+            // else if (dynamic_cast<QGraphicsRectItem*>(item)) 
+            // {       // Check if it's a Rect Point
+            //     ui->graphicsView->scene()->removeItem(item);
+            //     delete item;
+            // }
+        }
+        
+        int radius = 10;
+        
 
         for (size_t i=0; i<wplist_ptr->pose_names.size(); i++)
         {
                 QGraphicsTextItem *textItem = ui->graphicsView->scene()->addText(QString::fromStdString(wplist_ptr->pose_names[i]));
-                        textItem->setFont(QFont("Arial", 16));  // Set font and size
-                        textItem->setDefaultTextColor(QColor("#000000"));  // Set text color
-                        textItem->setPos(wplist_ptr->poses[i].position.x -50,wplist_ptr->poses[i].position.y -65);
+                    textItem->setFont(QFont("Arial", 16));  // Set font and size
+                    textItem->setDefaultTextColor(QColor("#000000"));  // Set text color
+                    textItem->setPos(wplist_ptr->poses[i].position.x -50,wplist_ptr->poses[i].position.y -65);
 
                 QRectF circle(wplist_ptr->poses[i].position.x - radius, wplist_ptr->poses[i].position.y - radius, radius * 3, radius * 3);
                 
-                    QGraphicsEllipseItem* circleItem = new QGraphicsEllipseItem(circle);
+                QGraphicsEllipseItem* circleItem = new QGraphicsEllipseItem(circle);
                     // Set properties
-                    circleItem->setPen(QPen(Qt::red, 2));
+                    //circleItem->setPen(QPen(Qt::red, 2));
+                    //circleItem->setBrush(QBrush(Qt::green)); 
 
-                ui->graphicsView->scene()->addItem(circleItem);
+                QRadialGradient radialGradient(circle.center().x(), circle.center().y(), radius * 1.5);
+                    // Earth-like colors
+                    radialGradient.setColorAt(0, QColor(34, 139, 34));  // Forest Green (center)
+                    radialGradient.setColorAt(0.4, QColor(50, 205, 50)); // Lime Green (midway)
+                    radialGradient.setColorAt(0.7, QColor(0, 191, 255)); // Deep Sky Blue (near edge)
+                    radialGradient.setColorAt(1, QColor(25, 25, 112));  // Midnight Blue (outer edge)
 
-                waypoints_.append(circleItem);
-                waypoints_text_.append(textItem);
-                waypoints_direction_.append(wplist_ptr->poses[i].orientation.x);
+                    // Apply gradient to brush
+                    circleItem->setBrush(QBrush(radialGradient));
+                    circleItem->setPen(QPen(Qt::black, 2)); // Black outline for contrast
 
-                double mapX = (wplist_ptr->poses[i].position.x * this->map_resolution_) + this->map_origin_x_;
-                double mapY = (wplist_ptr->poses[i].position.y * this->map_resolution_) + this->map_origin_y_;
+            ui->graphicsView->scene()->addItem(circleItem);
 
-                geometry_msgs::msg::Pose tmp;
+            waypoints_.append(circleItem);
+            waypoints_text_.append(textItem);
+            waypoints_direction_.append(wplist_ptr->poses[i].orientation.x);
 
-                tmp.position.x = mapX;
-                tmp.position.y = mapY;
+            double mapX = (wplist_ptr->poses[i].position.x * this->map_resolution_) + this->map_origin_x_;
+            double mapY = (wplist_ptr->poses[i].position.y * this->map_resolution_) + this->map_origin_y_;
 
-                    double wp_heading = wplist_ptr->poses[i].orientation.x;
-                    double z_in_quaternion;
+            geometry_msgs::msg::Pose tmp;
+
+            tmp.position.x = mapX;
+            tmp.position.y = mapY;
+
+            double wp_heading = wplist_ptr->poses[i].orientation.x;
+            double z_in_quaternion;
                     double w_in_quaternion;
 
-                    double yaw_in_map = (wp_heading*0.017453292519943295);
-                    yaw_to_quaternion(yaw_in_map, z_in_quaternion, w_in_quaternion);
+            double yaw_in_map = (wp_heading*0.017453292519943295);
+            yaw_to_quaternion(yaw_in_map, z_in_quaternion, w_in_quaternion);
                     
-                    tmp.orientation.z = z_in_quaternion;
-                    tmp.orientation.w = w_in_quaternion;
+            tmp.orientation.z = z_in_quaternion;
+            tmp.orientation.w = w_in_quaternion;
                 
-                waypoints_map_[wplist_ptr->pose_names[i]] = tmp;
+            waypoints_map_[wplist_ptr->pose_names[i]] = tmp;
                     
                 // gui
-                waypoints_scene_[wplist_ptr->pose_names[i]] = wplist_ptr->poses[i];
-                waypoints_scene_[wplist_ptr->pose_names[i]].orientation.x = 0.000; 
+            waypoints_scene_[wplist_ptr->pose_names[i]] = wplist_ptr->poses[i];
+            waypoints_scene_[wplist_ptr->pose_names[i]].orientation.x = 0.000; 
         }
 }
 
@@ -1989,7 +2125,7 @@ void MainWindow::onGoAllBtnClicked(bool status)
     #ifdef ROM_DEBUG 
         qDebug() << "[    MainWindow::onGoAllBtnClicked()      ] : ";
     #endif
-    UNUSED(status);
+    ROM_DYNAMICS_UNUSED(status);
     statusLabelPtr_->setText("\n waypoints လွှတ်ပြီ ...\n");
     
         std::vector<std::string> selected_wp_names;
@@ -2004,6 +2140,8 @@ void MainWindow::onGoAllBtnClicked(bool status)
             #endif
         }
         
+        selected_wp_names.push_back("all_goals"); // or ("custom_goals")
+
         loop_waypoints_ = ui->loopCheckBox->isChecked();
 
         // btn trigger loop_waypoints_ to true or false; default အားဖြင့် false
@@ -2020,9 +2158,9 @@ void MainWindow::onGoAllBtnClicked(bool status)
         if (!selected_wp_names.empty()) 
         {
             //this->blockSignals(false);  
-            //qDebug() << "Emitting sendWaypointsGoal...";    
+            //qDebug() << "[    MainWindow::onGoAllBtnClicked()      ] : Emitting sendWaypointsGoal...";    
             emit sendWaypointsGoal(selected_wp_names);
-            //qDebug() << "sendWaypointsGoal emitted";
+            //qDebug() << "[    MainWindow::onGoAllBtnClicked()      ] : sendWaypointsGoal emitted";
             //this->blockSignals(true);    
         }
 }
