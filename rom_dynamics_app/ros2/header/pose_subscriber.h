@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <chrono>
+#include <QDebug>
 
 class Subscriber : public QObject, public rclcpp::Node
 {
@@ -36,6 +37,7 @@ class Subscriber : public QObject, public rclcpp::Node
         void poseCallback(const geometry_msgs::msg::Pose2D::SharedPtr msg);
 
         geometry_msgs::msg::Pose2D::SharedPtr msgPtr_;
+        bool first_time_trigger_ = true;
 };
 
 //------------------------------------------------------------

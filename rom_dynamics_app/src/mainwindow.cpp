@@ -151,6 +151,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayCurrentPose(const geometry_msgs::msg::Pose2D::SharedPtr msg) 
 {
+    #ifdef ROM_DEBUG
+        qDebug() << "[ MainWindow::displayCurrentPose ]: get robot Pose";
+    #endif
     // transform map coordinate to scene coordinate
     double x_meter = msg->x * -1.0;
     double y_meter = msg->y;

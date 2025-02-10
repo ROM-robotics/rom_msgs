@@ -2,7 +2,8 @@
 
 using namespace std::chrono_literals;
 
-Subscriber::Subscriber(const std::string &topic_name) : Node("qt_robot_pose_publisher")
+#define ROM_DEBUG 1
+Subscriber::Subscriber(const std::string &topic_name) : Node("qt_robot_pose_publisher"), msgPtr_(nullptr) 
 {
     subscription_ = this->create_subscription<geometry_msgs::msg::Pose2D>(
         topic_name, 10, std::bind(&Subscriber::poseCallback, this, std::placeholders::_1));
@@ -12,16 +13,31 @@ Subscriber::Subscriber(const std::string &topic_name) : Node("qt_robot_pose_publ
 void Subscriber::poseCallback(const geometry_msgs::msg::Pose2D::SharedPtr msg) 
 {
     //emit logReceived(msg);
-    msgPtr_.reset();
-    msgPtr_ = msg;
+    if(first_time_trigger_)
+    {
+        msgPtr_.reset();
+        msgPtr_ = msg;
+        first_time_trigger_ = false;
+    }
+    else{
+        msgPtr_.reset();
+        msgPtr_ = msg;
+        emit logReceived(msgPtr_);
+    }
+    
 }
 
 void Subscriber::onMapReadyForRobotPoseSubscriber()
 {
-    #ifdef ROM_DEBUG
-        qDebug() << "[ Subscriber::onMapReadyForWaypointsSubscriber ]: emit logReceived(msg);";
-    #endif
+    if (!msgPtr_) {
+        qDebug() << "[ Subscriber::onMapReadyForRobotPoseSubscriber ]: msgPtr_ is nullptr, skipping emit.";
+        return;  // Avoid emitting a nullptr
+    }
     emit logReceived(msgPtr_);
+
+    #ifdef ROM_DEBUG
+        qDebug() << "[ Subscriber::onMapReadyForRobotPoseSubscriber ]: emit logReceived(msg);";
+    #endif
 }
 ///-------------------- tf --------------------------------------
 
