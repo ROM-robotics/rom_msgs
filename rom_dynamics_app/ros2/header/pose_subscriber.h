@@ -24,13 +24,18 @@ class Subscriber : public QObject, public rclcpp::Node
 
     public:
         explicit Subscriber(const std::string &topic_name);
-
+    
+    public slots:
+        void onMapReadyForRobotPoseSubscriber();
+        
     signals:
         void logReceived(const geometry_msgs::msg::Pose2D::SharedPtr msg);
 
     private:
         rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr subscription_;
         void poseCallback(const geometry_msgs::msg::Pose2D::SharedPtr msg);
+
+        geometry_msgs::msg::Pose2D::SharedPtr msgPtr_;
 };
 
 //------------------------------------------------------------

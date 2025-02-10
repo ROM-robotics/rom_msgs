@@ -34,8 +34,10 @@ const std::string launch_cus_goals_loop = "send_waypoints_custom_goals_loop.laun
 std::vector<std::string> wp_names_;
 std::string data;
 
-bool state=false;
+bool loop_state= false;
 std::string nav_command="all_goals";
+
+bool first_time = true;
 
 //bool all_goals, all_goals_loop, custom_goals, custom_goals_loop = false;
 void all_goals();
@@ -108,18 +110,18 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
       return; 
     }
   
-    state = request->loop;
+    loop_state = request->loop;
     nav_command = request->command;
 
-    if(nav_command == "all_goals" && state == true)
+    if(nav_command == "all_goals" && loop_state == true)
     {
         all_goals_loop();
     }
-    else if(nav_command == "all_goals" && state == false)
+    else if(nav_command == "all_goals" && loop_state == false)
     {
         all_goals();
     }
-    else if(nav_command == "custom_goals" && state == true)
+    else if(nav_command == "custom_goals" && loop_state == true)
     {
         // copy data from qt
         wp_names_.clear();
@@ -133,7 +135,7 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
 
         custom_goals_loop();
     }
-    else if(nav_command == "custom_goals" && state == false)
+    else if(nav_command == "custom_goals" && loop_state == false)
     {
         // copy data from qt
         wp_names_.clear();
@@ -170,6 +172,23 @@ int main(int argc, char **argv)
 void all_goals()
 {
     RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "all_goals()");
+    if(first_time)
+    {
+        startLaunch(wp_package,launch_all_goals);
+        #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "New Launch all goals()");
+        #endif
+        first_time = false;
+        return;
+    }
+    else
+    {
+        shutdownLaunch();
+        startLaunch(wp_package,launch_all_goals);
+        #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Restart Launch all goals()");
+        #endif
+    }
     // shutdownLaunch();
     // startLaunch(wp_package,launch_all_goals);
 }
@@ -177,6 +196,23 @@ void all_goals()
 void all_goals_loop()
 {
     RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "all_goals_loop()");
+    if(first_time)
+    {
+        startLaunch(wp_package,launch_all_goals_loop);
+        #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "New Launch all goals loops()");
+        #endif
+        first_time = false;
+        return;
+    }
+    else
+    {
+        shutdownLaunch();
+        startLaunch(wp_package,launch_all_goals_loop);
+        #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Restart Launch all goals loops()");
+        #endif
+    }
     // shutdownLaunch();
     // startLaunch(wp_package,launch_all_goals_loop);
 }
@@ -184,6 +220,19 @@ void all_goals_loop()
 void custom_goals()
 {
     RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "custom_goals()");
+    if(first_time)
+    {
+        // //startLaunch(wp_package,launch_cus_goals, wp);
+        // #ifdef ROM_DEBUG
+        // RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "New Launch all custom_goals()");
+        // #endif
+        // first_time = false;
+        // return;
+    }
+    else
+    {
+
+    }
     // shutdownLaunch();
     // startLaunch(wp_package,launch_all_goals, data);
 }
@@ -191,6 +240,19 @@ void custom_goals()
 void custom_goals_loop()
 {
     RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "custom_goals_loop()");
+    if(first_time)
+    {
+        // startLaunch(wp_package,launch_cus_goals_loop);
+        // #ifdef ROM_DEBUG
+        // RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "New Launch custom_goals_loop()");
+        // #endif
+        // first_time = false;
+        // return;
+    }
+    else
+    {
+
+    }
     // shutdownLaunch();
     // startLaunch(wp_package,launch_all_goals, data);
 }

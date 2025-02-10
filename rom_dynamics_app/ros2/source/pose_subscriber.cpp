@@ -11,9 +11,18 @@ Subscriber::Subscriber(const std::string &topic_name) : Node("qt_robot_pose_publ
 
 void Subscriber::poseCallback(const geometry_msgs::msg::Pose2D::SharedPtr msg) 
 {
-    emit logReceived(msg);
+    //emit logReceived(msg);
+    msgPtr_.reset();
+    msgPtr_ = msg;
 }
-   
+
+void Subscriber::onMapReadyForRobotPoseSubscriber()
+{
+    #ifdef ROM_DEBUG
+        qDebug() << "[ Subscriber::onMapReadyForWaypointsSubscriber ]: emit logReceived(msg);";
+    #endif
+    emit logReceived(msgPtr_);
+}
 ///-------------------- tf --------------------------------------
 
 TfListener::TfListener(const std::string &node_name) 

@@ -113,8 +113,10 @@ int main(int argc, char *argv[])
     
     // map
     QObject::connect(map_subscriber.get(), &MapSubscriber::updateMap, &mainWindow, &MainWindow::onUpdateMap, Qt::QueuedConnection); // Connect the updateMap signal to onupdateMap, Qt::QueuedConnection);
-    // map ready for adding pose
+    // map ready for adding waypoints
     QObject::connect(&mainWindow, &MainWindow::mapReadyForWaypointsSubscriber, wp_subscriber.get(), &WaypointListSubscriber::onMapReadyForWaypointsSubscriber);
+    // map ready for adding robot pose
+    QObject::connect(&mainWindow, &MainWindow::mapReadyForWaypointsSubscriber, pose_subscriber.get(), &Subscriber::onMapReadyForRobotPoseSubscriber);
     
     // tf listen
     QObject::connect(tf_listener.get(), &TfListener::transformReceived, &mainWindow, &MainWindow::onTransformReceived);
