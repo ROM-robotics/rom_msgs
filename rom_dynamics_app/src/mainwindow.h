@@ -33,6 +33,8 @@
 // --------------------mapping app
 
 #include <geometry_msgs/msg/pose2_d.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
 
 #define ROM_DEBUG 1
 
@@ -152,6 +154,8 @@ class MainWindow : public QMainWindow
         void onGoAllBtnClicked(bool statys);
 
         void onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan);
+
+        void onTransformReceived(const geometry_msgs::msg::TransformStamped::SharedPtr transform);
         
     private slots:
         void on_shutdownBtn_clicked();

@@ -21,16 +21,16 @@ int main(int argc, char *argv[])
     std::shared_ptr<MapSubscriber> map_subscriber = nullptr;
     std::shared_ptr<WaypointListSubscriber> wp_subscriber = nullptr;
     std::shared_ptr<SendWaypointsClient> send_wp_client = nullptr;
-    std::shared_ptr<LaserSubscriber> laser_subscriber = nullptr;
+    //std::shared_ptr<LaserSubscriber> laser_subscriber = nullptr;
 
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> pose_mode_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
-    std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> cmd_executor_st = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+    std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> cmd_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> action_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> waypoint_executor_st = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
     pose_subscriber = std::make_shared<Subscriber>("/robot_pose"); 
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
-    laser_subscriber = std::make_shared<LaserSubscriber>("/scan");
+    //laser_subscriber = std::make_shared<LaserSubscriber>("/scan");
 
     cmd_service_client = std::make_shared<CmdServiceClient>("which_vel");
     yaml_service_client = std::make_shared<ConstructYamlServiceClient>("/construct_yaml");
@@ -39,14 +39,18 @@ int main(int argc, char *argv[])
 
     goal_action_client = std::make_shared<NavigateToPoseClient>("/navigate_to_pose");
     map_subscriber = std::make_shared<MapSubscriber>("/map");
+
+    // Instantiate and add TFListener
+    auto tf_listener = std::make_shared<TfListener>("tf_listener_node"); //--------------------
     
     pose_mode_executor_mt->add_node(pose_subscriber);
     pose_mode_executor_mt->add_node(mode_subscriber);
-    pose_mode_executor_mt->add_node(laser_subscriber);
+    //pose_mode_executor_mt->add_node(laser_subscriber);
 
-    cmd_executor_st->add_node(cmd_service_client);
-    cmd_executor_st->add_node(yaml_service_client);
-    cmd_executor_st->add_node(wp_subscriber);
+    cmd_executor_mt->add_node(cmd_service_client);
+    cmd_executor_mt->add_node(yaml_service_client);
+    cmd_executor_mt->add_node(wp_subscriber);
+    cmd_executor_mt->add_node(tf_listener);
 
     waypoint_executor_st->add_node(send_wp_client);
 
@@ -54,7 +58,7 @@ int main(int argc, char *argv[])
     action_executor_mt->add_node(map_subscriber);
     
     std::thread pose_mode_executor_thread([pose_mode_executor_mt](){pose_mode_executor_mt->spin();});
-    std::thread cmd_executor_thread([cmd_executor_st](){cmd_executor_st->spin();});
+    std::thread cmd_executor_thread([cmd_executor_mt](){cmd_executor_mt->spin();});
     std::thread waypoint_executor_thread([waypoint_executor_st](){waypoint_executor_st->spin();});
     
 
@@ -110,10 +114,14 @@ int main(int argc, char *argv[])
     // map
     QObject::connect(map_subscriber.get(), &MapSubscriber::updateMap, &mainWindow, &MainWindow::onUpdateMap, Qt::QueuedConnection); // Connect the updateMap signal to onupdateMap, Qt::QueuedConnection);
     // map ready for adding pose
-    //QObject::connect(&mainWindow, &MainWindow::mapReadyForWaypointsSubscriber, wp_subscriber.get(), &WaypointListSubscriber::onMapReadyForWaypointsSubscriber);
+    QObject::connect(&mainWindow, &MainWindow::mapReadyForWaypointsSubscriber, wp_subscriber.get(), &WaypointListSubscriber::onMapReadyForWaypointsSubscriber);
     
+    // tf listen
+    QObject::connect(tf_listener.get(), &TfListener::transformReceived, &mainWindow, &MainWindow::onTransformReceived);
+
+
     // laser scan
-    QObject::connect(laser_subscriber.get(), &LaserSubscriber::updateLaser, &mainWindow, &MainWindow::onUpdateLaser, Qt::QueuedConnection); 
+    //QObject::connect(laser_subscriber.get(), &LaserSubscriber::updateLaser, &mainWindow, &MainWindow::onUpdateLaser, Qt::QueuedConnection); 
     
     // subscribe wp_lists
     QObject::connect(wp_subscriber.get(), &WaypointListSubscriber::updateWpUI, &mainWindow, &MainWindow::onUpdateWpUI);

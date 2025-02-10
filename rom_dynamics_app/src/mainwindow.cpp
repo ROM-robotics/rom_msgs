@@ -124,6 +124,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     qRegisterMetaType<geometry_msgs::msg::Pose2D::SharedPtr>("geometry_msgs::msg::Pose2D::SharedPtr");
     // laser scan
     qRegisterMetaType<sensor_msgs::msg::LaserScan::SharedPtr>("sensor_msgs::msg::LaserScan::SharedPtr");
+    // tf
+    qRegisterMetaType<geometry_msgs::msg::TransformStamped::SharedPtr>("geometry_msgs::msg::TransformStamped::SharedPtr");
     
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
 
@@ -149,7 +151,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayCurrentPose(const geometry_msgs::msg::Pose2D::SharedPtr msg) 
 {
-    double x_meter = msg->x;
+    // transform map coordinate to scene coordinate
+    double x_meter = msg->x * -1.0;
     double y_meter = msg->y;
 
     double x_feet = (x_meter * meter_to_foot_constant);
@@ -179,16 +182,17 @@ void MainWindow::displayCurrentPose(const geometry_msgs::msg::Pose2D::SharedPtr 
         
         // Add to scene
         ui->graphicsView->scene()->addItem(robotItemPtr_);
+        // why?------------------------------------------------
     } 
     else 
-    {
+    {   // why?------------------------------------------------
         // Update robot position
         robotItemPtr_->setPos(sceneX - robotItemPtr_->boundingRect().width() / 2, 
                           sceneY - robotItemPtr_->boundingRect().height() / 2);
     }
 
     // Apply rotation
-    robotItemPtr_->setRotation(theta_degree);
+    robotItemPtr_->setRotation(theta_degree); // why?--------------------------------------------------------------
 }
 
 void MainWindow::changeCurrentMode(const std_msgs::msg::String::SharedPtr msg)
@@ -1688,6 +1692,12 @@ void MainWindow::onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
     this->map_origin_x_ = map_origin_x;
     this->map_origin_y_ = map_origin_y;
 
+    #ifdef ROM_DEBUG
+        qDebug() << "[ MainWindow::onUpdateMap ] : map_resolution = " << map_resolution;
+        qDebug() << "[ MainWindow::onUpdateMap ] : map_origin.x = " << map_origin_x;
+        qDebug() << "[ MainWindow::onUpdateMap ] : map_origin.y = " << map_origin_y;
+    #endif
+
     QGraphicsScene *scene = new QGraphicsScene(this);
     scene->addPixmap(QPixmap::fromImage(mapImage));
     ui->graphicsView->setScene(scene);
@@ -2202,4 +2212,23 @@ void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan
         qDebug() << "[ MainWindow::onUpdateLaser ] : get laser";
     #endif
 }
+
+void MainWindow::onTransformReceived(const geometry_msgs::msg::TransformStamped::SharedPtr transform)
+{
+    // Extract yaw from the quaternion rotation
+    double yaw = quaternion_to_euler_yaw(transform->transform.rotation.x, 
+                                  transform->transform.rotation.y, 
+                                  transform->transform.rotation.z, 
+                                  transform->transform.rotation.w);
+
+    // Set the text of the status label with the transform data
+    statusLabelPtr_->setText(tr("\nmap->baselink\n       x: \"%1\"\n       y: \"%2\"\n     yaw: \"%3\"")
+                             .arg(transform->transform.translation.x)
+                             .arg(transform->transform.translation.y)
+                             .arg(yaw));
+}
+
+
+
+
 // file_path = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png
