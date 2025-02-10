@@ -670,6 +670,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             ui->statusLabel->setText("Click outside scene bounds ignored.");
             return;
         }
+        
         // secne ထဲ မှာရှိရင်
         else 
         {   // if the point inside the scene, do your work
@@ -1710,6 +1711,8 @@ void MainWindow::onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
         qDebug() << "[  MainWindow::onUpdateMap ]: onUpdateMap finished";
     #endif
 
+    showSceneOriginCoordinate();
+    showMapOriginCooridinate();
     emit mapReadyForWaypointsSubscriber();
 }
 
@@ -2231,7 +2234,71 @@ void MainWindow::onTransformReceived(const geometry_msgs::msg::TransformStamped:
                              .arg(yaw));
 }
 
+void MainWindow::showSceneOriginCoordinate()
+{
+    QPointF origin(0, 0);
 
+    // Create and add the X-axis (red)
+    QGraphicsLineItem *xAxis = ui->graphicsView->scene()->addLine(0, 0, 100, 0);
+    QPen xAxisPen(QColor(255, 0, 0), 2);  // Red color and thickness 2
+    xAxis->setPen(xAxisPen);
+    // Create and add the Y-axis (green)
+    QGraphicsLineItem *yAxis = ui->graphicsView->scene()->addLine(0, 0, 0, 100);
+    QPen yAxisPen(QColor(0, 255, 0), 2);  // Green color and thickness 2
+    yAxis->setPen(yAxisPen);
 
+    // Add arrowheads to the X-axis (red arrow)
+    QPolygonF xArrow;
+    xArrow << QPointF(100, 0) << QPointF(90, -10) << QPointF(90, 10); // Triangle shape
+    QGraphicsPolygonItem *xArrowItem = ui->graphicsView->scene()->addPolygon(xArrow);
+    xArrowItem->setBrush(QColor(255, 0, 0)); // Red color
+    xArrowItem->setPos(0, 0); // Position at the end of the X-axis
+
+    // Add arrowheads to the Y-axis (green arrow)
+    QPolygonF yArrow;
+    yArrow << QPointF(0, 100) << QPointF(-10, 90) << QPointF(10, 90); // Triangle shape
+    QGraphicsPolygonItem *yArrowItem = ui->graphicsView->scene()->addPolygon(yArrow);
+    yArrowItem->setBrush(QColor(0, 255, 0)); // Green color
+    yArrowItem->setPos(0, 0); // Position at the end of the Y-axis
+
+    // Add text at the origin (0, 0)
+    QGraphicsTextItem *originText = ui->graphicsView->scene()->addText("scene_origin");
+    originText->setPos(5, 5);  // Adjust position slightly to avoid overlap with axes
+    originText->setDefaultTextColor(Qt::black);  // Set text color to black
+    originText->setFont(QFont("Arial", 12));  // Set font to Arial with size 12
+}
+
+void MainWindow::showMapOriginCooridinate()
+{
+    QPointF origin(map_origin_x_, map_origin_y_);
+
+    QGraphicsLineItem *xAxis = ui->graphicsView->scene()->addLine(map_origin_x_, map_origin_y_, 100, map_origin_y_);
+    QPen xAxisPen(QColor(255, 0, 0), 2);  // Red color and thickness 2
+    xAxis->setPen(xAxisPen);
+    // Create and add the Y-axis (green)
+    QGraphicsLineItem *yAxis = ui->graphicsView->scene()->addLine(map_origin_x_, map_origin_y_, map_origin_x_, 100);
+    QPen yAxisPen(QColor(0, 255, 0), 2);  // Green color and thickness 2
+    yAxis->setPen(yAxisPen);
+
+    // Add arrowheads to the X-axis (red arrow)
+    QPolygonF xArrow;
+    xArrow << QPointF(100, map_origin_y_) << QPointF(90, map_origin_y_-10) << QPointF(90, map_origin_y_+10); // Triangle shape
+    QGraphicsPolygonItem *xArrowItem = ui->graphicsView->scene()->addPolygon(xArrow);
+    xArrowItem->setBrush(QColor(255, 0, 0)); // Red color
+    xArrowItem->setPos(0, 0); // Position at the end of the X-axis
+
+    // Add arrowheads to the Y-axis (green arrow)
+    QPolygonF yArrow;
+    yArrow << QPointF(map_origin_x_, 100) << QPointF(map_origin_x_-10, 90) << QPointF(map_origin_x_+10, 90); // Triangle shape
+    QGraphicsPolygonItem *yArrowItem = ui->graphicsView->scene()->addPolygon(yArrow);
+    yArrowItem->setBrush(QColor(0, 255, 0)); // Green color
+    yArrowItem->setPos(0, 0); // Position at the end of the Y-axis
+
+    // Add text at the origin (0, 0)
+    QGraphicsTextItem *originText = ui->graphicsView->scene()->addText("map_origin");
+    originText->setPos(map_origin_x_+2, map_origin_y_);  // Adjust position slightly to avoid overlap with axes
+    originText->setDefaultTextColor(Qt::black);  // Set text color to black
+    originText->setFont(QFont("Arial", 12));  // Set font to Arial with size 12
+}
 
 // file_path = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png

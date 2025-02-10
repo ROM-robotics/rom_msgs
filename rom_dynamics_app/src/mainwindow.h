@@ -94,6 +94,9 @@ class MainWindow : public QMainWindow
         void applyStyleNormal();
         void applyStyleServiceMode();
 
+        void showSceneOriginCoordinate();
+        void showMapOriginCooridinate();
+
         // ------------------- map app
         //void mousePressEvent(QMouseEvent *event); check protected
         void wheelEvent(QWheelEvent *event);
