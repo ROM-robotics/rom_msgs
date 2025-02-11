@@ -1685,11 +1685,12 @@ void MainWindow::onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
     // Convert OccupancyGrid to an image
     QImage mapImage(msg->info.width, msg->info.height, QImage::Format_RGB888);
     for (size_t y = 0; y < msg->info.height; ++y) {
+        int inverted_y = msg->info.height - 1 - y;
         for (size_t x = 0; x < msg->info.width; ++x) {
             int index = y * msg->info.width + x;
             int value = msg->data[index];
             QColor color = (value == 0) ? Qt::white : (value == 100) ? Qt::black : Qt::gray;
-            mapImage.setPixel(x, y, color.rgb());
+            mapImage.setPixel(x, inverted_y, color.rgb());
         }
     }
     this->map_resolution_ = map_resolution;
