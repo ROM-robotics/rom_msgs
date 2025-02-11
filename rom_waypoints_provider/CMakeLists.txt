@@ -49,11 +49,10 @@ ament_target_dependencies(send_waypoints_server rclcpp rclcpp_action nav2_msgs g
 add_executable(robot_pose_publisher src/robot_pose.cpp)
 ament_target_dependencies(robot_pose_publisher rclcpp geometry_msgs tf2 tf2_ros nav_msgs tf2_geometry_msgs)
 
-add_executable(navigation_stop src/navigation_stop.cpp)
-ament_target_dependencies(navigation_stop rclcpp std_msgs)
+# add_executable(navigation_stop src/navigation_stop.cpp)
+# ament_target_dependencies(navigation_stop rclcpp std_msgs)
 
 install(TARGETS 
-  navigation_stop
   send_waypoints_goals 
   robot_pose_publisher
   construct_yaml_server

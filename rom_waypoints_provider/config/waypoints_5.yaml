@@ -1,0 +1,74 @@
+waypoints:
+  - name: start1
+    frame_id: hello
+    pose:
+      position:
+        x: 1.0
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 1.0
+  - name: world
+    frame_id: map
+    pose:
+      position:
+        x: 0.0
+        y: 1.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 1.0
+  - name: room1
+    frame_id: map
+    pose:
+      position:
+        x: 2.0
+        y: 2.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: -0.617
+        w: 0.7865
+  - name: room2
+    frame_id: map
+    pose:
+      position:
+        x: -2.0
+        y: 2.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: -0.617
+        w: 0.7865
+  - name: corner1
+    frame_id: map
+    pose:
+      position:
+        x: 1.5
+        y: 0.5
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: -0.999
+        w: 0.0344
+  - name: corner2
+    frame_id: map
+    pose:
+      position:
+        x: -1.5
+        y: 0.0
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: -0.999
+        w: 0.0344
+
