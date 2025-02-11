@@ -6,7 +6,7 @@
 #include <nav2_msgs/action/follow_waypoints.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
-#include <std_msgs/msg/bool.hpp>  
+
 #include <fstream>
 #include <iostream>
 #include <unordered_map>
@@ -20,8 +20,7 @@ public:
     using GoalHandle = rclcpp_action::ClientGoalHandle<FollowWaypoints>;
 
     WaypointFollower(std::vector<std::string> selected_waypoints, bool loop = false)
-        : Node("waypoint_follower"), loop_(loop), cancel_requested_(false)
-        {
+        : Node("waypoint_follower"), loop_(loop) {
 
         // Load waypoints from YAML
         load_waypoints();
@@ -39,10 +38,6 @@ public:
         // Create publisher for RViz markers
         marker_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/waypoint_markers", 10);
 
-        // Subscribe to navigation_stop topic
-        stop_sub_ = this->create_subscription<std_msgs::msg::Bool>(
-            "/navigation_stop", 10, std::bind(&WaypointFollower::navigation_stop_callback, this, std::placeholders::_1));
-
         // Publish markers
         publish_markers();
 
@@ -51,26 +46,11 @@ public:
     }
 
 private:
-        // Callback to handle the navigation_stop message
-        void navigation_stop_callback(const std_msgs::msg::Bool::SharedPtr msg) 
-        {
-            if (msg->data) {
-                RCLCPP_INFO(this->get_logger(), "Received stop signal. Cancelling goals and stopping the loop.");
-                cancel_requested_ = true;
-    
-                if (current_goal_handle_) {
-                    auto cancel_future = client_->async_cancel_goal(current_goal_handle_);
-                    auto result = rclcpp::spin_until_future_complete(this->get_node_base_interface(), cancel_future);
-    
-                    if (result == rclcpp::FutureReturnCode::SUCCESS) {
-                        RCLCPP_INFO(this->get_logger(), "Successfully cancelled the goal.");
-                    } else {
-                        RCLCPP_ERROR(this->get_logger(), "Failed to cancel the goal.");
-                    }
-                }
-            }
-            // should loop = false
-        }
+    std::unordered_map<std::string, geometry_msgs::msg::PoseStamped> waypoint_map_;
+    std::vector<geometry_msgs::msg::PoseStamped> selected_waypoints_;
+    bool loop_;
+    rclcpp_action::Client<FollowWaypoints>::SharedPtr client_;
+    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
 
     void load_waypoints() {
         try {
@@ -137,7 +117,6 @@ private:
             if (result == rclcpp::FutureReturnCode::SUCCESS) 
             {
                 auto goal_handle = future_goal.get();
-                current_goal_handle_ = goal_handle;  // Save the goal handle for cancellation later
 
                 if (!goal_handle) 
                 {
@@ -211,18 +190,6 @@ private:
         marker_pub_->publish(marker_array);
         RCLCPP_INFO(this->get_logger(), "Published waypoints to RViz.");
     }
-
-
-    std::unordered_map<std::string, geometry_msgs::msg::PoseStamped> waypoint_map_;
-    std::vector<geometry_msgs::msg::PoseStamped> selected_waypoints_;
-    bool loop_;
-    rclcpp_action::Client<FollowWaypoints>::SharedPtr client_;
-    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
-
-    bool cancel_requested_;
-    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr stop_sub_;
-    rclcpp_action::ClientGoalHandle<FollowWaypoints>::SharedPtr current_goal_handle_;
-
 };
 
 int main(int argc, char **argv) 

@@ -1,96 +1,48 @@
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
-
-#include "geometry_msgs/msg/transform_stamped.hpp"
-#include "geometry_msgs/msg/pose2_d.hpp"
 #include "rclcpp/rclcpp.hpp"
-#include "tf2/exceptions.h"
-#include "tf2_ros/transform_listener.h"
-#include "tf2_ros/buffer.h"
+#include "nav_msgs/msg/odometry.hpp"
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
-using namespace std::chrono_literals;
-std::string target_frame_, source_frame_;
-class RobotPoseListener : public rclcpp::Node
+class OdomToPosePublisher : public rclcpp::Node
 {
 public:
-  RobotPoseListener(): Node("robot_pose_publisher")
-  {
-    // source_frame_ = this->declare_parameter<std::string>("source_frame", "turtle1");
-    // target_frame_ = this->declare_parameter<std::string>("target_frame", "turtle2");
+    OdomToPosePublisher()
+    : Node("odom_to_pose_publisher")
+    {
+        // Create a publisher for /robot_pose
+        robot_pose_publisher_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/amcl_pose", 10);
 
-    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
-    tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
-
-    publisher_ = this->create_publisher<geometry_msgs::msg::Pose2D>("robot_pose", 1);
-
-    timer_ = this->create_wall_timer(1s, std::bind(&RobotPoseListener::on_timer, this));
-  }
+        // Create a subscriber for /odom
+        odom_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
+            "/odom", 10, std::bind(&OdomToPosePublisher::odom_callback, this, std::placeholders::_1));
+    }
 
 private:
-  void on_timer()
-  {
-   
-    std::string fromFrameRel = source_frame_.c_str();
-    std::string toFrameRel = target_frame_.c_str();
-    
-    geometry_msgs::msg::TransformStamped t;
-    rclcpp::Time now = this->get_clock()->now();
+    void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
+    {
+        // Create a PoseWithCovarianceStamped message
+        geometry_msgs::msg::PoseWithCovarianceStamped pose_with_covariance_msg;
 
-        // Look up for the transformation between target_frame and turtle2 frames
-        // and send velocity commands for turtle2 to reach target_frame
-    try 
-    {
-        t = tf_buffer_->lookupTransform(toFrameRel, fromFrameRel,tf2::TimePointZero);
-    } 
-    catch (const tf2::TransformException & ex) 
-    {
-        RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
-        return;
+        // Set the header
+        pose_with_covariance_msg.header.stamp = this->get_clock()->now();
+        pose_with_covariance_msg.header.frame_id = "odom";  // You can change this to your desired frame
+
+        // Set position and orientation from Odometry
+        pose_with_covariance_msg.pose = msg->pose;
+
+        // Publish the PoseWithCovarianceStamped message
+        robot_pose_publisher_->publish(pose_with_covariance_msg);
     }
-    geometry_msgs::msg::Pose2D msg;
 
-    tf2::Quaternion q(
-        t.transform.rotation.x,
-        t.transform.rotation.y,
-        t.transform.rotation.z,
-        t.transform.rotation.w);
-    
-    double roll, pitch, yaw;
-    tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);  // Convert quaternion to roll, pitch, yaw (in radians)
-
-    roll = roll * (180.0 / M_PI);
-    pitch = pitch * (180.0 / M_PI);
-    yaw = yaw * (180.0 / M_PI);
-
-    msg.x = t.transform.translation.x;
-    msg.y = t.transform.translation.y;
-    msg.theta = yaw;
-
-    publisher_->publish(msg);
-}
-  rclcpp::TimerBase::SharedPtr timer_{nullptr};
-  rclcpp::Publisher<geometry_msgs::msg::Pose2D>::SharedPtr publisher_{nullptr};
-  
-  std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
-  std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber_;
+    rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr robot_pose_publisher_;
 };
 
-int main(int argc, char * argv[])
+int main(int argc, char **argv)
 {
-  rclcpp::init(argc, argv);
-  if(argc == 3)
-  {
-    source_frame_ = argv[1];
-    target_frame_ = argv[2];
-  }
-  else
-  {
-    source_frame_ = "map";
-    target_frame_ = "base_link";
-  }
-  rclcpp::spin(std::make_shared<RobotPoseListener>());
-  rclcpp::shutdown();
-  return 0;
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared<OdomToPosePublisher>());
+    rclcpp::shutdown();
+    return 0;
 }
+

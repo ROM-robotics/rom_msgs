@@ -4,7 +4,7 @@
 #include <filesystem>
 
 #include <memory>
-
+#include <std_msgs/msg/bool.hpp>  
 #include <std_msgs/msg/string.hpp>
 #include <stdexcept>
 #include <string>
@@ -39,11 +39,18 @@ std::string nav_command="all_goals";
 
 bool first_time = true;
 
+// for publisher
+rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr publisher;
+int counter = 0;
+
 //bool all_goals, all_goals_loop, custom_goals, custom_goals_loop = false;
 void all_goals();
 void all_goals_loop();
 void custom_goals();
 void custom_goals_loop();
+
+void publish_stop_signal();
+
 std::string joinVector(const std::vector<std::string>& waypoints, const std::string& delimiter = " ") {
     std::ostringstream oss;
     for (size_t i = 0; i < waypoints.size(); ++i) {
@@ -115,10 +122,12 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
 
     if(nav_command == "all_goals" && loop_state == true)
     {
+        publish_stop_signal();
         all_goals_loop();
     }
     else if(nav_command == "all_goals" && loop_state == false)
     {
+        publish_stop_signal();
         all_goals();
     }
     else if(nav_command == "custom_goals" && loop_state == true)
@@ -126,13 +135,14 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
         // copy data from qt
         wp_names_.clear();
         data.clear();
-        for (size_t i = 0; i < request->pose_names.size(); ++i) 
-        {
-            wp_names_.emplace_back(request->pose_names[i]);
-            RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "request->pose_names[i] : %s",wp_names_[i].c_str());
-        }
+            for (size_t i = 0; i < request->pose_names.size(); ++i) 
+            {
+                wp_names_.emplace_back(request->pose_names[i]);
+                RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "request->pose_names[i] : %s",wp_names_[i].c_str());
+            }
         data = joinVector(wp_names_);
-
+        
+        publish_stop_signal();
         custom_goals_loop();
     }
     else if(nav_command == "custom_goals" && loop_state == false)
@@ -140,33 +150,54 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
         // copy data from qt
         wp_names_.clear();
         data.clear();
-        for (size_t i = 0; i < request->pose_names.size(); ++i) 
-        {
-            wp_names_.emplace_back(request->pose_names[i]);
-            RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "request->pose_names[i] : %s",wp_names_[i].c_str());
-        }
+            for (size_t i = 0; i < request->pose_names.size(); ++i) 
+            {
+                wp_names_.emplace_back(request->pose_names[i]);
+                RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "request->pose_names[i] : %s",wp_names_[i].c_str());
+            }
         data = joinVector(wp_names_);
-
+        
+        publish_stop_signal();
         custom_goals();
     }
 }
 
 int main(int argc, char **argv)
 {
-  rclcpp::init(argc, argv);
+    rclcpp::init(argc, argv);
 
-  std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("waypoint_server");
+    std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("waypoint_server");
 
-  rclcpp::Service<rom_interfaces::srv::ConstructYaml>::SharedPtr service = node->create_service<rom_interfaces::srv::ConstructYaml>("waypoints_selected", &waypoints_select);
+    rclcpp::Service<rom_interfaces::srv::ConstructYaml>::SharedPtr service = node->create_service<rom_interfaces::srv::ConstructYaml>("waypoints_selected", &waypoints_select);
+    publisher = node->create_publisher<std_msgs::msg::Bool>("navigation_stop", 10);
 
-  #ifdef ROM_DEBUG
-    RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Ready to selected waypoints.");
-   
-  #endif
+    #ifdef ROM_DEBUG
+        RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Ready to selected waypoints."); 
+    #endif
 
-  rclcpp::spin(node);
-  rclcpp::shutdown();
+    rclcpp::spin(node);
+    rclcpp::shutdown();
 }
+
+void publish_stop_signal() {
+    auto msg = std_msgs::msg::Bool();
+
+    // Publish True first (Stop signal)
+    if (counter == 0) {
+        msg.data = true;
+        RCLCPP_INFO(rclcpp::get_logger("navigation_stop_publisher"), "Publishing: STOP navigation (True)");
+    }
+
+    publisher->publish(msg);
+    counter++;
+
+    // Exit after sending 2 messages (True and False)
+    if (counter > 1) {
+        RCLCPP_INFO(rclcpp::get_logger("navigation_stop_publisher"), "Exiting publisher after sending stop signals.");
+        rclcpp::shutdown();
+    }
+}
+
 
 // shutdown launch ခေါ်ဖို့လိုမလို စဥ်းစားပါ။ first time trigger
 void all_goals()

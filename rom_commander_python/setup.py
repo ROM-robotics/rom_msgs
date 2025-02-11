@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            #'all_goals = rom_commander_python.all_goals:main',
+            'all_goals = rom_commander_python.all_goals:main',
             'all_goals_loop = rom_commander_python.all_goals_loop:main',
             'navigation_stop = rom_commander_python.navigation_stop:main',
         ],
