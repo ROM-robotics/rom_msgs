@@ -49,8 +49,6 @@ void all_goals_loop();
 void custom_goals();
 void custom_goals_loop();
 
-void publish_stop_signal();
-
 std::string joinVector(const std::vector<std::string>& waypoints, const std::string& delimiter = " ") {
     std::ostringstream oss;
     for (size_t i = 0; i < waypoints.size(); ++i) {
@@ -122,12 +120,12 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
 
     if(nav_command == "all_goals" && loop_state == true)
     {
-        publish_stop_signal();
+        
         all_goals_loop();
     }
     else if(nav_command == "all_goals" && loop_state == false)
     {
-        publish_stop_signal();
+        
         all_goals();
     }
     else if(nav_command == "custom_goals" && loop_state == true)
@@ -142,7 +140,7 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
             }
         data = joinVector(wp_names_);
         
-        publish_stop_signal();
+        
         custom_goals_loop();
     }
     else if(nav_command == "custom_goals" && loop_state == false)
@@ -157,7 +155,7 @@ void waypoints_select(const std::shared_ptr<rom_interfaces::srv::ConstructYaml::
             }
         data = joinVector(wp_names_);
         
-        publish_stop_signal();
+        
         custom_goals();
     }
 }
@@ -179,30 +177,13 @@ int main(int argc, char **argv)
     rclcpp::shutdown();
 }
 
-void publish_stop_signal() {
-    auto msg = std_msgs::msg::Bool();
-
-    // Publish True first (Stop signal)
-    if (counter == 0) {
-        msg.data = true;
-        RCLCPP_INFO(rclcpp::get_logger("navigation_stop_publisher"), "Publishing: STOP navigation (True)");
-    }
-
-    publisher->publish(msg);
-    counter++;
-
-    // Exit after sending 2 messages (True and False)
-    if (counter > 1) {
-        RCLCPP_INFO(rclcpp::get_logger("navigation_stop_publisher"), "Exiting publisher after sending stop signals.");
-        rclcpp::shutdown();
-    }
-}
 
 
 // shutdown launch ခေါ်ဖို့လိုမလို စဥ်းစားပါ။ first time trigger
 void all_goals()
 {
     RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "all_goals()");
+    // firstime param
     if(first_time)
     {
         startLaunch(wp_package,launch_all_goals);
@@ -214,14 +195,17 @@ void all_goals()
     }
     else
     {
+        // check wp_loop_done is true if true, get param meter 
+        // while(!wp_loop_done)
+        {
+
+        }
         shutdownLaunch();
         startLaunch(wp_package,launch_all_goals);
         #ifdef ROM_DEBUG
         RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Restart Launch all goals()");
         #endif
     }
-    // shutdownLaunch();
-    // startLaunch(wp_package,launch_all_goals);
 }
 
 void all_goals_loop()
@@ -244,8 +228,6 @@ void all_goals_loop()
         RCLCPP_INFO(rclcpp::get_logger("send_waypoints_server"), "Restart Launch all goals loops()");
         #endif
     }
-    // shutdownLaunch();
-    // startLaunch(wp_package,launch_all_goals_loop);
 }
 
 void custom_goals()

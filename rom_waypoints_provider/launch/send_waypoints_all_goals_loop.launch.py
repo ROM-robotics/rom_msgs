@@ -11,7 +11,7 @@ def generate_launch_description():
         # Pass the launch argument as a parameter
         Node(
             package='rom_waypoints_provider',
-            executable='send_waypoints_goals',
+            executable='send_waypoints_goals_loop',
             name='send_waypoints_goals_loop',
             output='screen',
             arguments=[LaunchConfiguration('loop')]  

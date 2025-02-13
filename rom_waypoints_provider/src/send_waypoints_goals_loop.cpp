@@ -29,7 +29,19 @@ public:
             return;
         }
         
-        loop_ = false;
+        loop_ = true;
+        
+        // if(loop_)
+        // {
+        //     this->declare_parameter<bool>("loop", true);
+        // }
+        // else{
+        //     this->declare_parameter<bool>("loop", false);
+        // }
+
+        this->declare_parameter<bool>("loop", true);
+        rclcpp::Parameter loop_param("loop", true); // Set 'loop' to true
+        this->set_parameter(loop_param);    
         
         this->declare_parameter<bool>("wp_loop_done", false);
 
@@ -102,9 +114,12 @@ private:
     {
         while (rclcpp::ok()) 
         {
-            rclcpp::Parameter false_param("wp_loop_done", false); 
-            this->set_parameter(false_param);  
+            // Get the 'loop' parameter value
+            loop_ = this->get_parameter("loop").get_value<bool>();
 
+            rclcpp::Parameter false_param("wp_loop_done", false); // Set 'loop' to true
+            this->set_parameter(false_param);  
+            
             if (!client_->wait_for_action_server(std::chrono::seconds(10))) 
             {
                 RCLCPP_ERROR(this->get_logger(), "FollowWaypoints action server not available!");
@@ -165,7 +180,7 @@ private:
                     RCLCPP_INFO(this->get_logger(), "%s", log_msg.str().c_str());
                 }
             #endif 
-            
+
             rclcpp::Parameter true_param("wp_loop_done", true); // Set 'loop' to true
             this->set_parameter(true_param);  
 
