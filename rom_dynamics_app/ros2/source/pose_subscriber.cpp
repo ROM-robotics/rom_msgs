@@ -55,14 +55,15 @@ void TfListener::listenForTransform()
     while (rclcpp::ok()) {
         try {
             // Look up transform between 'map' and 'base_link'
-            geometry_msgs::msg::TransformStamped transform = tf_buffer_->lookupTransform(
-                "map", "base_link", rclcpp::Time(0), rclcpp::Duration(1, 0));  // 1 second timeout
-
+            geometry_msgs::msg::TransformStamped map_odom_tf = tf_buffer_->lookupTransform("map", "odom", rclcpp::Time(0), rclcpp::Duration(1, 0));  // 1 second timeout
+            geometry_msgs::msg::TransformStamped odom_footprint_tf = tf_buffer_->lookupTransform("odom", "base_footprint", rclcpp::Time(0), rclcpp::Duration(1, 0));
+            
             // Create a shared pointer to the transform object
-            auto transform_ptr = std::make_shared<geometry_msgs::msg::TransformStamped>(transform);
+            auto map_odom_tf_ptr = std::make_shared<geometry_msgs::msg::TransformStamped>(map_odom_tf);
+            auto odom_footprint_tf_ptr = std::make_shared<geometry_msgs::msg::TransformStamped>(odom_footprint_tf);
 
             // Emit signal with the shared pointer to the transform
-            emit transformReceived(transform_ptr);
+            emit transformReceived(map_odom_tf_ptr, odom_footprint_tf_ptr);
         } catch (const tf2::TransformException &ex) {
             RCLCPP_WARN(this->get_logger(), "Could not get transform: %s", ex.what());
         }

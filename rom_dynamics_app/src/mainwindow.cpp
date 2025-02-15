@@ -1714,6 +1714,7 @@ void MainWindow::onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
 
     showSceneOriginCoordinate();
     showMapOriginCooridinate();
+    showOdomAndBaseFootprint();
     emit mapReadyForWaypointsSubscriber();
 }
 
@@ -2220,19 +2221,28 @@ void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan
     #endif
 }
 
-void MainWindow::onTransformReceived(const geometry_msgs::msg::TransformStamped::SharedPtr transform)
+void MainWindow::onTransformReceived(const geometry_msgs::msg::TransformStamped::SharedPtr map_odom, const geometry_msgs::msg::TransformStamped::SharedPtr odom_base_footprint)
 {
     // Extract yaw from the quaternion rotation
-    double yaw = quaternion_to_euler_yaw(transform->transform.rotation.x, 
-                                  transform->transform.rotation.y, 
-                                  transform->transform.rotation.z, 
-                                  transform->transform.rotation.w);
+    map_odom_x = map_odom->transform.translation.x;
+    map_odom_y = map_odom->transform.translation.y;
+    odom_base_footprint_x = odom_base_footprint->transform.translation.x;
+    odom_base_footprint_y = odom_base_footprint->transform.translation.y;
+
+    map_odom_yaw = quaternion_to_euler_yaw(map_odom->transform.rotation.x, 
+                                map_odom->transform.rotation.y, 
+                                map_odom->transform.rotation.z, 
+                                map_odom->transform.rotation.w);
+    odom_base_footprint_yaw = quaternion_to_euler_yaw(map_odom->transform.rotation.x, 
+                                odom_base_footprint->transform.rotation.y, 
+                                odom_base_footprint->transform.rotation.z, 
+                                odom_base_footprint->transform.rotation.w);
 
     // Set the text of the status label with the transform data
-    statusLabelPtr_->setText(tr("\nmap->baselink\n       x: \"%1\"\n       y: \"%2\"\n     yaw: \"%3\"")
-                             .arg(transform->transform.translation.x)
-                             .arg(transform->transform.translation.y)
-                             .arg(yaw));
+    // statusLabelPtr_->setText(tr("\nmap->baselink\n       x: \"%1\"\n       y: \"%2\"\n     yaw: \"%3\"")
+    //                          .arg(transform->transform.translation.x)
+    //                          .arg(transform->transform.translation.y)
+    //                          .arg(yaw));
 }
 
 void MainWindow::showSceneOriginCoordinate()
@@ -2301,5 +2311,80 @@ void MainWindow::showMapOriginCooridinate()
     originText->setDefaultTextColor(Qt::black);  // Set text color to black
     originText->setFont(QFont("Arial", 12));  // Set font to Arial with size 12
 }
+
+void MainWindow::showOdomAndBaseFootprint()
+{
+    QGraphicsScene *scene = ui->graphicsView->scene();
+
+    // Odom Frame (Blue)
+    QGraphicsLineItem *odomXAxis = scene->addLine(map_odom_x, map_odom_y, map_odom_x + 100, map_odom_y);
+    QGraphicsLineItem *odomYAxis = scene->addLine(map_odom_x, map_odom_y, map_odom_x, map_odom_y + 100);
+    QPen odomPen(QColor(0, 0, 255), 2);  // Blue color
+    odomXAxis->setPen(odomPen);
+    odomYAxis->setPen(odomPen);
+
+    QGraphicsTextItem *odomText = scene->addText("odom");
+    odomText->setPos(map_odom_x + 5, map_odom_y + 5);
+    odomText->setDefaultTextColor(Qt::blue);
+    odomText->setFont(QFont("Arial", 12));
+
+    // Base Footprint Frame (Purple)
+    QGraphicsLineItem *baseXAxis = scene->addLine(odom_base_footprint_x, odom_base_footprint_y, odom_base_footprint_x + 50, odom_base_footprint_y);
+    QGraphicsLineItem *baseYAxis = scene->addLine(odom_base_footprint_x, odom_base_footprint_y, odom_base_footprint_x, odom_base_footprint_y + 50);
+    QPen basePen(QColor(128, 0, 128), 2);  // Purple color
+    baseXAxis->setPen(basePen);
+    baseYAxis->setPen(basePen);
+
+    QGraphicsTextItem *baseText = scene->addText("base_footprint");
+    baseText->setPos(odom_base_footprint_x + 5, odom_base_footprint_y + 5);
+    baseText->setDefaultTextColor(QColor(128, 0, 128));
+    baseText->setFont(QFont("Arial", 12));
+}
+
+
+// void MainWindow::showOdomAndBaseFootprint()
+// {
+//     QGraphicsScene *scene = ui->graphicsView->scene();
+
+//     // Clear previous drawings before updating
+//     scene->clear();
+
+//     // Odom Frame (Blue)
+//     QGraphicsLineItem *odomXAxis = scene->addLine(map_odom_x, map_odom_y, map_odom_x + 100, map_odom_y);
+//     QGraphicsLineItem *odomYAxis = scene->addLine(map_odom_x, map_odom_y, map_odom_x, map_odom_y + 100);
+//     QPen odomPen(QColor(0, 0, 255), 2);  // Blue color
+//     odomXAxis->setPen(odomPen);
+//     odomYAxis->setPen(odomPen);
+
+//     QGraphicsTextItem *odomText = scene->addText("odom");
+//     odomText->setPos(map_odom_x + 5, map_odom_y + 5);
+//     odomText->setDefaultTextColor(Qt::blue);
+//     odomText->setFont(QFont("Arial", 12));
+
+//     // Base Footprint Frame (Purple)
+//     QGraphicsLineItem *baseXAxis = scene->addLine(odom_base_footprint_x, odom_base_footprint_y, odom_base_footprint_x + 50, odom_base_footprint_y);
+//     QGraphicsLineItem *baseYAxis = scene->addLine(odom_base_footprint_x, odom_base_footprint_y, odom_base_footprint_x, odom_base_footprint_y + 50);
+//     QPen basePen(QColor(128, 0, 128), 2);  // Purple color
+//     baseXAxis->setPen(basePen);
+//     baseYAxis->setPen(basePen);
+
+//     QGraphicsTextItem *baseText = scene->addText("base_footprint");
+//     baseText->setPos(odom_base_footprint_x + 5, odom_base_footprint_y + 5);
+//     baseText->setDefaultTextColor(QColor(128, 0, 128));
+//     baseText->setFont(QFont("Arial", 12));
+
+//     // --- Add Robot Image ---
+//     QPixmap robotPixmap(":/images/robot.png"); // Ensure the image is in Qt's resource file (resources.qrc)
+//     QGraphicsPixmapItem *robotItem = scene->addPixmap(robotPixmap);
+
+//     // Center the image at (odom_base_footprint_x, odom_base_footprint_y)
+//     QSize imageSize = robotPixmap.size();
+//     robotItem->setTransformOriginPoint(imageSize.width() / 2, imageSize.height() / 2);
+//     robotItem->setPos(odom_base_footprint_x - imageSize.width() / 2, 
+//                       odom_base_footprint_y - imageSize.height() / 2);
+
+//     // Rotate the robot image based on odom_base_footprint_yaw
+//     robotItem->setRotation(-odom_base_footprint_yaw * 180.0 / M_PI); // Convert radians to degrees
+// }
 
 // file_path = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png

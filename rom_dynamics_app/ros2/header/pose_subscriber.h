@@ -53,7 +53,7 @@ public:
     void listenForTransform();
 
 signals:
-    void transformReceived(std::shared_ptr<geometry_msgs::msg::TransformStamped> transform);
+    void transformReceived(std::shared_ptr<geometry_msgs::msg::TransformStamped> map_odom, std::shared_ptr<geometry_msgs::msg::TransformStamped> odom_base_footprint);
 
 private:
     std::shared_ptr<tf2_ros::Buffer> tf_buffer_;

@@ -106,6 +106,7 @@ class MainWindow : public QMainWindow
         // ------------------- map app
 
         void romSendWpGoals();
+        void showOdomAndBaseFootprint();
 
     signals:
         void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr msg);
@@ -158,7 +159,7 @@ class MainWindow : public QMainWindow
 
         void onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan);
 
-        void onTransformReceived(const geometry_msgs::msg::TransformStamped::SharedPtr transform);
+        void onTransformReceived(const geometry_msgs::msg::TransformStamped::SharedPtr map_odom, const geometry_msgs::msg::TransformStamped::SharedPtr odom_base_footprint);
         
     private slots:
         void on_shutdownBtn_clicked();
@@ -229,6 +230,14 @@ class MainWindow : public QMainWindow
         double map_origin_x_ = 0.000;
         double map_origin_y_ = 0.000;
         double map_resolution_ = 0.000;
+
+        // tf data
+        double map_odom_x = 0.0;
+        double map_odom_y = 0.0;
+        double map_odom_yaw = 0.0;
+        double odom_base_footprint_x = 0.0;
+        double odom_base_footprint_y = 0.0;
+        double odom_base_footprint_yaw = 0.0;
 
         // 6 modes
         bool zoom_mode_ = false;
