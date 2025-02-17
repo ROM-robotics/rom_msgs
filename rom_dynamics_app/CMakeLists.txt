@@ -62,6 +62,7 @@ add_executable(ROM_DYNAMICS
     ros2/header/pose_subscriber.h
     ros2/source/pose_subscriber.cpp
     ros2/header/rom_algorithm.h
+    ros2/header/rom_structures.h
     ros2/header/mode_subscriber.h
     ros2/source/mode_subscriber.cpp
     ros2/header/navigate_to_pose_client.h

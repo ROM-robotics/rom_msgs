@@ -36,6 +36,8 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 
+#include "rom_structures.h"
+
 #define ROM_DEBUG 1
 
 QT_BEGIN_NAMESPACE
@@ -159,7 +161,7 @@ class MainWindow : public QMainWindow
 
         void onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan);
 
-        void onTransformReceived(const geometry_msgs::msg::TransformStamped::SharedPtr map_odom, const geometry_msgs::msg::TransformStamped::SharedPtr odom_base_footprint);
+        void onTransformReceived(const ROMTransform rom_tf);
         
     private slots:
         void on_shutdownBtn_clicked();

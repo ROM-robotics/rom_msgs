@@ -44,5 +44,5 @@ void yaw_to_quaternion(double yaw, double &z, double &w)
     //y = 0;
     z = sin(yaw / 2);
 }
-#endif // SUBSCRIBER_H
+#endif 
 

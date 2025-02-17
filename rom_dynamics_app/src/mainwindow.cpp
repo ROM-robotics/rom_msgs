@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <cmath> // For atan2 and M_PI
+
 #include "rom_algorithm.h"
 
 extern void shutdown_thread();
@@ -126,6 +127,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     qRegisterMetaType<sensor_msgs::msg::LaserScan::SharedPtr>("sensor_msgs::msg::LaserScan::SharedPtr");
     // tf
     qRegisterMetaType<geometry_msgs::msg::TransformStamped::SharedPtr>("geometry_msgs::msg::TransformStamped::SharedPtr");
+    qRegisterMetaType<ROMTransform>("ROMTransform");
     
     statusLabelPtr_->setText("App အား အသုံးပြုဖို့အတွက် အောက်ပါ ROS2 humble package နှစ်ခုကို install လုပ်ပါ။။\n      - rom_interfaces\n      - which_maps\n\n $ ros2 run which_maps which_maps_server\n # map save ရန် lifecycle လို/မလို စစ်ဆေးပါ။\n");
 
@@ -2221,28 +2223,33 @@ void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan
     #endif
 }
 
-void MainWindow::onTransformReceived(const geometry_msgs::msg::TransformStamped::SharedPtr map_odom, const geometry_msgs::msg::TransformStamped::SharedPtr odom_base_footprint)
+void MainWindow::onTransformReceived(const ROMTransform rom_tf)
 {
-    // Extract yaw from the quaternion rotation
-    map_odom_x = map_odom->transform.translation.x;
-    map_odom_y = map_odom->transform.translation.y;
-    odom_base_footprint_x = odom_base_footprint->transform.translation.x;
-    odom_base_footprint_y = odom_base_footprint->transform.translation.y;
+    // // Extract yaw from the quaternion rotation
+    // map_odom_x = map_odom->transform.translation.x;
+    // map_odom_y = map_odom->transform.translation.y;
 
-    map_odom_yaw = quaternion_to_euler_yaw(map_odom->transform.rotation.x, 
-                                map_odom->transform.rotation.y, 
-                                map_odom->transform.rotation.z, 
-                                map_odom->transform.rotation.w);
-    odom_base_footprint_yaw = quaternion_to_euler_yaw(map_odom->transform.rotation.x, 
-                                odom_base_footprint->transform.rotation.y, 
-                                odom_base_footprint->transform.rotation.z, 
-                                odom_base_footprint->transform.rotation.w);
+    // map_odom_yaw = quaternion_to_euler_yaw(map_odom->transform.rotation.x, 
+    //                             map_odom->transform.rotation.y, 
+    //                             map_odom->transform.rotation.z, 
+    //                             map_odom->transform.rotation.w);
 
-    // Set the text of the status label with the transform data
-    // statusLabelPtr_->setText(tr("\nmap->baselink\n       x: \"%1\"\n       y: \"%2\"\n     yaw: \"%3\"")
-    //                          .arg(transform->transform.translation.x)
-    //                          .arg(transform->transform.translation.y)
-    //                          .arg(yaw));
+    // odom_base_footprint_x = odom_base_footprint->transform.translation.x;
+    // odom_base_footprint_y = odom_base_footprint->transform.translation.y;
+    // odom_base_footprint_yaw = quaternion_to_euler_yaw(map_odom->transform.rotation.x, 
+    //                             odom_base_footprint->transform.rotation.y, 
+    //                             odom_base_footprint->transform.rotation.z, 
+    //                             odom_base_footprint->transform.rotation.w);
+
+    // // Set the text of the status label with the transform data
+    // statusLabelPtr_->setText(tr("\nmap->odom\n       x: \"%1\"\n       y: \"%2\"\n     yaw: \"%3\"\nodom->base_footprint\n       x: \"%4\"\n       y: \"%5\"\n     yaw: \"%6\"")
+    //                          .arg(map_odom_x)
+    //                          .arg(map_odom_y)
+    //                          .arg(map_odom_yaw)
+    //                          .arg(odom_base_footprint_x)
+    //                          .arg(odom_base_footprint_y)
+    //                          .arg(odom_base_footprint_yaw)
+    //                         );
 }
 
 void MainWindow::showSceneOriginCoordinate()

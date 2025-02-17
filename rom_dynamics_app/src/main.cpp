@@ -76,8 +76,10 @@ int main(int argc, char *argv[])
     );
 
     MainWindow mainWindow;
-
+    
     mainWindow.show();
+
+    //qRegisterMetaType<geometry_msgs::msg::TransformStamped::SharedPtr>("geometry_msgs::msg::TransformStamped::SharedPtr");
 
     std::thread action_executor_thread([action_executor_mt](){action_executor_mt->spin();});
 

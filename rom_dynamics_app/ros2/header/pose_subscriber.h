@@ -19,6 +19,7 @@
 #include <chrono>
 #include <QDebug>
 
+#include "rom_structures.h"
 class Subscriber : public QObject, public rclcpp::Node
 {
     Q_OBJECT
@@ -53,11 +54,13 @@ public:
     void listenForTransform();
 
 signals:
-    void transformReceived(std::shared_ptr<geometry_msgs::msg::TransformStamped> map_odom, std::shared_ptr<geometry_msgs::msg::TransformStamped> odom_base_footprint);
+    void transformReceived(const ROMTransform rom_tf);
 
 private:
+    rclcpp::TimerBase::SharedPtr timer_;
     std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
     std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
+    ROMTransform rtf_;
 };
 
 
