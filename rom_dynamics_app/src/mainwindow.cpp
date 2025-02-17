@@ -2225,6 +2225,9 @@ void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan
 
 void MainWindow::onTransformReceived(const ROMTransform rom_tf)
 {
+    #ifdef ROM_DEBUG
+        qDebug() << "[  MainWindow::onTransformReceived    ] : get rom_tf";
+    #endif
     // // Extract yaw from the quaternion rotation
     // map_odom_x = map_odom->transform.translation.x;
     // map_odom_y = map_odom->transform.translation.y;

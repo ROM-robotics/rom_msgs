@@ -1,8 +1,8 @@
 #include "pose_subscriber.h"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 using namespace std::chrono_literals;
 
-//#define ROM_DEBUG 1
+#define ROM_DEBUG 1
 Subscriber::Subscriber(const std::string &topic_name) : Node("qt_robot_pose_publisher"), msgPtr_(nullptr) 
 {
     subscription_ = this->create_subscription<geometry_msgs::msg::Pose2D>(
@@ -75,11 +75,10 @@ void TfListener::listenForTransform()
 
         tf2::Quaternion map_odom_quat;
         tf2::fromMsg(map_odom_tf_ptr->transform.rotation, map_odom_quat);  // Convert geometry_msgs::Quaternion to tf2::Quaternion
-        // Convert quaternion to yaw using tf2::Matrix3x3
         tf2::Matrix3x3 mat(map_odom_quat);
         double roll, pitch, yaw;
-        mat.getRPY(roll, pitch, yaw);  // Get roll, pitch, yaw
-        rtf_.map_odom_yaw = yaw;  // Get yaw (Z-axis rotation)
+        mat.getRPY(roll, pitch, yaw);  
+        rtf_.map_odom_yaw = yaw;  
 
             rtf_.odom_base_footprint_x = odom_footprint_tf_ptr->transform.translation.x;
             rtf_.odom_base_footprint_y = odom_footprint_tf_ptr->transform.translation.y;
@@ -92,9 +91,9 @@ void TfListener::listenForTransform()
         mat2.getRPY(r, p, y); 
         rtf_.odom_base_footprint_yaw = y;  
             
-            #ifdef ROM_DEBUG
+        #ifdef ROM_DEBUG
                 qDebug() << "[  TfListener::listenForTransform   ]  :  get transform ";
-            #endif
+        #endif
             // Emit signal with the shared pointers to the transforms
             emit transformReceived(rtf_);
         } catch (const tf2::TransformException &ex) {
