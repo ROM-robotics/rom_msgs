@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <sys/wait.h>
+#include "rom_define.h"
 
 // switch mode parameters
 std::string current_mode = "navi";

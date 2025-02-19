@@ -2,10 +2,16 @@
 #include "std_msgs/msg/string.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "rom_interfaces/srv/which_vel.hpp" // Replace with your package's service file if custom
+#include "rom_define.h"
 
+#ifdef USE_ROM2109_HARDWARE_ROBOT
 const double linear_vel = 0.090;
 const double angular_vel = 0.2;
-
+#endif
+#ifdef USE_BOBO_SIMULATION_CONTAINER
+const double linear_vel = 0.4;
+const double angular_vel = 0.2;
+#endif
 //#define ROM_DEBUG 1
 class CmdVelServiceNode : public rclcpp::Node
 {

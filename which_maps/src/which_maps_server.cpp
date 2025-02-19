@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <sys/wait.h>
+#include "rom_define.h"
 
 #define ROM_DEBUG 1
 
@@ -34,8 +35,11 @@ const std::string carto_localization_launch = "localization.launch.py";
     
 const std::string remapping_launch = "something.launch.py";
 
-std::string package_directory = "/home/mr_robot/data/maps/";
-
+#ifdef USE_ROM2109_HARDWARE_ROBOT
+  std::string package_directory = "/home/mr_robot/data/maps/";
+#elif USE_BOBO_SIMULATION_CONTAINER
+  std::string package_directory = "/data/maps/";
+#endif
 
 // /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py
 // /ros2_ws/install/bobo_carto/share/bobo_carto/launch/localization.launch.py
@@ -155,8 +159,12 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
       // Save the map
       // command စစ်ဆေးရန်။
-      std:: string cmd = "cd /home/mr_robot/data/maps/ && touch " + map_name + "_hack; rm " + map_name + "* && ros2 service call /write_state cartographer_ros_msgs/srv/WriteState '{filename: '/home/mr_robot/data/maps/" +  map_name + ".pbstream', include_unfinished_submaps: true}'";
-
+      //std::string cmd = "cd /home/mr_robot/data/maps/ && touch " + map_name + "_hack; rm " + map_name + "* && ros2 service call /write_state cartographer_ros_msgs/srv/WriteState '{filename: '/home/mr_robot/data/maps/" +  map_name + ".pbstream', include_unfinished_submaps: true}'";
+      #ifdef USE_ROM2109_HARDWARE_ROBOT
+        std::string cmd = "cd /home/mr_robot/data/maps/ && touch " + map_name + "_hack; rm " + map_name + "* && ros2 service call /write_state cartographer_ros_msgs/srv/WriteState '{filename: '/home/mr_robot/data/maps/" +  map_name + ".pbstream', include_unfinished_submaps: true}'";
+      #elif USE_BOBO_SIMULATION_CONTAINER
+        std::string cmd = "cd /data/maps/ && touch " + map_name + "_hack; rm " + map_name + "* && ros2 service call /write_state cartographer_ros_msgs/srv/WriteState '{filename: '/data/maps/" +  map_name + ".pbstream', include_unfinished_submaps: true}'";
+      #endif
       // first command
       int ret_code = std::system(cmd.c_str());
 
@@ -165,12 +173,21 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
           RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 1 executed successfully.");
         #endif 
 
+        #ifdef USE_ROM2109_HARDWARE_ROBOT
         std::string cmd2 = std::string("ros2 run cartographer_ros cartographer_pbstream_to_ros_map ") +
                             "-pbstream_filename /home/mr_robot/data/maps/" + map_name + ".pbstream " +
                             "-map_filename /home/mr_robot/data/maps/" + map_name + ".pgm " +
                             "-yaml_filename /home/mr_robot/data/maps/" + map_name + ".yaml && "  
                             "mv /home/mr_robot/devel_ws/map.pgm /home/mr_robot/data/maps/"  + map_name + ".pgm && "
                             "mv /home/mr_robot/devel_ws/map.yaml /home/mr_robot/data/maps/"  + map_name + ".yaml";
+        #elif USE_BOBO_SIMULATION_CONTAINER
+        std::string cmd2 = std::string("ros2 run cartographer_ros cartographer_pbstream_to_ros_map ") +
+                            "-pbstream_filename /data/maps/" + map_name + ".pbstream " +
+                            "-map_filename /data/maps/" + map_name + ".pgm " +
+                            "-yaml_filename /data/maps/" + map_name + ".yaml && "  
+                            "mv /ros2_ws/map.pgm /data/maps/"  + map_name + ".pgm && "
+                            "mv /ros2_ws/map.yaml /data/maps/"  + map_name + ".yaml";
+        #endif
         // second command
         int ret_code2 = std::system(cmd2.c_str());
 
@@ -180,7 +197,12 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
             RCLCPP_INFO(rclcpp::get_logger("which_map_server"), "Map saver command 2 executed successfully.");
           #endif 
 
-          std::string cmd3 = "sed -i \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
+          #ifdef USE_ROM2109_HARDWARE_ROBOT
+            std::string cmd3 = "sed -i \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
+          #elif USE_BOBO_SIMULATION_CONTAINER
+            std::string cmd3 = "sed -i \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /ros2_ws/install/bobo_carto/share/bobo_carto/launch/localization.launch.py";
+          #endif
+
           int ret_code3 = std::system(cmd3.c_str());
           if(ret_code3==0)
           {
@@ -188,8 +210,11 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
               RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 3 OK");
             #endif 
 
-            std::string cmd4 = "sed -i \"s|maps/.*\\.yaml|maps/" + map_name + ".yaml|g\" /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
-
+            #ifdef USE_ROM2109_HARDWARE_ROBOT
+              std::string cmd4 = "sed -i \"s|maps/.*\\.yaml|maps/" + map_name + ".yaml|g\" /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
+            #elif USE_BOBO_SIMULATION_CONTAINER
+              std::string cmd4 = "sed -i \"s|maps/.*\\.yaml|maps/" + map_name + ".yaml|g\" /ros2_ws/install/bobo_nav2/share/bobo_nav2/config/nav2_params.yaml";
+            #endif
             int ret_code4 = std::system(cmd4.c_str());
 
             if(ret_code4==0) 
@@ -197,7 +222,13 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
               #ifdef ROM_DEBUG
                 RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "sed command 4 OK"); 
               #endif 
-              std::string cmd5 = "sed -i \"s|^image: .*\\.pgm|image: " + map_name + ".pgm|\" /home/mr_robot/data/maps/" + map_name + ".yaml";
+
+              #ifdef USE_ROM2109_HARDWARE_ROBOT
+                std::string cmd5 = "sed -i \"s|^image: .*\\.pgm|image: " + map_name + ".pgm|\" /home/mr_robot/data/maps/" + map_name + ".yaml";
+              #elif USE_BOBO_SIMULATION_CONTAINER
+                std::string cmd5 = "sed -i \"s|^image: .*\\.pgm|image: " + map_name + ".pgm|\" /data/maps/" + map_name + ".yaml";
+              #endif
+              
               int ret_code5 = std::system(cmd5.c_str());
               if(ret_code5==0) 
               { // ******************************* all done ***************************** //
@@ -289,12 +320,22 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
         #endif
         // Do Your Work
         // ၂ ၊ nav2_param.yaml နဲ့ carto localization launch မှာ သက်ဆိုင်ရာ yaml နဲ့ pbstream ပြင်ပါ။ မရရင် error(7) 
-        std::string cmd1 = "sed -i \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
+        //std::string cmd1 = "sed -i \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
+        #ifdef USE_ROM2109_HARDWARE_ROBOT
+          std::string cmd1 = "sed -i \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /home/mr_robot/devel_ws/install/rom2109_carto/share/rom2109_carto/launch/localization.launch.py";
+        #elif USE_BOBO_SIMULATION_CONTAINER
+          std::string cmd1 = "sed -i \"s|maps/.*\\.pbstream|maps/" + map_name + ".pbstream|g\" /ros2_ws/install/bobo_carto/share/bobo_carto/launch/localization.launch.py";
+        #endif
         int ret_code1 = std::system(cmd1.c_str());
         if(ret_code1==0)
         {
           // execute command 2 
-          std::string cmd2 = "sed -i \"s|maps/.*\\.yaml|maps/" + map_name + ".yaml|g\" /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
+          //std::string cmd2 = "sed -i \"s|maps/.*\\.yaml|maps/" + map_name + ".yaml|g\" /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
+          #ifdef USE_ROM2109_HARDWARE_ROBOT
+            std::string cmd2 = "sed -i \"s|maps/.*\\.yaml|maps/" + map_name + ".yaml|g\" /home/mr_robot/devel_ws/install/rom2109_nav2/share/rom2109_nav2/config/nav2_params.yaml";
+          #elif USE_BOBO_SIMULATION_CONTAINER
+            std::string cmd2 = "sed -i \"s|maps/.*\\.yaml|maps/" + map_name + ".yaml|g\" /ros2_ws/install/bobo_nav2/share/bobo_nav2/config/nav2_params.yaml";
+          #endif
           int ret_code2 = std::system(cmd2.c_str());
           if(ret_code2==0)
           {
@@ -316,11 +357,21 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
             */
 
             /* အဲ့ဒီ အစား အောက်ပါအတိုင်း မြေပုံချိန်းဖို့ service call မယ်။ */
-            std::string map_path = "/home/mr_robot/data/maps/";
-            std::string path_to_map = map_path + map_name + ".yaml";
+            #ifdef USE_ROM2109_HARDWARE_ROBOT
+              std::string map_path = "/home/mr_robot/data/maps/";
+              std::string path_to_map = map_path + map_name + ".yaml";
+            #elif USE_BOBO_SIMULATION_CONTAINER
+              std::string map_path = "/data/maps/";
+              std::string path_to_map = map_path + map_name + ".yaml";
+            #endif
             
             // std::string map_cmd = "ros2 service call /map_server/load_map nav2_msgs/srv/LoadMap \"{map_url: \'"+ path_to_map +"\'}\"";
-            std::string map_cmd = "ros2 service call /map_server/load_map nav2_msgs/srv/LoadMap \"{map_url: \'"+ path_to_map +"\'}\" > NUL 2>&1";
+            //std::string map_cmd = "ros2 service call /map_server/load_map nav2_msgs/srv/LoadMap \"{map_url: \'"+ path_to_map +"\'}\" > NUL 2>&1";
+            #ifdef USE_ROM2109_HARDWARE_ROBOT
+              std::string map_cmd = "ros2 service call /map_server/load_map nav2_msgs/srv/LoadMap \"{map_url: \'"+ path_to_map +"\'}\" > NUL 2>&1";
+            #elif USE_BOBO_SIMULATION_CONTAINER
+              std::string map_cmd = "ros2 service call /map_server/load_map nav2_msgs/srv/LoadMap \"{map_url: \'"+ path_to_map +"\'}\" > NUL 2>&1";
+            #endif
             int map_ret_code = std::system(map_cmd.c_str());
             if (map_ret_code == 0)
             {
@@ -330,8 +381,12 @@ void which_map_answer(const std::shared_ptr<rom_interfaces::srv::WhichMaps::Requ
 
               // clear costmap commands
               //std::string clear_costmap_cmd = "ros2 service call /clear_costmap/clear_costmap std_srvs/srv/Empty \"{}\"";
-              std::string clear_costmap_cmd = "ros2 service call /global_costmap/clear_around_global_costmap nav2_msgs/srv/ClearCostmapAroundRobot && ros2 service call /local_costmap/clear_around_local_costmap nav2_msgs/srv/ClearCostmapAroundRobot";
-
+              //std::string clear_costmap_cmd = "ros2 service call /global_costmap/clear_around_global_costmap nav2_msgs/srv/ClearCostmapAroundRobot && ros2 service call /local_costmap/clear_around_local_costmap nav2_msgs/srv/ClearCostmapAroundRobot";
+              #ifdef USE_ROM2109_HARDWARE_ROBOT
+                std::string clear_costmap_cmd = "ros2 service call /global_costmap/clear_around_global_costmap nav2_msgs/srv/ClearCostmapAroundRobot && ros2 service call /local_costmap/clear_around_local_costmap nav2_msgs/srv/ClearCostmapAroundRobot";
+              #elif USE_BOBO_SIMULATION_CONTAINER
+                std::string clear_costmap_cmd = "ros2 service call /global_costmap/clear_around_global_costmap nav2_msgs/srv/ClearCostmapAroundRobot && ros2 service call /local_costmap/clear_around_local_costmap nav2_msgs/srv/ClearCostmapAroundRobot";
+              #endif
               int clear_costmap_cmd_ret = std::system(clear_costmap_cmd.c_str());
               if (clear_costmap_cmd_ret == 0)
               {
