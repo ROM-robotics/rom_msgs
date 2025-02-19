@@ -22,7 +22,7 @@ const std::string remapping_launch = "something.launch.py";
 
 void startLaunch(const std::string &package, const std::string &launch_file) 
 {
-        RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Starting launch file: %s/%s", package.c_str(), launch_file.c_str());
+        RCLCPP_INFO(rclcpp::get_logger("which_navs_server"), "Starting launch file: %s/%s", package.c_str(), launch_file.c_str());
 
         // Fork a proce  to run the launch file
         launch_pid = fork();
@@ -42,7 +42,7 @@ void startLaunch(const std::string &package, const std::string &launch_file)
 void shutdownLaunch() 
 {
         if (launch_pid > 0) {
-            RCLCPP_INFO(rclcpp::get_logger("which_maps_server"), "Shutting down current launch process (PID: %d)...", launch_pid);
+            RCLCPP_INFO(rclcpp::get_logger("which_navs_server"), "Shutting down current launch process (PID: %d)...", launch_pid);
             kill(launch_pid, SIGINT);
             int status;
             waitpid(launch_pid, &status, 0);
@@ -121,7 +121,7 @@ int main(int argc, char **argv)
     // Create a subscriber
     auto subscription = node->create_subscription<std_msgs::msg::String>("which_nav", 10, topic_callback);
 
-    RCLCPP_INFO(rclcpp::get_logger("which_nav_server"), "Fist Time trigger to Nav mode");
+    RCLCPP_INFO(rclcpp::get_logger("which_navs_server"), "Fist Time trigger to Nav mode");
 
     startLaunch(nav2_pkg, nav2_localization_launch);
 
