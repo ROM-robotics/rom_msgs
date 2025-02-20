@@ -11,12 +11,12 @@ struct ROMTransform
     // Transform between "map" and "odom" frame
     double map_odom_x = 0.0;   // X coordinate of the transform (map -> odom)
     double map_odom_y = 0.0;   // Y coordinate of the transform (map -> odom)
-    double map_odom_yaw = 0.0; // Yaw (orientation) of the transform (map -> odom)
+    double map_odom_yaw = 0.0; // Yaw (orientation) of the transform (map -> odom) radian
 
     // Transform between "odom" and "base_footprint" frame
     double odom_base_footprint_x = 0.0;  // X coordinate of the transform (odom -> base_footprint)
     double odom_base_footprint_y = 0.0;  // Y coordinate of the transform (odom -> base_footprint)
-    double odom_base_footprint_yaw = 0.0; // Yaw (orientation) of the transform (odom -> base_footprint)
+    double odom_base_footprint_yaw = 0.0; // Yaw (orientation) of the transform (odom -> base_footprint) radian
 
     // Default constructor
     ROMTransform() = default;

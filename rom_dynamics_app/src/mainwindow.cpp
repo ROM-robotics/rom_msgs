@@ -1091,8 +1091,7 @@ void MainWindow::on_goBtn_clicked()
 
 void MainWindow::on_waypointBtn_clicked()
 {
-    emit sendWaypoints(std::make_shared<std::unordered_map<std::string, geometry_msgs::msg::Pose>>(waypoints_map_),
-   std::make_shared<std::unordered_map<std::string, geometry_msgs::msg::Pose>>(waypoints_scene_));
+    emit sendWaypoints(std::make_shared<std::unordered_map<std::string, geometry_msgs::msg::Pose>>(waypoints_map_), std::make_shared<std::unordered_map<std::string, geometry_msgs::msg::Pose>>(waypoints_scene_));
 //void onSendWaypoints(std::shared_ptr<std::unordered_map<std::string, geometry_msgs::msg::Pose>> wp_list);
 }
 
@@ -1686,17 +1685,22 @@ void MainWindow::onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
 
     // Convert OccupancyGrid to an image
     QImage mapImage(msg->info.width, msg->info.height, QImage::Format_RGB888);
-    for (size_t y = 0; y < msg->info.height; ++y) {
+    for (size_t y = 0; y < msg->info.height; ++y) 
+    {
         int inverted_y = msg->info.height - 1 - y;
-        for (size_t x = 0; x < msg->info.width; ++x) {
+
+        for (size_t x = 0; x < msg->info.width; ++x) 
+        {
             int index = y * msg->info.width + x;
             int value = msg->data[index];
             QColor color = (value == 0) ? Qt::white : (value == 100) ? Qt::black : Qt::gray;
-            mapImage.setPixel(x, inverted_y, color.rgb());
+
+            //mapImage.setPixel(x, inverted_y, color.rgb());
+            mapImage.setPixel(x, y, color.rgb());
         }
     }
-    this->map_resolution_ = map_resolution;
-    this->map_origin_x_ = map_origin_x;
+    this->map_resolution_ = map_resolution; 
+    this->map_origin_x_ = map_origin_x; // catesian coordinate
     this->map_origin_y_ = map_origin_y;
 
     #ifdef ROM_DEBUG
@@ -1716,7 +1720,7 @@ void MainWindow::onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
 
     showSceneOriginCoordinate();
     showMapOriginCooridinate();
-    showOdomAndBaseFootprint();
+    //showOdomAndBaseFootprint();
     emit mapReadyForWaypointsSubscriber();
 }
 
@@ -2225,34 +2229,12 @@ void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan
 
 void MainWindow::onTransformReceived(const ROMTransform rom_tf)
 {
-    #ifdef ROM_DEBUG
-        qDebug() << "[  MainWindow::onTransformReceived    ] : get rom_tf";
-    #endif
-    // // Extract yaw from the quaternion rotation
-    // map_odom_x = map_odom->transform.translation.x;
-    // map_odom_y = map_odom->transform.translation.y;
+    // #ifdef ROM_DEBUG
+    //     qDebug() << "[  MainWindow::onTransformReceived    ] : get rom_tf";
+    // #endif
+    rom_tf_ = rom_tf;
 
-    // map_odom_yaw = quaternion_to_euler_yaw(map_odom->transform.rotation.x, 
-    //                             map_odom->transform.rotation.y, 
-    //                             map_odom->transform.rotation.z, 
-    //                             map_odom->transform.rotation.w);
-
-    // odom_base_footprint_x = odom_base_footprint->transform.translation.x;
-    // odom_base_footprint_y = odom_base_footprint->transform.translation.y;
-    // odom_base_footprint_yaw = quaternion_to_euler_yaw(map_odom->transform.rotation.x, 
-    //                             odom_base_footprint->transform.rotation.y, 
-    //                             odom_base_footprint->transform.rotation.z, 
-    //                             odom_base_footprint->transform.rotation.w);
-
-    // // Set the text of the status label with the transform data
-    // statusLabelPtr_->setText(tr("\nmap->odom\n       x: \"%1\"\n       y: \"%2\"\n     yaw: \"%3\"\nodom->base_footprint\n       x: \"%4\"\n       y: \"%5\"\n     yaw: \"%6\"")
-    //                          .arg(map_odom_x)
-    //                          .arg(map_odom_y)
-    //                          .arg(map_odom_yaw)
-    //                          .arg(odom_base_footprint_x)
-    //                          .arg(odom_base_footprint_y)
-    //                          .arg(odom_base_footprint_yaw)
-    //                         );
+    showOdomAndBaseFootprint();
 }
 
 void MainWindow::showSceneOriginCoordinate()
@@ -2260,24 +2242,24 @@ void MainWindow::showSceneOriginCoordinate()
     QPointF origin(0, 0);
 
     // Create and add the X-axis (red)
-    QGraphicsLineItem *xAxis = ui->graphicsView->scene()->addLine(0, 0, 100, 0);
+    QGraphicsLineItem *xAxis = ui->graphicsView->scene()->addLine(0, 0, 30, 0);
     QPen xAxisPen(QColor(255, 0, 0), 2);  // Red color and thickness 2
     xAxis->setPen(xAxisPen);
     // Create and add the Y-axis (green)
-    QGraphicsLineItem *yAxis = ui->graphicsView->scene()->addLine(0, 0, 0, 100);
+    QGraphicsLineItem *yAxis = ui->graphicsView->scene()->addLine(0, 0, 0, 30);
     QPen yAxisPen(QColor(0, 255, 0), 2);  // Green color and thickness 2
     yAxis->setPen(yAxisPen);
 
     // Add arrowheads to the X-axis (red arrow)
     QPolygonF xArrow;
-    xArrow << QPointF(100, 0) << QPointF(90, -10) << QPointF(90, 10); // Triangle shape
+    xArrow << QPointF(30, 0) << QPointF(20, -10) << QPointF(20, 10); // Triangle shape
     QGraphicsPolygonItem *xArrowItem = ui->graphicsView->scene()->addPolygon(xArrow);
     xArrowItem->setBrush(QColor(255, 0, 0)); // Red color
     xArrowItem->setPos(0, 0); // Position at the end of the X-axis
 
     // Add arrowheads to the Y-axis (green arrow)
     QPolygonF yArrow;
-    yArrow << QPointF(0, 100) << QPointF(-10, 90) << QPointF(10, 90); // Triangle shape
+    yArrow << QPointF(0, 30) << QPointF(-10, 20) << QPointF(10, 20); // Triangle shape
     QGraphicsPolygonItem *yArrowItem = ui->graphicsView->scene()->addPolygon(yArrow);
     yArrowItem->setBrush(QColor(0, 255, 0)); // Green color
     yArrowItem->setPos(0, 0); // Position at the end of the Y-axis
@@ -2291,110 +2273,218 @@ void MainWindow::showSceneOriginCoordinate()
 
 void MainWindow::showMapOriginCooridinate()
 {
-    QPointF origin(map_origin_x_, map_origin_y_);
+        // Convert world coordinates to scene coordinates (adjust as needed)
+        // scaleFactor converts meters to scene pixels
+        double sceneX_map = (0.0 - this->map_origin_x_) / this->map_resolution_; // * -1  
+        double sceneY_map = (0.0 - this->map_origin_y_) / this->map_resolution_; // * -1  
 
-    QGraphicsLineItem *xAxis = ui->graphicsView->scene()->addLine(map_origin_x_, map_origin_y_, 100, map_origin_y_);
-    QPen xAxisPen(QColor(255, 0, 0), 2);  // Red color and thickness 2
-    xAxis->setPen(xAxisPen);
-    // Create and add the Y-axis (green)
-    QGraphicsLineItem *yAxis = ui->graphicsView->scene()->addLine(map_origin_x_, map_origin_y_, map_origin_x_, 100);
-    QPen yAxisPen(QColor(0, 255, 0), 2);  // Green color and thickness 2
-    yAxis->setPen(yAxisPen);
+        // Define axis length
+        double axis_length = 5.0;
 
-    // Add arrowheads to the X-axis (red arrow)
-    QPolygonF xArrow;
-    xArrow << QPointF(100, map_origin_y_) << QPointF(90, map_origin_y_-10) << QPointF(90, map_origin_y_+10); // Triangle shape
-    QGraphicsPolygonItem *xArrowItem = ui->graphicsView->scene()->addPolygon(xArrow);
-    xArrowItem->setBrush(QColor(255, 0, 0)); // Red color
-    xArrowItem->setPos(0, 0); // Position at the end of the X-axis
+        // Compute rotated X-axis using yaw
+        //double yaw_rad = rom_tf_.map_odom_yaw * M_PI / 180.0;  // Convert degrees to radians
+        //double yaw_rad = rom_tf_.map_odom_yaw;
+        double yaw_rad = 0.0;
+        double end_x_x = sceneX_map + axis_length * cos(yaw_rad);
+        double end_x_y = sceneY_map + axis_length * sin(yaw_rad);
+        QPointF end_point_x(end_x_x, end_x_y);
 
-    // Add arrowheads to the Y-axis (green arrow)
-    QPolygonF yArrow;
-    yArrow << QPointF(map_origin_x_, 100) << QPointF(map_origin_x_-10, 90) << QPointF(map_origin_x_+10, 90); // Triangle shape
-    QGraphicsPolygonItem *yArrowItem = ui->graphicsView->scene()->addPolygon(yArrow);
-    yArrowItem->setBrush(QColor(0, 255, 0)); // Green color
-    yArrowItem->setPos(0, 0); // Position at the end of the Y-axis
+        // Y-axis perpendicular to X-axis (90-degree rotation)
+        double end_y_x = sceneX_map - axis_length * sin(yaw_rad);
+        double end_y_y = sceneY_map + axis_length * cos(yaw_rad);
+        QPointF end_point_y(end_y_x, end_y_y);
 
-    // Add text at the origin (0, 0)
-    QGraphicsTextItem *originText = ui->graphicsView->scene()->addText("map_origin");
-    originText->setPos(map_origin_x_+2, map_origin_y_);  // Adjust position slightly to avoid overlap with axes
-    originText->setDefaultTextColor(Qt::black);  // Set text color to black
-    originText->setFont(QFont("Arial", 12));  // Set font to Arial with size 12
+        QPointF origin(sceneX_map, sceneY_map);
+
+        // Create and add the X-axis (red)
+        static QGraphicsLineItem *xAxis = nullptr;
+        if(!xAxis)
+        {
+            xAxis = ui->graphicsView->scene()->addLine(QLineF(origin, end_point_x));
+            QPen xAxisPen(QColor(255, 0, 0), 1);  // Red color and thickness 2
+            xAxis->setPen(xAxisPen);
+        }else{
+            xAxis->setLine(QLineF(origin, end_point_x));
+        }
+
+        // Create and add the Y-axis (green)
+        static QGraphicsLineItem *yAxis = nullptr;
+        if(!yAxis)
+        {
+            yAxis = ui->graphicsView->scene()->addLine(QLineF(origin, end_point_y));
+            QPen yAxisPen(QColor(0, 255, 0), 1);  // Red color and thickness 2
+            yAxis->setPen(yAxisPen);
+        }else{
+            yAxis->setLine(QLineF(origin, end_point_y));
+        }
+
+        // Add text at the origin (0, 0)
+        static QGraphicsTextItem *originText = nullptr;
+        if(!originText)
+        {
+            originText = ui->graphicsView->scene()->addText("map");
+            originText->setPos(sceneX_map, sceneY_map); 
+            originText->setDefaultTextColor(Qt::black);  
+            originText->setFont(QFont("Arial", 2));  
+        }
+        else{
+            originText->setPos(sceneX_map, sceneY_map); 
+        }
+        // QGraphicsLineItem *xAxis = ui->graphicsView->scene()->addLine(QLineF(origin, end_point_x));
+        // QPen xAxisPen(QColor(255, 0, 0), 1);  // Red color and thickness 2
+        // xAxis->setPen(xAxisPen);
+        // xAxis->setData(0, 221);
+
+        // // Create and add the Y-axis (green)
+        // QGraphicsLineItem *yAxis = ui->graphicsView->scene()->addLine(QLineF(origin, end_point_y));
+        // QPen yAxisPen(QColor(0, 255, 0), 1);  // Green color and thickness 2
+        // yAxis->setPen(yAxisPen);
+        // yAxis->setData(0, 221);
+
+        // // Add text at the origin (0, 0)
+        // QGraphicsTextItem *originText = ui->graphicsView->scene()->addText("map");
+        // originText->setPos(sceneX_map, sceneY_map);  // Adjust position slightly to avoid overlap with axes
+        // originText->setDefaultTextColor(Qt::black);  // Set text color to black
+        // originText->setFont(QFont("Arial", 2));  // Set font to Arial with size 12
+        // originText->setData(0, 221);
 }
 
 void MainWindow::showOdomAndBaseFootprint()
 {
-    QGraphicsScene *scene = ui->graphicsView->scene();
-
-    // Odom Frame (Blue)
-    QGraphicsLineItem *odomXAxis = scene->addLine(map_odom_x, map_odom_y, map_odom_x + 100, map_odom_y);
-    QGraphicsLineItem *odomYAxis = scene->addLine(map_odom_x, map_odom_y, map_odom_x, map_odom_y + 100);
-    QPen odomPen(QColor(0, 0, 255), 2);  // Blue color
-    odomXAxis->setPen(odomPen);
-    odomYAxis->setPen(odomPen);
-
-    QGraphicsTextItem *odomText = scene->addText("odom");
-    odomText->setPos(map_odom_x + 5, map_odom_y + 5);
-    odomText->setDefaultTextColor(Qt::blue);
-    odomText->setFont(QFont("Arial", 12));
-
-    // Base Footprint Frame (Purple)
-    QGraphicsLineItem *baseXAxis = scene->addLine(odom_base_footprint_x, odom_base_footprint_y, odom_base_footprint_x + 50, odom_base_footprint_y);
-    QGraphicsLineItem *baseYAxis = scene->addLine(odom_base_footprint_x, odom_base_footprint_y, odom_base_footprint_x, odom_base_footprint_y + 50);
-    QPen basePen(QColor(128, 0, 128), 2);  // Purple color
-    baseXAxis->setPen(basePen);
-    baseYAxis->setPen(basePen);
-
-    QGraphicsTextItem *baseText = scene->addText("base_footprint");
-    baseText->setPos(odom_base_footprint_x + 5, odom_base_footprint_y + 5);
-    baseText->setDefaultTextColor(QColor(128, 0, 128));
-    baseText->setFont(QFont("Arial", 12));
+        showOdom();
+        showBaseFootprint();
 }
 
+void MainWindow::showOdom()
+{
+        // Convert world coordinates to scene coordinates (adjust as needed)
+        // scaleFactor converts meters to scene pixels
+        double sceneX_map = (rom_tf_.map_odom_x - this->map_origin_x_) / this->map_resolution_; // * -1  
+        double sceneY_map = (rom_tf_.map_odom_y - this->map_origin_y_) / this->map_resolution_; // * -1  
 
-// void MainWindow::showOdomAndBaseFootprint()
-// {
-//     QGraphicsScene *scene = ui->graphicsView->scene();
+        // Define axis length
+        double axis_length = 5.0;
 
-//     // Clear previous drawings before updating
-//     scene->clear();
+        // Compute rotated X-axis using yaw
+        //double yaw_rad = rom_tf_.map_odom_yaw * M_PI / 180.0;  // Convert degrees to radians
+        double yaw_rad = rom_tf_.map_odom_yaw;
+        double end_x_x = sceneX_map + axis_length * cos(yaw_rad);
+        double end_x_y = sceneY_map + axis_length * sin(yaw_rad);
+        QPointF end_point_x(end_x_x, end_x_y);
 
-//     // Odom Frame (Blue)
-//     QGraphicsLineItem *odomXAxis = scene->addLine(map_odom_x, map_odom_y, map_odom_x + 100, map_odom_y);
-//     QGraphicsLineItem *odomYAxis = scene->addLine(map_odom_x, map_odom_y, map_odom_x, map_odom_y + 100);
-//     QPen odomPen(QColor(0, 0, 255), 2);  // Blue color
-//     odomXAxis->setPen(odomPen);
-//     odomYAxis->setPen(odomPen);
+        // Y-axis perpendicular to X-axis (90-degree rotation)
+        double end_y_x = sceneX_map - axis_length * sin(yaw_rad);
+        double end_y_y = sceneY_map + axis_length * cos(yaw_rad);
+        QPointF end_point_y(end_y_x, end_y_y);
 
-//     QGraphicsTextItem *odomText = scene->addText("odom");
-//     odomText->setPos(map_odom_x + 5, map_odom_y + 5);
-//     odomText->setDefaultTextColor(Qt::blue);
-//     odomText->setFont(QFont("Arial", 12));
+        QPointF origin(sceneX_map, sceneY_map);
 
-//     // Base Footprint Frame (Purple)
-//     QGraphicsLineItem *baseXAxis = scene->addLine(odom_base_footprint_x, odom_base_footprint_y, odom_base_footprint_x + 50, odom_base_footprint_y);
-//     QGraphicsLineItem *baseYAxis = scene->addLine(odom_base_footprint_x, odom_base_footprint_y, odom_base_footprint_x, odom_base_footprint_y + 50);
-//     QPen basePen(QColor(128, 0, 128), 2);  // Purple color
-//     baseXAxis->setPen(basePen);
-//     baseYAxis->setPen(basePen);
+        // Create and add the X-axis (red)
+        static QGraphicsLineItem *xAxis = nullptr;
+        if(!xAxis)
+        {
+            xAxis = ui->graphicsView->scene()->addLine(QLineF(origin, end_point_x));
+            QPen xAxisPen(QColor(255, 0, 0), 1);  // Red color and thickness 2
+            xAxis->setPen(xAxisPen);
+        }else{
+            xAxis->setLine(QLineF(origin, end_point_x));
+        }
 
-//     QGraphicsTextItem *baseText = scene->addText("base_footprint");
-//     baseText->setPos(odom_base_footprint_x + 5, odom_base_footprint_y + 5);
-//     baseText->setDefaultTextColor(QColor(128, 0, 128));
-//     baseText->setFont(QFont("Arial", 12));
+        // Create and add the Y-axis (green)
+        static QGraphicsLineItem *yAxis = nullptr;
+        if(!yAxis)
+        {
+            yAxis = ui->graphicsView->scene()->addLine(QLineF(origin, end_point_y));
+            QPen yAxisPen(QColor(0, 255, 0), 1);  // Red color and thickness 2
+            yAxis->setPen(yAxisPen);
+        }else{
+            yAxis->setLine(QLineF(origin, end_point_y));
+        }
 
-//     // --- Add Robot Image ---
-//     QPixmap robotPixmap(":/images/robot.png"); // Ensure the image is in Qt's resource file (resources.qrc)
-//     QGraphicsPixmapItem *robotItem = scene->addPixmap(robotPixmap);
+        // Add text at the origin (0, 0)
+        // static QGraphicsTextItem *originText = nullptr;
+        // if(!originText)
+        // {
+        //     originText = ui->graphicsView->scene()->addText("odom");
+        //     originText->setPos(sceneX_map, sceneY_map); 
+        //     originText->setDefaultTextColor(Qt::black);  
+        //     originText->setFont(QFont("Arial", 2));  
+        // }
+        // else{
+        //     originText->setPos(sceneX_map, sceneY_map); 
+        // }
+}
 
-//     // Center the image at (odom_base_footprint_x, odom_base_footprint_y)
-//     QSize imageSize = robotPixmap.size();
-//     robotItem->setTransformOriginPoint(imageSize.width() / 2, imageSize.height() / 2);
-//     robotItem->setPos(odom_base_footprint_x - imageSize.width() / 2, 
-//                       odom_base_footprint_y - imageSize.height() / 2);
+void MainWindow::showBaseFootprint()
+{
+        // Convert world coordinates to scene coordinates (adjust as needed)
+        // scaleFactor converts meters to scene pixels
+        double sceneX_map = (rom_tf_.odom_base_footprint_x - this->map_origin_x_) / this->map_resolution_; // * -1  
+        double sceneY_map = (rom_tf_.odom_base_footprint_y - this->map_origin_y_) / this->map_resolution_; // * -1  
 
-//     // Rotate the robot image based on odom_base_footprint_yaw
-//     robotItem->setRotation(-odom_base_footprint_yaw * 180.0 / M_PI); // Convert radians to degrees
-// }
+        // Define axis length
+        double axis_length = 5.0;
 
+        // Compute rotated X-axis using yaw
+        //double yaw_rad = rom_tf_.map_odom_yaw * M_PI / 180.0;  // Convert degrees to radians
+        double yaw_rad = rom_tf_.odom_base_footprint_yaw;
+        double end_x_x = sceneX_map + axis_length * cos(yaw_rad);
+        double end_x_y = sceneY_map + axis_length * sin(yaw_rad);
+        QPointF end_point_x(end_x_x, end_x_y);
+
+        // Y-axis perpendicular to X-axis (90-degree rotation)
+        double end_y_x = sceneX_map - axis_length * sin(yaw_rad);
+        double end_y_y = sceneY_map + axis_length * cos(yaw_rad);
+        QPointF end_point_y(end_y_x, end_y_y);
+        
+        QPointF origin(sceneX_map, sceneY_map);
+        
+        // --- Add TF axis ---
+        static QGraphicsLineItem *xAxis = nullptr;
+        if(!xAxis)
+        {
+            xAxis = ui->graphicsView->scene()->addLine(QLineF(origin, end_point_x));
+            QPen xAxisPen(QColor(255, 0, 0), 1);  // Red color and thickness 2
+            xAxis->setPen(xAxisPen);
+        }else{
+            xAxis->setLine(QLineF(origin, end_point_x));
+        }
+        // to delete xAxis->setData(0, 223);
+
+        // Create and add the Y-axis (green)
+        // QGraphicsLineItem *yAxis = ui->graphicsView->scene()->addLine(QLineF(origin, end_point_y));
+        // QPen yAxisPen(QColor(0, 255, 0), 1);  // Green color and thickness 2
+        // yAxis->setPen(yAxisPen);
+        // yAxis->setData(0, 223);
+
+        // Add text at the origin (0, 0)
+        // static QGraphicsTextItem *originText = nullptr;
+        // if(!originText)
+        // {
+        //     originText = ui->graphicsView->scene()->addText("base_footprint");
+        //     originText->setPos(sceneX_map, sceneY_map); 
+        //     originText->setDefaultTextColor(Qt::black);  // Set text color to black
+        //     originText->setFont(QFont("Arial", 2));  // Set font to Arial with size 12
+        // }
+        // else{
+        //     originText->setPos(sceneX_map, sceneY_map); 
+        // }
+
+        // add robot 
+        double radius = 2.5;  // Adjust radius size as needed
+
+        // Create a circle at the robot's position
+        QRectF robotRect(sceneX_map - radius, sceneY_map - radius, 2 * radius, 2 * radius);
+        
+        static QGraphicsEllipseItem *robotPolygonItem = nullptr;
+    
+        if (!robotPolygonItem)
+        {
+            robotPolygonItem = ui->graphicsView->scene()->addEllipse(robotRect, QPen(Qt::blue, 2), QBrush(Qt::blue));
+        }
+        else
+        {
+            robotPolygonItem->setRect(robotRect);
+        }
+}
 // file_path = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png

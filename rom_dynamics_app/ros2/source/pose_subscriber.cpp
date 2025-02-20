@@ -2,7 +2,7 @@
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 using namespace std::chrono_literals;
 
-#define ROM_DEBUG 1
+//#define ROM_DEBUG 1
 Subscriber::Subscriber(const std::string &topic_name) : Node("qt_robot_pose_publisher"), msgPtr_(nullptr) 
 {
     subscription_ = this->create_subscription<geometry_msgs::msg::Pose2D>(
@@ -63,7 +63,7 @@ void TfListener::listenForTransform()
         try {
             // Look up transform between 'map' and 'odom'
             geometry_msgs::msg::TransformStamped map_odom_tf = tf_buffer_->lookupTransform("map", "odom", rclcpp::Time(0), rclcpp::Duration(1, 0));  // 1 second timeout
-            geometry_msgs::msg::TransformStamped odom_footprint_tf = tf_buffer_->lookupTransform("odom", "base_footprint", rclcpp::Time(0), rclcpp::Duration(1, 0));
+            geometry_msgs::msg::TransformStamped odom_footprint_tf = tf_buffer_->lookupTransform("map", "base_footprint", rclcpp::Time(0), rclcpp::Duration(1, 0));
             
             // Create shared pointers to the transform objects
             auto map_odom_tf_ptr = std::make_shared<geometry_msgs::msg::TransformStamped>(map_odom_tf);

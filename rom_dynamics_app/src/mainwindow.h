@@ -109,6 +109,8 @@ class MainWindow : public QMainWindow
 
         void romSendWpGoals();
         void showOdomAndBaseFootprint();
+        void showOdom();
+        void showBaseFootprint();
 
     signals:
         void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr msg);
@@ -162,6 +164,8 @@ class MainWindow : public QMainWindow
         void onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan);
 
         void onTransformReceived(const ROMTransform rom_tf);
+
+        void on_waypointBtn_clicked();
         
     private slots:
         void on_shutdownBtn_clicked();
@@ -173,7 +177,7 @@ class MainWindow : public QMainWindow
 
         // action goal
         void on_goBtn_clicked();
-        void on_waypointBtn_clicked();
+        
         void on_rthBtn_clicked();
 
     protected:
@@ -276,6 +280,7 @@ class MainWindow : public QMainWindow
         QGraphicsLineItem *obstacleLine_ = nullptr;
 
         // -----------------------end for mapping app
+        ROMTransform rom_tf_;
 };
 
 #endif // MAINWINDOW_H
