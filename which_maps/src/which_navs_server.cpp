@@ -16,8 +16,10 @@ pid_t launch_pid = -1;
 const std::string robot_name = std::getenv("ROM_ROBOT_MODEL");
 
 const std::string nav2_pkg = robot_name +"_nav2";                
-const std::string nav2_mapping_launch = "navigation_mapping_composable.launch.py";
-const std::string nav2_localization_launch = "navigation_localization_composable.launch.py";
+// const std::string nav2_mapping_launch = "navigation_mapping_composable.launch.py";
+// const std::string nav2_localization_launch = "navigation_localization_composable.launch.py";
+const std::string nav2_mapping_launch = "navigation_mapping.launch.py";
+const std::string nav2_localization_launch = "navigation_localization.launch.py";
 const std::string remapping_launch = "something.launch.py";
 
 void startLaunch(const std::string &package, const std::string &launch_file) 
