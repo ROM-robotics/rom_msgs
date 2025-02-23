@@ -1021,6 +1021,29 @@ background-color: black;</string>
      <string>Groot</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="generalBtn">
+    <property name="geometry">
+     <rect>
+      <x>1580</x>
+      <y>1256</y>
+      <width>100</width>
+      <height>100</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white;</string>
+    </property>
+    <property name="text">
+     <string>😊</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

@@ -63,6 +63,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     btnReturnToHome_ = ui->rthBtn;
     goAllBtnPtr_ = ui->goAllBtn;
 
+    // eye emotion -----------------------------------------------------------------------------------------
+    robotEyesWidgetPtr_ = new RobotEyeEmotionWindow();
+    generalBtnPtr_ = ui->generalBtn;
+    connect(generalBtnPtr_, &QPushButton::clicked, this, &MainWindow::showEyesWidget);
+    //connect(robotEyeWindow, &QWidget::close, this, &MainWindow::on_robot_eye_window_closed);
+
+    grootBtnPtr_ = ui->grootBtn;
+
     // mapping ---------------------------------------------------------------------------------------------
     
     zoom_btn_ptr_ = ui->zoomBtn;
@@ -134,6 +142,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     ui->saveMapBtn->hide();//setEnabled(false);
     ui->openMapBtn->show();//setEnabled(true);
     ui->relocateBtn->show();//setEnabled(true);
+
+    // Initialize the inactivity timer
+    inactivityTimer_ = new QTimer(this);
+    inactivityTimer_->setInterval(60000);  // 1 min
+    connect(inactivityTimer_, &QTimer::timeout, this, &MainWindow::handleInactivityTimeout);
+    inactivityTimer_->start();
 }
 
 
@@ -148,6 +162,9 @@ MainWindow::~MainWindow()
     delete rosServiceClientThreadPtr_;
 
     removeBusyDialog(); 
+
+    //delete ui; // no need shared_pointer automaticall handle lifecycle of ui
+    //delete robotEyeWindow;
 }
 
 
@@ -640,6 +657,7 @@ void MainWindow::labelEditForSetStop()
 /// for dragging
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
+    resetInactivityTimer();
     // 1. Default mode
     if(normal_mode_)
     {
@@ -965,6 +983,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
+    resetInactivityTimer();
     if (dragging && (event->buttons() & Qt::LeftButton)) {
         // Move the window based on the offset calculated in mousePressEvent
         move(event->globalPos() - dragPosition);
@@ -974,6 +993,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
+    resetInactivityTimer();
     if (event->button() == Qt::LeftButton) {
         // Stop dragging when the left mouse button is released
         dragging = false;
@@ -2220,11 +2240,149 @@ void MainWindow::onGoAllBtnClicked(bool status)
         }
 }
 
+// void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan)
+// {
+//     #ifdef ROM_DEBUG 
+//         qDebug() << "[ MainWindow::onUpdateLaser ] : get laser";
+//     #endif
+
+//     // Extract the data from the LaserScan message
+//     std::vector<float> ranges = scan->ranges;
+//     float angle_min = scan->angle_min;
+//     float angle_increment = scan->angle_increment;
+//     int num_readings = ranges.size();
+    
+//     // Create a list of points to plot
+//     std::vector<QPointF> points;
+
+//     for (int i = 0; i < num_readings; ++i) {
+//         float range = ranges[i];
+//         if (range >= scan->range_min && range <= scan->range_max) {
+//             // Convert polar (range, angle) to Cartesian (x, y)
+//             float angle = angle_min + i * angle_increment;
+//             float x = range * cos(angle);
+//             float y = range * sin(angle);
+//             points.push_back(QPointF(x, y));
+//         }
+//     }
+
+//     // Update the UI with these points
+    
+
+//     // Add each new point to the scene
+//     for (const auto& point : points) 
+//     {
+//         // transformation offset ထည့်ဖို့လိုမယ်။ ( from robot pose)
+//         ui->graphicsView->scene()->addEllipse(robot_pose_x_+point.x(), robot_pose_y_+point.y(), 1, 1, QPen(Qt::red), QBrush(Qt::red));
+//         // id ထည့်ပြီး ပြန်ဖျက်မလား
+//         // static points pointer သုံးမလား
+//     }
+// }
+
 void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan)
 {
     #ifdef ROM_DEBUG 
         qDebug() << "[ MainWindow::onUpdateLaser ] : get laser";
     #endif
+    rom_scan_ = scan;
+}
+
+void MainWindow::processScan(QPointF origin)
+{
+    // Static pointer to store previously added points
+    static std::vector<QGraphicsEllipseItem*> ellipseList;
+
+    // First call: initialize and add ellipses
+    if (ellipseList.empty()) 
+    {
+        // Extract the data from the LaserScan message
+        std::vector<float> ranges = rom_scan_->ranges;
+        float angle_min = rom_scan_->angle_min;
+        float angle_increment = rom_scan_->angle_increment;
+        int num_readings = ranges.size();
+
+        for (int i = 0; i < num_readings; ++i) 
+        {
+            float range = ranges[i];
+            if (range >= rom_scan_->range_min && range <= rom_scan_->range_max) 
+            {
+                // Convert polar (range, angle) to Cartesian (x, y)
+                float angle = angle_min + i * angle_increment; // radian
+                // float x = (range * cos(angle))+robot_pose_x_; // meter
+                // float y = (range * sin(angle))+robot_pose_y_; // meter
+
+                float x = (range * cos(angle)); // meter
+                float y = (range * sin(angle)); // meter
+
+                // meter to pixel
+                double _x = ( (x- this->map_origin_x_) / this->map_resolution_ ) + origin.x(); // * -1  
+                double _y = ( (y - this->map_origin_y_) / this->map_resolution_ ) + origin.y(); // * -1  
+                
+
+                // Add ellipse to scene and store pointer
+                QGraphicsEllipseItem* ellipse = ui->graphicsView->scene()->addEllipse(
+                    _x, _y, 2, 2, 
+                    QPen(Qt::red), QBrush(Qt::red)
+                );
+                ellipseList.push_back(ellipse);
+            }
+        }
+    }
+    else 
+    {
+        // Update existing ellipses
+        std::vector<float> ranges = rom_scan_->ranges;
+        float angle_min = rom_scan_->angle_min;
+        float angle_increment = rom_scan_->angle_increment;
+        int num_readings = std::min(static_cast<int>(ellipseList.size()), static_cast<int>(ranges.size()));
+
+        for (int i = 0; i < num_readings; ++i) 
+        {
+            float range = ranges[i];
+            if (range >= rom_scan_->range_min && range <= rom_scan_->range_max) 
+            {
+                float angle = angle_min + i * angle_increment;
+                // float x = (range * cos(angle))+robot_pose_x_;
+                // float y = (range * sin(angle))+robot_pose_y_;
+
+                float x = (range * cos(angle)); // meter
+                float y = (range * sin(angle)); // meter
+                
+                // meter to pixel
+                double _x = ( (x- this->map_origin_x_) / this->map_resolution_ ) + origin.x(); // * -1  
+                double _y = ( (y - this->map_origin_y_) / this->map_resolution_ ) + origin.y(); // * -1   
+
+                // Update ellipse position (make sure it's still in the scene)
+                ellipseList[i]->setRect(_x, _y, 2, 2);
+            }
+        }
+
+        // If there are more points in the scan than existing ellipses, add new ones to the scene
+        for (int i = ellipseList.size(); i < ranges.size(); ++i)
+        {
+            float range = ranges[i];
+            if (range >= rom_scan_->range_min && range <= rom_scan_->range_max) 
+            {
+                float angle = angle_min + i * angle_increment;
+                // float x = (range * cos(angle))+robot_pose_x_;
+                // float y = (range * sin(angle))+robot_pose_y_;
+
+                float x = (range * cos(angle)); // meter
+                float y = (range * sin(angle)); // meter
+
+                // meter to pixel
+                double _x = ( (x- this->map_origin_x_) / this->map_resolution_ ) + origin.x(); // * -1  
+                double _y = ( (y - this->map_origin_y_) / this->map_resolution_ ) + origin.y(); // * -1  
+
+                // Add new ellipse to the scene
+                QGraphicsEllipseItem* ellipse = ui->graphicsView->scene()->addEllipse(
+                    _x, _y, 2, 2, 
+                    QPen(Qt::red), QBrush(Qt::red)
+                );
+                ellipseList.push_back(ellipse);
+            }
+        }
+    }
 }
 
 void MainWindow::onTransformReceived(const ROMTransform rom_tf)
@@ -2427,10 +2585,15 @@ void MainWindow::showBaseFootprint()
 
         // Compute rotated X-axis using yaw
         //double yaw_rad = rom_tf_.map_odom_yaw * M_PI / 180.0;  // Convert degrees to radians
-        double yaw_rad = rom_tf_.odom_base_footprint_yaw;
+        double yaw_rad = rom_tf_.odom_base_footprint_yaw;        // radian
         double end_x_x = sceneX_map + axis_length * cos(yaw_rad);
         double end_x_y = sceneY_map + axis_length * sin(yaw_rad);
         QPointF end_point_x(end_x_x, end_x_y);
+
+        // save robot pose
+        robot_pose_x_ = rom_tf_.odom_base_footprint_x;
+        robot_pose_y_ = rom_tf_.odom_base_footprint_y;   
+        robot_yaw_rad_ = yaw_rad;
 
         // Y-axis perpendicular to X-axis (90-degree rotation)
         double end_y_x = sceneX_map - axis_length * sin(yaw_rad);
@@ -2486,5 +2649,37 @@ void MainWindow::showBaseFootprint()
         {
             robotPolygonItem->setRect(robotRect);
         }
+
+        static int count = 0;
+        if (count%10 == 0)
+        {
+            processScan(origin);
+        }
+        count++;
+       if (count == 109)
+       {
+         count = 0;
+       }
 }
+
+void MainWindow::showEyesWidget()
+{
+    robotEyesWidgetPtr_->move(this->pos().x(), this->pos().y());
+    robotEyesWidgetPtr_->show(); 
+}
+
+void MainWindow::resetInactivityTimer()
+{
+    inactivityTimer_->start();
+}
+
+void MainWindow::handleInactivityTimeout()
+{
+    showEyesWidget();
+}
+// void MainWindow::on_robot_eye_window_closed()
+// {
+//     robotEyeWindow->hide();
+// }
+
 // file_path = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png

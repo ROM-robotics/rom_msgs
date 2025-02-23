@@ -37,7 +37,8 @@
 #include <geometry_msgs/msg/transform_stamped.hpp>
 
 #include "rom_structures.h"
-
+//#include "eyeswidget.h"
+#include "roboteyeemotionwindow.h"
 #define ROM_DEBUG 1
 
 QT_BEGIN_NAMESPACE
@@ -112,6 +113,8 @@ class MainWindow : public QMainWindow
         void showOdom();
         void showBaseFootprint();
 
+        void processScan(QPointF origin);
+
     signals:
         void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr msg);
         //void sendCancelGoal(const rclcpp_action::GoalUUID& goal_uuid);
@@ -166,10 +169,11 @@ class MainWindow : public QMainWindow
         void onTransformReceived(const ROMTransform rom_tf);
 
         void on_waypointBtn_clicked();
+
+        void showEyesWidget();
         
     private slots:
         void on_shutdownBtn_clicked();
-        //void on_btnEstop_clicked();
 
     private slots:
         void onResponseReceived(int sum);  
@@ -179,6 +183,10 @@ class MainWindow : public QMainWindow
         void on_goBtn_clicked();
         
         void on_rthBtn_clicked();
+
+
+        void resetInactivityTimer();
+        void handleInactivityTimeout();
 
     protected:
 
@@ -190,6 +198,8 @@ class MainWindow : public QMainWindow
     
     private:
         std::shared_ptr<Ui::MainWindow> ui = nullptr;
+        QTimer *inactivityTimer_;
+        RobotEyeEmotionWindow *robotEyesWidgetPtr_ = nullptr;
 
         QGraphicsEllipseItem *robotItemPtr_ = nullptr;
 
@@ -216,6 +226,9 @@ class MainWindow : public QMainWindow
         QPushButton *saveMapBtnPtr_;
         QPushButton *openMapBtnPtr_;
         QPushButton *relocateBtnPtr_;
+
+        QPushButton *grootBtnPtr_;
+        QPushButton *generalBtnPtr_;
 
         QLabel* statusLabelPtr_ = nullptr;
 
@@ -281,6 +294,11 @@ class MainWindow : public QMainWindow
 
         // -----------------------end for mapping app
         ROMTransform rom_tf_;
+        double robot_pose_x_ = 0.0;
+        double robot_pose_y_ = 0.0;
+        double robot_yaw_rad_ = 0.0;
+
+        sensor_msgs::msg::LaserScan::SharedPtr rom_scan_ = nullptr;
 };
 
 #endif // MAINWINDOW_H

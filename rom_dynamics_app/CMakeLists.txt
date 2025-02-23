@@ -57,6 +57,8 @@ add_executable(ROM_DYNAMICS
     src/main.cpp
     src/mainwindow.h
     src/mainwindow.cpp
+    src/roboteyeemotionwindow.h
+    src/roboteyeemotionwindow.cpp
     ros2/header/cmd_service_client.h
     ros2/source/cmd_service_client.cpp
     ros2/header/pose_subscriber.h
@@ -71,10 +73,6 @@ add_executable(ROM_DYNAMICS
     ros2/source/map_subscriber.cpp
     ${UI_HEADERS}
 )
-
-
-
-
 target_link_libraries(ROM_DYNAMICS ${Qt5Core_LIBRARIES})
 target_link_libraries(ROM_DYNAMICS ${Qt5Widgets_LIBRARIES})
 ament_target_dependencies(ROM_DYNAMICS rclcpp rclcpp_action std_msgs geometry_msgs sensor_msgs nav_msgs nav2_msgs tf2 tf2_ros tf2_geometry_msgs rom_interfaces)

@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<MapSubscriber> map_subscriber = nullptr;
     std::shared_ptr<WaypointListSubscriber> wp_subscriber = nullptr;
     std::shared_ptr<SendWaypointsClient> send_wp_client = nullptr;
-    //std::shared_ptr<LaserSubscriber> laser_subscriber = nullptr;
+    std::shared_ptr<LaserSubscriber> laser_subscriber = nullptr;
 
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> pose_mode_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> cmd_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     pose_subscriber = std::make_shared<Subscriber>("/robot_pose"); 
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
-    //laser_subscriber = std::make_shared<LaserSubscriber>("/scan");
+    laser_subscriber = std::make_shared<LaserSubscriber>("/scan");
 
     cmd_service_client = std::make_shared<CmdServiceClient>("which_vel");
     yaml_service_client = std::make_shared<ConstructYamlServiceClient>("/construct_yaml");
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     
     pose_mode_executor_mt->add_node(pose_subscriber);
     pose_mode_executor_mt->add_node(mode_subscriber);
-    //pose_mode_executor_mt->add_node(laser_subscriber);
+    pose_mode_executor_mt->add_node(laser_subscriber);
 
     cmd_executor_mt->add_node(cmd_service_client);
     cmd_executor_mt->add_node(yaml_service_client);
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 
 
     // laser scan
-    //QObject::connect(laser_subscriber.get(), &LaserSubscriber::updateLaser, &mainWindow, &MainWindow::onUpdateLaser, Qt::QueuedConnection); 
+    QObject::connect(laser_subscriber.get(), &LaserSubscriber::updateLaser, &mainWindow, &MainWindow::onUpdateLaser, Qt::QueuedConnection); 
     
     // subscribe wp_lists
     QObject::connect(wp_subscriber.get(), &WaypointListSubscriber::updateWpUI, &mainWindow, &MainWindow::onUpdateWpUI);

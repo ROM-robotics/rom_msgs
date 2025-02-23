@@ -7,6 +7,7 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <QImage>
 #include <QDebug>
+
 //#define ROM_DEBUG 1
 
 class MapSubscriber : public QObject, public rclcpp::Node {
