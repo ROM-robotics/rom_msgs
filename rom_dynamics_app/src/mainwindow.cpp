@@ -344,11 +344,6 @@ void MainWindow::on_shutdownBtn_clicked()
 }
 
 
-// void MainWindow::on_btnEstop_clicked()
-// {
-//     statusLabelPtr_->setText("\nActivating E-Stop ...\n");
-// }
-
 void MainWindow::onResponseReceived(int service_status) {
 
 // # -1 [service not ok], 1 [service ok], 
@@ -691,7 +686,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             return;
         }
         
-        // secne ထဲ မှာရှိရင်
+        // secene ထဲ မှာရှိရင်
         else 
         {   // if the point inside the scene, do your work
             ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -816,6 +811,31 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
                     // Add the rectangle to the scene
                     ui->graphicsView->scene()->addItem(circleItem);
+
+                    // Add ring of the waypoints
+                        // int ringRadius = 30;
+                        // QGraphicsEllipseItem* ringItem = new QGraphicsEllipseItem(scenePoint.x() - ringRadius, scenePoint.y() - ringRadius, ringRadius * 2.5, ringRadius * 2.5);
+                        // ringItem->setPen(QPen(Qt::blue, 12));
+                        // ringItem->setBrush(QBrush(Qt::transparent));
+                        // ringItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges);  // To track geometry changes
+                        // ui->graphicsView->scene()->addItem(ringItem);
+                
+                        // // Add a heading arrow using a QGraphicsLineItem
+                        // QGraphicsLineItem* arrowItem = new QGraphicsLineItem(scenePoint.x(), scenePoint.y(), 
+                        // scenePoint.x() + ringRadius, scenePoint.y());
+                        // arrowItem->setPen(QPen(Qt::red, 2));  // Red arrow
+                        // ui->graphicsView->scene()->addItem(arrowItem);
+
+                        // // Make the ring only rotatable (not movable)
+                        // ringItem->setFlag(QGraphicsItem::ItemIsSelectable);
+                        // ringItem->setFlag(QGraphicsItem::ItemIsFocusable);
+
+                        // // Initial heading
+                        // double currentHeading = wp_heading;  // In degrees
+                        // double currentHeadingRad = currentHeading * 0.017453292519943295;  // Convert to radians
+                        // arrowItem->setRotation(currentHeading);  // Rotate the arrow based on heading
+
+                    // Add ring of the waypoints
                 }
 
                 /********************* remove points to points list ***************************/
@@ -1167,25 +1187,6 @@ void MainWindow::onNavigationResult(const std::string& result_status)
     hideBusyDialog();
 }
 
-
-// void MainWindow::onSendGoalId(const rclcpp_action::GoalUUID& goal_uuid)
-// {
-//     // need char array to string conversion
-
-//     QString currentText = statusLabelPtr_->text();
-//     //QString statusText = QString("\nGoal ID : %1\n").arg(QString::fromStdString(goal_id));
-//     QString statusText = QString("\nGoal ID \n");
-//     QString updateText = currentText + statusText;
-//     statusLabelPtr_->setText(updateText);
-
-//     #ifdef ROM_DEBUG
-//         //qDebug() << "Goal ID from Mainwindow::sendGoalId " << QString::fromStdString(goal_id);
-//         qDebug() << "Goal ID from Mainwindow::sendGoalId ";
-//     #endif
-
-//     //goal_id_ = goal_id;
-//     //active_goal_uuid_ = goal_uuid;
-// }
 
 void MainWindow::toggleButtonWithAnimation(QPushButton* button, bool show) {
     // Create a property animation
@@ -2240,44 +2241,6 @@ void MainWindow::onGoAllBtnClicked(bool status)
         }
 }
 
-// void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan)
-// {
-//     #ifdef ROM_DEBUG 
-//         qDebug() << "[ MainWindow::onUpdateLaser ] : get laser";
-//     #endif
-
-//     // Extract the data from the LaserScan message
-//     std::vector<float> ranges = scan->ranges;
-//     float angle_min = scan->angle_min;
-//     float angle_increment = scan->angle_increment;
-//     int num_readings = ranges.size();
-    
-//     // Create a list of points to plot
-//     std::vector<QPointF> points;
-
-//     for (int i = 0; i < num_readings; ++i) {
-//         float range = ranges[i];
-//         if (range >= scan->range_min && range <= scan->range_max) {
-//             // Convert polar (range, angle) to Cartesian (x, y)
-//             float angle = angle_min + i * angle_increment;
-//             float x = range * cos(angle);
-//             float y = range * sin(angle);
-//             points.push_back(QPointF(x, y));
-//         }
-//     }
-
-//     // Update the UI with these points
-    
-
-//     // Add each new point to the scene
-//     for (const auto& point : points) 
-//     {
-//         // transformation offset ထည့်ဖို့လိုမယ်။ ( from robot pose)
-//         ui->graphicsView->scene()->addEllipse(robot_pose_x_+point.x(), robot_pose_y_+point.y(), 1, 1, QPen(Qt::red), QBrush(Qt::red));
-//         // id ထည့်ပြီး ပြန်ဖျက်မလား
-//         // static points pointer သုံးမလား
-//     }
-// }
 
 void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan)
 {
@@ -2634,22 +2597,33 @@ void MainWindow::showBaseFootprint()
         // }
 
         // add robot 
-        double radius = 2.5;  // Adjust radius size as needed
-
-        // Create a circle at the robot's position
-        QRectF robotRect(sceneX_map - radius, sceneY_map - radius, 2 * radius, 2 * radius);
-        
-        static QGraphicsEllipseItem *robotPolygonItem = nullptr;
+        QPolygonF arrowShape;
+        arrowShape << QPointF(0, -5)  // Tip of the arrow
+                   << QPointF(-2.5, 5)  // Bottom left
+                   << QPointF(0, 2.5)    // Inner left
+                   << QPointF(2.5, 5)   // Bottom right
+                   << QPointF(0, -5); // Back to tip to close the shape
     
-        if (!robotPolygonItem)
+        // Create a polygon item for the arrow
+        static QGraphicsPolygonItem *arrowItem = nullptr;
+        if (!arrowItem)
         {
-            robotPolygonItem = ui->graphicsView->scene()->addEllipse(robotRect, QPen(Qt::blue, 2), QBrush(Qt::blue));
+            arrowItem = new QGraphicsPolygonItem(arrowShape);
+            arrowItem->setPen(QPen(Qt::blue, 1));
+            arrowItem->setBrush(Qt::NoBrush);
+            ui->graphicsView->scene()->addItem(arrowItem);
         }
-        else
-        {
-            robotPolygonItem->setRect(robotRect);
-        }
+    
+        // Update position
+        arrowItem->setPos(sceneX_map, sceneY_map); // ok
+    
+        // Rotate the arrow based on yaw (in degrees)
+        double yaw_deg = rom_tf_.odom_base_footprint_yaw * 180.0 / M_PI;
+        arrowItem->setRotation(yaw_deg+90.0);
+        // --------------------- end add robot
 
+        
+        // laser scan ၁၀ ကြိမ်တကြိမ်
         static int count = 0;
         if (count%10 == 0)
         {
@@ -2677,9 +2651,6 @@ void MainWindow::handleInactivityTimeout()
 {
     showEyesWidget();
 }
-// void MainWindow::on_robot_eye_window_closed()
-// {
-//     robotEyeWindow->hide();
-// }
+
 
 // file_path = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png
