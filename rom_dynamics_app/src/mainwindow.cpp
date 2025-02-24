@@ -2270,21 +2270,21 @@ void MainWindow::processScan(QPointF origin)
             if (range >= rom_scan_->range_min && range <= rom_scan_->range_max) 
             {
                 // Convert polar (range, angle) to Cartesian (x, y)
-                float angle = angle_min + i * angle_increment; // radian
+                float angle = ( angle_min + i * angle_increment )+robot_yaw_rad_; // radian
                 // float x = (range * cos(angle))+robot_pose_x_; // meter
                 // float y = (range * sin(angle))+robot_pose_y_; // meter
 
                 float x = (range * cos(angle)); // meter
                 float y = (range * sin(angle)); // meter
 
-                // meter to pixel
-                double _x = ( (x- this->map_origin_x_) / this->map_resolution_ ) + origin.x(); // * -1  
-                double _y = ( (y - this->map_origin_y_) / this->map_resolution_ ) + origin.y(); // * -1  
+                 // meter to pixel
+                double _x = ( ( ( robot_pose_x_+x )- this->map_origin_x_) / this->map_resolution_ ); // * -1  
+                double _y = ( ( ( robot_pose_y_+y ) - this->map_origin_y_) / this->map_resolution_ ); // * -1  
                 
 
                 // Add ellipse to scene and store pointer
                 QGraphicsEllipseItem* ellipse = ui->graphicsView->scene()->addEllipse(
-                    _x, _y, 2, 2, 
+                    _x, _y, 1.2, 1.2, 
                     QPen(Qt::red), QBrush(Qt::red)
                 );
                 ellipseList.push_back(ellipse);
@@ -2304,7 +2304,7 @@ void MainWindow::processScan(QPointF origin)
             float range = ranges[i];
             if (range >= rom_scan_->range_min && range <= rom_scan_->range_max) 
             {
-                float angle = angle_min + i * angle_increment;
+                float angle = ( angle_min + i * angle_increment )+robot_yaw_rad_; // radian
                 // float x = (range * cos(angle))+robot_pose_x_;
                 // float y = (range * sin(angle))+robot_pose_y_;
 
@@ -2312,11 +2312,11 @@ void MainWindow::processScan(QPointF origin)
                 float y = (range * sin(angle)); // meter
                 
                 // meter to pixel
-                double _x = ( (x- this->map_origin_x_) / this->map_resolution_ ) + origin.x(); // * -1  
-                double _y = ( (y - this->map_origin_y_) / this->map_resolution_ ) + origin.y(); // * -1   
+                double _x = ( ( ( robot_pose_x_+x )- this->map_origin_x_) / this->map_resolution_ ); // * -1  
+                double _y = ( ( ( robot_pose_y_+y ) - this->map_origin_y_) / this->map_resolution_ ); // * -1    
 
                 // Update ellipse position (make sure it's still in the scene)
-                ellipseList[i]->setRect(_x, _y, 2, 2);
+                ellipseList[i]->setRect(_x, _y, 1.2, 1.2);
             }
         }
 
@@ -2326,20 +2326,20 @@ void MainWindow::processScan(QPointF origin)
             float range = ranges[i];
             if (range >= rom_scan_->range_min && range <= rom_scan_->range_max) 
             {
-                float angle = angle_min + i * angle_increment;
+                float angle = ( angle_min + i * angle_increment )+robot_yaw_rad_; // radian
                 // float x = (range * cos(angle))+robot_pose_x_;
                 // float y = (range * sin(angle))+robot_pose_y_;
 
                 float x = (range * cos(angle)); // meter
                 float y = (range * sin(angle)); // meter
 
-                // meter to pixel
-                double _x = ( (x- this->map_origin_x_) / this->map_resolution_ ) + origin.x(); // * -1  
-                double _y = ( (y - this->map_origin_y_) / this->map_resolution_ ) + origin.y(); // * -1  
+               // meter to pixel
+               double _x = ( ( ( robot_pose_x_+x )- this->map_origin_x_) / this->map_resolution_ ); // * -1  
+               double _y = ( ( ( robot_pose_y_+y ) - this->map_origin_y_) / this->map_resolution_ ); // * -1  
 
                 // Add new ellipse to the scene
                 QGraphicsEllipseItem* ellipse = ui->graphicsView->scene()->addEllipse(
-                    _x, _y, 2, 2, 
+                    _x, _y, 1.2, 1.2, 
                     QPen(Qt::red), QBrush(Qt::red)
                 );
                 ellipseList.push_back(ellipse);
@@ -2542,6 +2542,7 @@ void MainWindow::showBaseFootprint()
         // scaleFactor converts meters to scene pixels
         double sceneX_map = (rom_tf_.odom_base_footprint_x - this->map_origin_x_) / this->map_resolution_; // * -1  
         double sceneY_map = (rom_tf_.odom_base_footprint_y - this->map_origin_y_) / this->map_resolution_; // * -1  
+
 
         // Define axis length
         double axis_length = 5.0;
