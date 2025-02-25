@@ -1,5 +1,4 @@
 #include "roboteyeemotionwindow.h"
-
 #include <QCloseEvent>
 #include <QMetaType>
 #include <QRandomGenerator>
@@ -9,6 +8,9 @@
 #ifdef ROM_DEBUG
     #include <QDebug>
 #endif
+
+#define EMOTION_DIALOG_WIDTH 2880
+#define EMOTION_DIALOG_HEIGHT 1620
 
 const double PI = 3.1415;
 
@@ -37,7 +39,7 @@ RobotEyeEmotionWindow::RobotEyeEmotionWindow(QWidget *parent)
 {
     qRegisterMetaType<QString>("QString");
 
-    this->setFixedSize(2880, 1620); 
+    this->setFixedSize(EMOTION_DIALOG_WIDTH, EMOTION_DIALOG_HEIGHT); 
 
     // Set the background color 
     this->setAutoFillBackground(true);
@@ -326,6 +328,7 @@ void RobotEyeEmotionWindow::assignZeros()
 
 void RobotEyeEmotionWindow::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
     QPainter painter(this);
 
     if (is_blinking_) {

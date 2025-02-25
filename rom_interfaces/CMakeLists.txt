@@ -15,7 +15,7 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ConstructYaml.msg"
-  "msg/Num.msg"
+  "msg/Battery.msg"
   "msg/Sphere.msg"
   "srv/ConstructYaml.srv"
   "srv/WhichMaps.srv"

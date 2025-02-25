@@ -8,6 +8,10 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QDial>
+#include <QWidget>
+#include <QSpinBox>
+#include <QVBoxLayout>
 #include "ui_mainwindow.h"
 
 #include <rclcpp/rclcpp.hpp>
@@ -39,6 +43,7 @@
 #include "rom_structures.h"
 //#include "eyeswidget.h"
 #include "roboteyeemotionwindow.h"
+
 //#define ROM_DEBUG 1
 
 QT_BEGIN_NAMESPACE
@@ -47,6 +52,25 @@ namespace Ui
     class MainWindow;
 }
 QT_END_NAMESPACE
+
+class CustomDialog : public QDialog {
+    Q_OBJECT
+
+public:
+    explicit CustomDialog(QWidget *parent = nullptr);
+    QString getName() const;
+    int getNumber() const;
+
+private slots:
+    void validateInput();
+    
+private:
+    QLineEdit *nameEdit;
+    QSpinBox *numberEdit;
+    QDial *dial; 
+    QPushButton *okButton;
+};
+//---------------------------- END OF CUSTOM DIALOG ----------------------------
 
 class ServiceClient : public QObject {
     Q_OBJECT
@@ -70,7 +94,7 @@ private:
     void spin();
 };
 
-
+// ------------------------- END OF SERVICE CLIENT ----------------------------`
 
 class MainWindow : public QMainWindow
 {
@@ -113,7 +137,8 @@ class MainWindow : public QMainWindow
         void showOdom();
         void showBaseFootprint();
 
-        void processScan(QPointF origin);
+        //void processScan(QPointF origin);
+        void processScan();
 
     signals:
         void sendNavigationGoal(const geometry_msgs::msg::Pose::SharedPtr msg);
@@ -171,6 +196,11 @@ class MainWindow : public QMainWindow
         void on_waypointBtn_clicked();
 
         void showEyesWidget();
+
+        // for mapping , assign some position
+        void setChargingPoint();
+        void setCurrentPointAs();
+        void setProductionPoint();
         
     private slots:
         void on_shutdownBtn_clicked();
@@ -230,6 +260,10 @@ class MainWindow : public QMainWindow
         QPushButton *grootBtnPtr_;
         QPushButton *generalBtnPtr_;
 
+        QPushButton *setChargingPointBtnPtr_;
+        QPushButton *setCurrentPointAsBtnPtr_;
+        QPushButton *setProductionPointBtnPtr_;
+
         QLabel* statusLabelPtr_ = nullptr;
 
         ServiceClient *service_clientPtr_;
@@ -275,6 +309,7 @@ class MainWindow : public QMainWindow
 
         // store waypoints
         QList<QGraphicsEllipseItem*> waypoints_;
+        QList<QGraphicsLineItem*> waypoints_lines_;
         QList<QGraphicsTextItem*> waypoints_text_;
         QList<double> waypoints_direction_;
         std::unordered_map<std::string, geometry_msgs::msg::Pose> waypoints_map_;

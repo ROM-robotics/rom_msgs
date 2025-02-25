@@ -1,9 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include <cmath> // For atan2 and M_PI
-
 #include "rom_algorithm.h"
+
+#define ROM_SHOW_TF 1
+#define ROM_SHOW_MAP_TF 1
+
+#define ROM_SHOW_BASEFOOTPRINT_TF 1
+#define ROM_SHOW_ODOM_TF 1
+
+#define WAYPOINT_DIALOG_WIDTH 400
+#define WAYPOINT_DIALOG_HEIGHT 550
 
 extern void shutdown_thread();
 
@@ -44,6 +51,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     openMapBtnPtr_ = ui->openMapBtn;
     relocateBtnPtr_ = ui->relocateBtn;
     //relocateBtnPtr_->setText("Relocate");
+    setChargingPointBtnPtr_ = ui->setChargingPointBtn;
+    setCurrentPointAsBtnPtr_ = ui->setCurrentPointAsBtn;
+    setProductionPointBtnPtr_ = ui->setProductionPointBtn;
 
     x_spinBoxPtr_ = ui->xspinBox;
     y_spinBoxPtr_ = ui->yspinBox;
@@ -142,6 +152,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     ui->saveMapBtn->hide();//setEnabled(false);
     ui->openMapBtn->show();//setEnabled(true);
     ui->relocateBtn->show();//setEnabled(true);
+    ui->grootBtn->show();
+    ui->setChargingPointBtn->hide();
+    ui->setCurrentPointAsBtn->hide();
+    ui->setProductionPointBtn->hide();
+
+    // for mapping mode and assign some position
+    connect(setChargingPointBtnPtr_, &QPushButton::clicked, this, &MainWindow::setChargingPoint);
+    connect(setCurrentPointAsBtnPtr_, &QPushButton::clicked, this, &MainWindow::setCurrentPointAs);
+    connect(setProductionPointBtnPtr_, &QPushButton::clicked, this, &MainWindow::setProductionPoint);
 
     // Initialize the inactivity timer
     inactivityTimer_ = new QTimer(this);
@@ -267,6 +286,10 @@ void MainWindow::sendMappingMode() {
         ui->saveMapBtn->show();
         ui->openMapBtn->hide();
         ui->relocateBtn->hide();
+        ui->grootBtn->hide();
+        ui->setChargingPointBtn->show();
+        ui->setCurrentPointAsBtn->show();
+        ui->setProductionPointBtn->show();
         // ui->saveMapBtn->setEnabled(true);
         // ui->openMapBtn->setEnabled(false);
         // ui->relocateBtn->setEnabled(false);
@@ -297,6 +320,10 @@ void MainWindow::sendNavigationMode() {
         ui->saveMapBtn->hide();
         ui->openMapBtn->show();
         ui->relocateBtn->show();
+        ui->grootBtn->show();
+        ui->setChargingPointBtn->hide();
+        ui->setCurrentPointAsBtn->hide();
+        ui->setProductionPointBtn->hide();
         // ui->saveMapBtn->setEnabled(false);
         // ui->openMapBtn->setEnabled(true);
         // ui->relocateBtn->setEnabled(true);
@@ -432,88 +459,6 @@ void MainWindow::onResponseReceived(int service_status) {
     hideBusyDialog();
     setButtonsEnabled(true);
 }
-
-
-
-ServiceClient::ServiceClient() {
-    //rclcpp::init(0, nullptr);
-    node = rclcpp::Node::make_shared("qt_service_client");
-    client_ = node->create_client<rom_interfaces::srv::WhichMaps>("/which_maps");
-
-    // Start a separate thread for the ROS 2 spinning
-    rosServiceClientThread_ = std::thread(&ServiceClient::spin, this);
-}
-
-/// SERVICE CLIENT
-ServiceClient::~ServiceClient() {
-    rclcpp::shutdown();
-    if (rosServiceClientThread_.joinable()) {
-        rosServiceClientThread_.join();
-    }
-}
-
-void ServiceClient::spin() {
-    rclcpp::spin(node);
-}
-
-
-void ServiceClient::sendRequest(const std::string& request_string, const std::string& optional_param = "") {
-
-// # -1 [service not ok], 1 [service ok], 
-// # 2 [maps exist], 3 [maps do not exist], 
-// # 4 [save map ok], 5 [save map not ok]
-// # 6 [select map ok], 7 [select map not ok], 
-
-// # 8 [mapping mode ok], 9 [mapping mode not ok],
-// # 10 [navi mode ok], 11 [navi mode not ok]
-// # 12 [remapping mode ok], 13 [remapping mode not ok]
-
-    auto request = std::make_shared<rom_interfaces::srv::WhichMaps::Request>();
-    
-    #ifdef ROM_DEBUG
-        qDebug() << "[  ServiceClient::sendRequest  ] : mode change";
-    #endif
-    
-    request->request_string = request_string;
-
-    // reconfigure for save_map and select_map
-    if (request_string == "save_map") {
-        request->map_name_to_save = optional_param;
-    } 
-    else if (request_string == "select_map") {
-        request->map_name_to_select = optional_param;
-    }
-    
-    // check service        
-    if (!client_->wait_for_service(std::chrono::seconds(5))) {
-        emit responseReceived(-1); // Error: service not available
-        return;
-    }
-
-    // send request
-    auto future = client_->async_send_request(request);
-    future.wait();
-
-    // get response
-    try 
-    {
-        auto response = future.get();
-
-        // response for label updating
-        emit responseReceived(response->status);
-
-        // response for map exist or not
-        if (response->status == 2)
-        {
-            emit responseDataReceived(response);
-        }
-        
-    // response for error
-    } catch (const std::exception &e) {
-        emit responseReceived(-1); // Error: response failure
-    }
-}
-
 
 void MainWindow::saveMapClicked()
 {
@@ -733,7 +678,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 if (event->button() == Qt::LeftButton) 
                 {
                     int radius = 10;
-                    QRectF circle(scenePoint.x() - radius, scenePoint.y() - radius, radius * 3, radius * 3);
+                    QRectF circle(scenePoint.x() - radius, scenePoint.y() - radius, radius * 2, radius * 2);
                 
                     QGraphicsEllipseItem* circleItem = new QGraphicsEllipseItem(circle);
                     // Set properties
@@ -741,13 +686,14 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                     circleItem->setBrush(QBrush(Qt::green)); 
 
                     // create Dialog Box-----------------------------------------------
-                    bool is_name_ok;
-                    bool is_dir_ok;
                     QString wp_name; double wp_heading;
 
-                    wp_name = QInputDialog::getText(this, tr("Waypoint"), tr("Table name :"), QLineEdit::Normal, "", &is_name_ok);
-                    if (is_name_ok && !wp_name.isEmpty()) 
-                    {
+                    CustomDialog dialog;
+                    if (dialog.exec() == QDialog::Accepted) {
+                        wp_name = dialog.getName();
+                        wp_heading = dialog.getNumber() + 90.0; // This will return the value from the QDial
+                        
+                        // Use wp_name and wp_number in your code
                         for(int i = 0; i < waypoints_text_.size(); i++)
                         {
                             if(waypoints_text_[i]->toPlainText() == wp_name)
@@ -757,15 +703,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                             }
                             // and go to end Dialog Box
                         }
-                        wp_heading = QInputDialog::getDouble(this, tr("Enter Heading Direction"), tr("Heading (degrees):"), 0, -360, 360, 2, &is_dir_ok);
-                        if (!is_dir_ok) 
-                        {
-                            QMessageBox::information(this, tr("Cancelled"), tr("Heading input was cancelled."));
-                            return;
-                        }
-                    } 
-                    else
-                    {
+                    }
+                    else {
                         return;
                     }
                     // end Dialog Box----------------------------------------------------
@@ -811,58 +750,47 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
                     // Add the rectangle to the scene
                     ui->graphicsView->scene()->addItem(circleItem);
-
-                    // Add ring of the waypoints
-                        // int ringRadius = 30;
-                        // QGraphicsEllipseItem* ringItem = new QGraphicsEllipseItem(scenePoint.x() - ringRadius, scenePoint.y() - ringRadius, ringRadius * 2.5, ringRadius * 2.5);
-                        // ringItem->setPen(QPen(Qt::blue, 12));
-                        // ringItem->setBrush(QBrush(Qt::transparent));
-                        // ringItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges);  // To track geometry changes
-                        // ui->graphicsView->scene()->addItem(ringItem);
-                
-                        // // Add a heading arrow using a QGraphicsLineItem
-                        // QGraphicsLineItem* arrowItem = new QGraphicsLineItem(scenePoint.x(), scenePoint.y(), 
-                        // scenePoint.x() + ringRadius, scenePoint.y());
-                        // arrowItem->setPen(QPen(Qt::red, 2));  // Red arrow
-                        // ui->graphicsView->scene()->addItem(arrowItem);
-
-                        // // Make the ring only rotatable (not movable)
-                        // ringItem->setFlag(QGraphicsItem::ItemIsSelectable);
-                        // ringItem->setFlag(QGraphicsItem::ItemIsFocusable);
-
-                        // // Initial heading
-                        // double currentHeading = wp_heading;  // In degrees
-                        // double currentHeadingRad = currentHeading * 0.017453292519943295;  // Convert to radians
-                        // arrowItem->setRotation(currentHeading);  // Rotate the arrow based on heading
-
-                    // Add ring of the waypoints
+                    
+                        // **Draw the Radius Line**
+                        QPointF center(scenePoint.x(), scenePoint.y());
+                        QPointF edge(scenePoint.x() + radius * cos(yaw_in_map), scenePoint.y() + radius * sin(yaw_in_map));
+    
+                        QGraphicsLineItem* radiusLine = new QGraphicsLineItem(QLineF(center, edge));
+                        radiusLine->setPen(QPen(Qt::red, 2));
+                        ui->graphicsView->scene()->addItem(radiusLine);
+                        waypoints_lines_.append(radiusLine);
                 }
 
                 /********************* remove points to points list ***************************/
-                else if (event->button() == Qt::RightButton) 
-                {
-                    if (!waypoints_.isEmpty()) 
-                    {
-                        QGraphicsEllipseItem *tmpItem = waypoints_.takeLast(); // Get the last item and remove from list
-                        ui->graphicsView->scene()->removeItem(tmpItem);
-                        delete tmpItem;  // Free memory
+                // else if (event->button() == Qt::RightButton) 
+                // {
+                //     if (!waypoints_.isEmpty()) 
+                //     {
+                //         QGraphicsEllipseItem *tmpItem = waypoints_.takeLast(); // Get the last item and remove from list
+                //         ui->graphicsView->scene()->removeItem(tmpItem);
+                //         delete tmpItem;  // Free memory
 
-                        QGraphicsTextItem *textItem = waypoints_text_.takeLast();
-                        QString text = textItem->toPlainText();
-                        std::string textStd = text.toStdString();
-                        delete textItem; 
+                //         QGraphicsTextItem *textItem = waypoints_text_.takeLast();
+                //         QString text = textItem->toPlainText();
+                //         std::string textStd = text.toStdString();
+                //         delete textItem; 
 
-                        waypoints_.removeLast();
-                        waypoints_text_.removeLast();
-                        waypoints_direction_.removeLast();
+                //         QGraphicsLineItem *lineItem = waypoints_lines_.takeLast(); // Get the last item and remove from list
+                //         ui->graphicsView->scene()->removeItem(lineItem);
+                //         delete lineItem;  // Free memory
 
-                        waypoints_map_.erase(textStd); // should removeLast or not
-                        waypoints_scene_.erase(textStd);
+                //         waypoints_.removeLast();
+                //         waypoints_lines_.removeLast();
+                //         waypoints_text_.removeLast();
+                //         waypoints_direction_.removeLast();
+
+                //         waypoints_map_.erase(textStd); // should removeLast or not
+                //         waypoints_scene_.erase(textStd);
                         
-                        /************* emit data to transmit **************/
-                        // emit waypoints
-                    }
-                }
+                //         /************* emit data to transmit **************/
+                //         // emit waypoints
+                //     }
+                // } အိုကေပေမဲ့ နောက်ဆုံးနှစ်ခုမှာ မဖျက်တဲ့ ပြသနာရှိတယ်။
 
                 /*********** emit data to transmit **************/
                 // point ထည့် / ဖြုတ်ပြီးတိုင်း romWaypoints_ ကို transmit လုပ်ပေးရမယ်။
@@ -981,6 +909,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                     virtual_lines_points_.clear();
 
                     waypoints_.clear();
+                    waypoints_lines_.clear();
                     waypoints_text_.clear();
                     waypoints_direction_.clear();
 
@@ -1055,7 +984,7 @@ void MainWindow::showBusyDialog() {
         // busyDialog_->move((this->width() - busyDialog_->width()) / 2,
         //           (this->height() - busyDialog_->height()) / 2);
 
-        busyDialog_->move(350, 250); 
+        busyDialog_->move(600, 1080); 
         busyDialog_->setStyleSheet(
     "QProgressBar {"
     "   border: 2px solid black;"
@@ -1708,7 +1637,7 @@ void MainWindow::onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
     QImage mapImage(msg->info.width, msg->info.height, QImage::Format_RGB888);
     for (size_t y = 0; y < msg->info.height; ++y) 
     {
-        int inverted_y = msg->info.height - 1 - y;
+        //int inverted_y = msg->info.height - 1 - y;
 
         for (size_t x = 0; x < msg->info.width; ++x) 
         {
@@ -1740,7 +1669,12 @@ void MainWindow::onUpdateMap(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
     #endif
 
     showSceneOriginCoordinate();
-    showMapOriginCooridinate();
+
+    #ifdef ROM_SHOW_TF
+        #ifdef ROM_SHOW_MAP_TF
+            showMapOriginCooridinate();
+        #endif
+    #endif
     //showOdomAndBaseFootprint();
     emit mapReadyForWaypointsSubscriber();
 }
@@ -2250,7 +2184,8 @@ void MainWindow::onUpdateLaser(const sensor_msgs::msg::LaserScan::SharedPtr scan
     rom_scan_ = scan;
 }
 
-void MainWindow::processScan(QPointF origin)
+// void MainWindow::processScan(QPointF origin)
+void MainWindow::processScan()
 {
     // Static pointer to store previously added points
     static std::vector<QGraphicsEllipseItem*> ellipseList;
@@ -2321,7 +2256,8 @@ void MainWindow::processScan(QPointF origin)
         }
 
         // If there are more points in the scan than existing ellipses, add new ones to the scene
-        for (int i = ellipseList.size(); i < ranges.size(); ++i)
+        // for (int i = ellipseList.size(); i < ranges.size(); ++i)
+        for (size_t i = ellipseList.size(); i < ranges.size(); ++i)
         {
             float range = ranges[i];
             if (range >= rom_scan_->range_min && range <= rom_scan_->range_max) 
@@ -2354,8 +2290,9 @@ void MainWindow::onTransformReceived(const ROMTransform rom_tf)
     //     qDebug() << "[  MainWindow::onTransformReceived    ] : get rom_tf";
     // #endif
     rom_tf_ = rom_tf;
-
-    showOdomAndBaseFootprint();
+    #ifdef ROM_SHOW_TF
+        showOdomAndBaseFootprint();
+    #endif
 }
 
 void MainWindow::showSceneOriginCoordinate()
@@ -2472,8 +2409,12 @@ void MainWindow::showMapOriginCooridinate()
 
 void MainWindow::showOdomAndBaseFootprint()
 {
+    #ifdef ROM_SHOW_ODOM_TF
         showOdom();
+    #endif
+    #ifdef ROM_SHOW_BASEFOOTPRINT_TF
         showBaseFootprint();
+    #endif
 }
 
 void MainWindow::showOdom()
@@ -2628,7 +2569,8 @@ void MainWindow::showBaseFootprint()
         static int count = 0;
         if (count%10 == 0)
         {
-            processScan(origin);
+            //processScan(origin);
+            processScan();
         }
         count++;
        if (count == 109)
@@ -2651,6 +2593,181 @@ void MainWindow::resetInactivityTimer()
 void MainWindow::handleInactivityTimeout()
 {
     showEyesWidget();
+}
+
+void MainWindow::setChargingPoint()
+{
+    // ???? to solve ==> mapping မှာ robot နဲ့ tf ဘာကြောင့်မပေါ်သလဲ။ robot pose topic အလုပ်လုပ်/မလုပ် ။ laser ပေါ်သင့်။
+    // ???? waypoints ui များကို ဘယ်လိုနည်းနဲ့ update လုပ်မှာလဲ။
+    // ???? eraser mode မှာ waypoint ဖျက်ရင် robot ရဲ့ yaml ကို ရောဖျက်သင့် မဖျက်သင့်။ ?
+    // ???? mapping mode မှာ new wp ထားပေးလို့ ရသင့် / မရသင့်။ wp, eraser, wall တို့ hide သင့် မ hide သင့်။
+    // ???? reeman ဘယ်လိုလုပ်သလဲ။
+    // mapping mode ပြောင်ရင် auto rebuild လုပ်သင့် / မလုပ်သင့်။
+
+
+    // ၀။ Dialog box ဖြင့် confirm တောင်းပါ။
+
+    // ၁။ လက်ရှိ robot pose ကို ယူပါ။
+
+    // ၂။ charging_point အမည်ဖြင့်  wp lists များထဲထည့်ပါ။
+
+    // ၃။ Ui မှာ display ပြဖို့ လုပ်ပါ။
+}
+
+void MainWindow::setCurrentPointAs()
+{
+    // ၀။ Dialog box ဖြင့် pose name တောင်းပါ။
+    
+    // ၁။ လက်ရှိ robot pose ကို ယူပါ။
+
+    // ၂။ pose name အမည်ဖြင့်  wp lists များထဲထည့်ပါ။
+
+    // ၃။ Ui မှာ display ပြဖို့ လုပ်ပါ။
+}
+
+void MainWindow::setProductionPoint()
+{
+    // ၀။ Dialog box ဖြင့် confirm တောင်းပါ။
+    
+    // ၁။ လက်ရှိ robot pose ကို ယူပါ။
+
+    // ၂။ production_point အမည်ဖြင့်  wp lists များထဲထည့်ပါ။
+
+    // ၃။ Ui မှာ display ပြဖို့ လုပ်ပါ။
+}
+
+//---------------------------- SERVICE CLIENT ----------------------------
+ServiceClient::ServiceClient() {
+    //rclcpp::init(0, nullptr);
+    node = rclcpp::Node::make_shared("qt_service_client");
+    client_ = node->create_client<rom_interfaces::srv::WhichMaps>("/which_maps");
+
+    // Start a separate thread for the ROS 2 spinning
+    rosServiceClientThread_ = std::thread(&ServiceClient::spin, this);
+}
+
+/// SERVICE CLIENT
+ServiceClient::~ServiceClient() {
+    rclcpp::shutdown();
+    if (rosServiceClientThread_.joinable()) {
+        rosServiceClientThread_.join();
+    }
+}
+
+void ServiceClient::spin() {
+    rclcpp::spin(node);
+}
+
+
+void ServiceClient::sendRequest(const std::string& request_string, const std::string& optional_param = "") {
+
+// # -1 [service not ok], 1 [service ok], 
+// # 2 [maps exist], 3 [maps do not exist], 
+// # 4 [save map ok], 5 [save map not ok]
+// # 6 [select map ok], 7 [select map not ok], 
+
+// # 8 [mapping mode ok], 9 [mapping mode not ok],
+// # 10 [navi mode ok], 11 [navi mode not ok]
+// # 12 [remapping mode ok], 13 [remapping mode not ok]
+
+    auto request = std::make_shared<rom_interfaces::srv::WhichMaps::Request>();
+    
+    #ifdef ROM_DEBUG
+        qDebug() << "[  ServiceClient::sendRequest  ] : mode change";
+    #endif
+    
+    request->request_string = request_string;
+
+    // reconfigure for save_map and select_map
+    if (request_string == "save_map") {
+        request->map_name_to_save = optional_param;
+    } 
+    else if (request_string == "select_map") {
+        request->map_name_to_select = optional_param;
+    }
+    
+    // check service        
+    if (!client_->wait_for_service(std::chrono::seconds(5))) {
+        emit responseReceived(-1); // Error: service not available
+        return;
+    }
+
+    // send request
+    auto future = client_->async_send_request(request);
+    future.wait();
+
+    // get response
+    try 
+    {
+        auto response = future.get();
+
+        // response for label updating
+        emit responseReceived(response->status);
+
+        // response for map exist or not
+        if (response->status == 2)
+        {
+            emit responseDataReceived(response);
+        }
+        
+    // response for error
+    } catch (const std::exception &e) {
+        emit responseReceived(-1); // Error: response failure
+    }
+}
+
+
+//---------------------------- CUSTOM DIALOG ----------------------------
+
+CustomDialog::CustomDialog(QWidget *parent) : QDialog(parent) {
+    QVBoxLayout *layout = new QVBoxLayout;
+
+    QLabel *nameLabel = new QLabel("Waypoint Name:");
+    nameEdit = new QLineEdit;
+    layout->addWidget(nameLabel);
+    layout->addWidget(nameEdit);
+
+    // QLabel *numberLabel = new QLabel("Waypoint Number:");
+    // numberEdit = new QSpinBox;
+    // layout->addWidget(numberLabel);
+    // layout->addWidget(numberEdit);
+
+    // Create QDial for number selection (useful for selecting headings or other ranges)
+    QLabel *dialLabel = new QLabel("Direction (0-360):");
+    dial = new QDial;
+    dial->setRange(0, 360);  // Set the range of the dial (for example, 0 to 360 for degrees)
+    dial->setValue(180);  // Default value is 0
+    dial->setFixedSize(200,200);
+    layout->addWidget(dialLabel);
+    //layout->addWidget(dial);
+    //layout->addWidget(dialLabel, 0, Qt::AlignHCenter);  // Align label to center
+    layout->addWidget(dial, 0, Qt::AlignHCenter);  
+
+    okButton = new QPushButton("OK");
+    okButton->setEnabled(false);
+    layout->addWidget(okButton);
+    
+    connect(nameEdit, &QLineEdit::textChanged, this, &CustomDialog::validateInput);
+    connect(okButton, &QPushButton::clicked, this, &CustomDialog::accept);
+
+    setLayout(layout);
+    setFixedSize(WAYPOINT_DIALOG_WIDTH, WAYPOINT_DIALOG_HEIGHT);
+    // Initial validation
+    validateInput();
+}
+
+void CustomDialog::validateInput() {
+    // Enable or disable OK button based on whether the QLineEdit text is empty
+    okButton->setEnabled(!nameEdit->text().isEmpty());
+}
+
+QString CustomDialog::getName() const {
+    return nameEdit->text();
+}
+
+int CustomDialog::getNumber() const {
+    //return numberEdit->value();
+    return dial->value();
 }
 
 
