@@ -141,7 +141,7 @@ color: white;</string>
    <widget class="QPushButton" name="openMapBtn">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>820</x>
       <y>27</y>
       <width>161</width>
       <height>51</height>
@@ -164,7 +164,7 @@ color: white;</string>
    <widget class="QPushButton" name="relocateBtn">
     <property name="geometry">
      <rect>
-      <x>810</x>
+      <x>1000</x>
       <y>27</y>
       <width>161</width>
       <height>51</height>
@@ -187,7 +187,7 @@ color: white;</string>
    <widget class="QPushButton" name="saveMapBtn">
     <property name="geometry">
      <rect>
-      <x>990</x>
+      <x>820</x>
       <y>27</y>
       <width>161</width>
       <height>51</height>
@@ -317,6 +317,7 @@ color: orange;</string>
     </property>
     <property name="font">
      <font>
+      <family>Courier 10 Pitch</family>
       <pointsize>9</pointsize>
       <weight>50</weight>
       <bold>false</bold>
@@ -644,8 +645,8 @@ color: #e8e7e6;</string>
    <widget class="QLabel" name="sendGoalLabel">
     <property name="geometry">
      <rect>
-      <x>1830</x>
-      <y>1400</y>
+      <x>1818</x>
+      <y>1390</y>
       <width>271</width>
       <height>34</height>
      </rect>
@@ -668,7 +669,7 @@ color: #e8e7e6;</string>
    <widget class="QLabel" name="companyLabel">
     <property name="geometry">
      <rect>
-      <x>9</x>
+      <x>1170</x>
       <y>1570</y>
       <width>901</width>
       <height>34</height>
@@ -1001,7 +1002,7 @@ background-color: black;</string>
    <widget class="QPushButton" name="grootBtn">
     <property name="geometry">
      <rect>
-      <x>2070</x>
+      <x>2120</x>
       <y>26</y>
       <width>161</width>
       <height>51</height>
@@ -1047,9 +1048,9 @@ background-color: black;</string>
    <widget class="QPushButton" name="setProductionPointBtn">
     <property name="geometry">
      <rect>
-      <x>1470</x>
-      <y>27</y>
-      <width>281</width>
+      <x>1310</x>
+      <y>28</y>
+      <width>291</width>
       <height>51</height>
      </rect>
     </property>
@@ -1070,9 +1071,9 @@ background-color: black;</string>
    <widget class="QPushButton" name="setChargingPointBtn">
     <property name="geometry">
      <rect>
-      <x>1170</x>
+      <x>1000</x>
       <y>26</y>
-      <width>281</width>
+      <width>291</width>
       <height>51</height>
      </rect>
     </property>
@@ -1093,9 +1094,9 @@ background-color: black;</string>
    <widget class="QPushButton" name="setCurrentPointAsBtn">
     <property name="geometry">
      <rect>
-      <x>1770</x>
+      <x>1620</x>
       <y>27</y>
-      <width>281</width>
+      <width>291</width>
       <height>51</height>
      </rect>
     </property>
