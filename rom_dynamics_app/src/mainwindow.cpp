@@ -75,8 +75,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
 
     // eye emotion -----------------------------------------------------------------------------------------
     robotEyesWidgetPtr_ = new RobotEyeEmotionWindow();
-    generalBtnPtr_ = ui->generalBtn;
-    connect(generalBtnPtr_, &QPushButton::clicked, this, &MainWindow::showEyesWidget);
+    
     //connect(robotEyeWindow, &QWidget::close, this, &MainWindow::on_robot_eye_window_closed);
 
     grootBtnPtr_ = ui->grootBtn;
@@ -89,7 +88,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     eraser_btn_ptr_ = ui->eraserBtn;
     normal_btn_ptr_ = ui->normalBtn;
     service_mode_btn_ptr_ = ui->serviceBtn;
+    generalBtnPtr_ = ui->generalBtn;
 
+    connect(generalBtnPtr_, &QPushButton::clicked, this, &MainWindow::showEyesWidget);
     connect(zoom_btn_ptr_, &QPushButton::clicked, this, &MainWindow::onZoomButtonClicked);
     connect(waypoints_btn_ptr_, &QPushButton::clicked, this, &MainWindow::onWayPointsButtonClicked);
     connect(virtual_wall_btn_ptr_, &QPushButton::clicked, this, &MainWindow::onWallButtonClicked);
@@ -154,8 +155,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), dragging(false)
     ui->relocateBtn->show();//setEnabled(true);
     ui->grootBtn->show();
     ui->setChargingPointBtn->hide();
-    ui->setCurrentPointAsBtn->hide();
-    ui->setProductionPointBtn->hide();
+    ui->setCurrentPointAsBtn->show();
+    ui->setProductionPointBtn->show();
 
     // for mapping mode and assign some position
     connect(setChargingPointBtnPtr_, &QPushButton::clicked, this, &MainWindow::setChargingPoint);
@@ -191,51 +192,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayCurrentPose(const geometry_msgs::msg::Pose2D::SharedPtr msg) 
 {
+    // ဒီကောင့်ကို battery status ပြောင်းရန်
     #ifdef ROM_DEBUG
         qDebug() << "[ MainWindow::displayCurrentPose ]: get robot Pose";
     #endif
-    // transform map coordinate to scene coordinate
-    double x_meter = msg->x * -1.0;
-    double y_meter = msg->y;
 
-    double x_feet = (x_meter * meter_to_foot_constant);
-    double y_feet = (y_meter * meter_to_foot_constant);
-
-    //double theta = quaternion_to_euler_yaw(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
-    double theta_degree = msg->theta;
-
+    // robot pose ကို label ဖြင့်ပြရန်
+    // tf showBaseFootprint() မှာပြတယ်။
     /* Display */
-    ui->xValueLabel->setText(QString("%1").arg(x_feet, 0, 'f', 1));
-    ui->yValueLabel->setText(QString("%1").arg(y_feet, 0, 'f', 1));
-    ui->phiValueLabel->setText(QString("%1").arg(theta_degree, 0, 'f', 1));
+    // ui->xValueLabel->setText(QString("%1").arg(x_feet, 0, 'f', 1));
+    // ui->yValueLabel->setText(QString("%1").arg(y_feet, 0, 'f', 1));
+    // ui->phiValueLabel->setText(QString("%1").arg(theta_degree, 0, 'f', 1));
 
     // robot pose ကို scene ထဲမှာပြရန်
-    // Convert world coordinates to scene coordinates (adjust as needed)
-    double sceneX = (x_meter - this->map_origin_x_) / this->map_resolution_;  // scaleFactor converts meters to scene pixels
-    double sceneY = (y_meter - this->map_origin_y_) / this->map_resolution_; // * -1  Negative Y for correct Qt scene orientation
-
-    if (!robotItemPtr_) 
-    {
-        // Create robot representation if not already created
-        int robotSize = 20;
-        robotItemPtr_ = new QGraphicsEllipseItem(
-            QRectF(sceneX - robotSize / 2, sceneY - robotSize / 2, robotSize, robotSize));
-        robotItemPtr_->setPen(QPen(Qt::blue, 2));
-        robotItemPtr_->setBrush(QBrush(Qt::blue));
-        
-        // Add to scene
-        ui->graphicsView->scene()->addItem(robotItemPtr_);
-        // why?------------------------------------------------
-    } 
-    else 
-    {   // why?------------------------------------------------
-        // Update robot position
-        robotItemPtr_->setPos(sceneX - robotItemPtr_->boundingRect().width() / 2, 
-                          sceneY - robotItemPtr_->boundingRect().height() / 2);
-    }
-
-    // Apply rotation
-    robotItemPtr_->setRotation(theta_degree); // why?--------------------------------------------------------------
+    // tf showBaseFootprint() မှာပြတယ်။
+    
 }
 
 void MainWindow::changeCurrentMode(const std_msgs::msg::String::SharedPtr msg)
@@ -330,6 +301,13 @@ void MainWindow::sendMappingMode() {
         // ui->saveMapBtn->setEnabled(true);
         // ui->openMapBtn->setEnabled(false);
         // ui->relocateBtn->setEnabled(false);
+        zoom_btn_ptr_->hide();
+        waypoints_btn_ptr_->hide();
+        virtual_wall_btn_ptr_->hide();
+        eraser_btn_ptr_->hide();    
+        normal_btn_ptr_->hide();    
+        service_mode_btn_ptr_->hide();
+        generalBtnPtr_->hide();
     }
 }
 
@@ -394,12 +372,19 @@ void MainWindow::sendNavigationMode() {
         ui->openMapBtn->show();
         ui->relocateBtn->show();
         ui->grootBtn->show();
+        ui->setCurrentPointAsBtn->show();
+        ui->setProductionPointBtn->show();
         ui->setChargingPointBtn->hide();
-        ui->setCurrentPointAsBtn->hide();
-        ui->setProductionPointBtn->hide();
         // ui->saveMapBtn->setEnabled(false);
         // ui->openMapBtn->setEnabled(true);
         // ui->relocateBtn->setEnabled(true);
+        zoom_btn_ptr_->show();
+        waypoints_btn_ptr_->show();
+        virtual_wall_btn_ptr_->show();
+        eraser_btn_ptr_->show();    
+        normal_btn_ptr_->show();    
+        service_mode_btn_ptr_->show();
+        generalBtnPtr_->show();
     }
 }
 
@@ -464,6 +449,13 @@ void MainWindow::sendRemappingMode() {
         // ui->saveMapBtn->setEnabled(true);
         // ui->openMapBtn->setEnabled(true);
         // ui->relocateBtn->setEnabled(true);
+        zoom_btn_ptr_->hide();
+        waypoints_btn_ptr_->hide();
+        virtual_wall_btn_ptr_->hide();
+        eraser_btn_ptr_->hide();    
+        normal_btn_ptr_->hide();    
+        service_mode_btn_ptr_->hide();
+        generalBtnPtr_->hide();
     }
 }
 
@@ -2712,6 +2704,16 @@ void MainWindow::showBaseFootprint()
         robot_pose_x_ = rom_tf_.odom_base_footprint_x;
         robot_pose_y_ = rom_tf_.odom_base_footprint_y;   
         robot_yaw_rad_ = yaw_rad;
+
+        // Display Robot Pose
+        double x_feet = (robot_pose_x_ * meter_to_foot_constant);
+        double y_feet = (robot_pose_y_ * meter_to_foot_constant);
+        double theta_degree = (robot_yaw_rad_ * 180.0 / M_PI); //convert radian to degrees 
+        ui->label->setText(QString("Robot Pose( ပေ ၊ ဒီဂရီ )"));
+        ui->xValueLabel->setText(QString("%1").arg(x_feet, 0, 'f', 1));
+        ui->yValueLabel->setText(QString("%1").arg(y_feet, 0, 'f', 1));
+        ui->phiValueLabel->setText(QString("%1").arg(theta_degree, 0, 'f', 1));
+
 
         // Y-axis perpendicular to X-axis (90-degree rotation)
         double end_y_x = sceneX_map - axis_length * sin(yaw_rad);

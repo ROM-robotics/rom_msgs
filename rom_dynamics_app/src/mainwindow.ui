@@ -164,8 +164,8 @@ color: white;</string>
    <widget class="QPushButton" name="relocateBtn">
     <property name="geometry">
      <rect>
-      <x>1000</x>
-      <y>27</y>
+      <x>1620</x>
+      <y>29</y>
       <width>161</width>
       <height>51</height>
      </rect>
@@ -1048,7 +1048,7 @@ background-color: black;</string>
    <widget class="QPushButton" name="setProductionPointBtn">
     <property name="geometry">
      <rect>
-      <x>1310</x>
+      <x>1000</x>
       <y>28</y>
       <width>291</width>
       <height>51</height>
@@ -1071,8 +1071,8 @@ background-color: black;</string>
    <widget class="QPushButton" name="setChargingPointBtn">
     <property name="geometry">
      <rect>
-      <x>1000</x>
-      <y>26</y>
+      <x>1620</x>
+      <y>29</y>
       <width>291</width>
       <height>51</height>
      </rect>
@@ -1094,7 +1094,7 @@ background-color: black;</string>
    <widget class="QPushButton" name="setCurrentPointAsBtn">
     <property name="geometry">
      <rect>
-      <x>1620</x>
+      <x>1310</x>
       <y>27</y>
       <width>291</width>
       <height>51</height>
