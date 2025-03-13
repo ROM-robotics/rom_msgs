@@ -1600,7 +1600,7 @@ void MainWindow::applyStyles()
     "       stop: 1 #FFFFFF"             // White for clouds
     "   );"
     "   color: black;"          
-    "   font-size: 35px;"
+    "   font-size: 33px;"
     "}"
     "QPushButton:hover {"
     "   background: qlineargradient("
@@ -1625,7 +1625,7 @@ void MainWindow::applyStyles()
     "       stop: 1 #FFFFFF"             // Cloud White
     "   );"
     "   color: black;"
-    "   font-size: 35px;"
+    "   font-size: 33px;"
     "   font-weight: bold;"
     "}"
     "QPushButton:hover {"
@@ -1650,7 +1650,7 @@ void MainWindow::applyStyles()
     "       stop: 1 #FF4500"             // Red-Orange (outer glow)
     "   );"
     "   color: black;"
-    "   font-size: 26px;"
+    "   font-size: 24px;"
     "   font-weight: bold;"
     "}"
     "QPushButton:hover {"
@@ -1675,7 +1675,7 @@ void MainWindow::applyStyles()
     "       stop: 1.0 #4B3621  "         
     "   );"
     "   color: black;"
-    "   font-size: 24px;"
+    "   font-size: 22px;"
     "   font-weight: bold;"
     "}"
     "QPushButton:hover {"
@@ -1924,42 +1924,42 @@ void MainWindow::applyStyleWaypoint()
 {
     ui->addWaypointBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 4px solid white;"
     "}");
     ui->addWallBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->eraserBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->zoomBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->normalBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     service_mode_btn_ptr_->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -1969,42 +1969,42 @@ void MainWindow::applyStyleWall()
 {
     ui->addWaypointBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->addWallBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 4px solid white;"
     "}");
     ui->eraserBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->zoomBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->normalBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     service_mode_btn_ptr_->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -2014,42 +2014,42 @@ void MainWindow::applyStyleEraser()
 {
     ui->addWaypointBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->addWallBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->eraserBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 4px solid white;"
     "}");
     ui->zoomBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->normalBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     service_mode_btn_ptr_->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -2059,42 +2059,42 @@ void MainWindow::applyStyleZoom()
 {
     ui->addWaypointBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->addWallBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->eraserBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->zoomBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 4px solid white;"
     "}");
     ui->normalBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     service_mode_btn_ptr_->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -2120,42 +2120,42 @@ void MainWindow::applyStyleNormal()
 
     ui->addWaypointBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->addWallBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->eraserBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->zoomBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
     "}");
     ui->normalBtn->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 4px solid white;"
     "}");
     service_mode_btn_ptr_->setStyleSheet(
     "QPushButton {"
-    "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
+    "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_75.png);"
     "   background-repeat: no-repeat;"
     "   background-position: center;"
     "   border: 2px solid #979ba1;"
@@ -2166,42 +2166,42 @@ void MainWindow::applyStyleServiceMode()
 {
     ui->addWaypointBtn->setStyleSheet(
         "QPushButton {"
-        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
+        "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/waypoint.png);"
         "   background-repeat: no-repeat;"
         "   background-position: center;"
         "   border: 2px solid #979ba1;"
         "}");
         ui->addWallBtn->setStyleSheet(
         "QPushButton {"
-        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
+        "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/wall.png);"
         "   background-repeat: no-repeat;"
         "   background-position: center;"
         "   border: 2px solid #979ba1;"
         "}");
         ui->eraserBtn->setStyleSheet(
         "QPushButton {"
-        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
+        "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/eraser.png);"
         "   background-repeat: no-repeat;"
         "   background-position: center;"
         "   border: 2px solid #979ba1;"
         "}");
         ui->zoomBtn->setStyleSheet(
         "QPushButton {"
-        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
+        "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/zoom.png);"
         "   background-repeat: no-repeat;"
         "   background-position: center;"
         "   border: 2px solid #979ba1;"
         "}");
         ui->normalBtn->setStyleSheet(
         "QPushButton {"
-        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
+        "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png);"
         "   background-repeat: no-repeat;"
         "   background-position: center;"
         "   border: 2px solid #979ba1;"
         "}");
         service_mode_btn_ptr_->setStyleSheet(
         "QPushButton {"
-        "   background-image: url(/home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_100.png);"
+        "   background-image: url(/home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/robot_waiter_100.png);"
         "   background-repeat: no-repeat;"
         "   background-position: center;"
         "   border: 4px solid white;"
@@ -2986,4 +2986,4 @@ int CustomDialog::getNumber() const {
 }
 
 
-// file_path = /home/mr_robot/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png
+// file_path = /home/dolores/Desktop/Git/rom_msgs/rom_dynamics_app/ico/normal.png

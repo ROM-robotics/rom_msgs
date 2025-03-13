@@ -9,8 +9,8 @@
     #include <QDebug>
 #endif
 
-#define EMOTION_DIALOG_WIDTH 2880
-#define EMOTION_DIALOG_HEIGHT 1620
+#define EMOTION_DIALOG_WIDTH 1675
+#define EMOTION_DIALOG_HEIGHT 1048
 
 const double PI = 3.1415;
 

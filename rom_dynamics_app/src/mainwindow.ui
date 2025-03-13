@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>2880</width>
-    <height>1620</height>
+    <width>1440</width>
+    <height>1001</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,14 +24,16 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>2880</width>
-    <height>1620</height>
+    <width>1675</width>
+    <height>1048</height>
    </size>
   </property>
   <property name="font">
    <font>
-    <pointsize>12</pointsize>
+    <family>Ubuntu</family>
+    <pointsize>10</pointsize>
     <weight>75</weight>
+    <italic>true</italic>
     <bold>true</bold>
    </font>
   </property>
@@ -48,16 +50,18 @@
    <widget class="QPushButton" name="mappingBtn">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>27</y>
-      <width>171</width>
+      <x>10</x>
+      <y>8</y>
+      <width>141</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>10</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -71,16 +75,18 @@
    <widget class="QPushButton" name="navigationBtn">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>27</y>
-      <width>191</width>
+      <x>160</x>
+      <y>8</y>
+      <width>141</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>10</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -94,16 +100,18 @@
    <widget class="QPushButton" name="remappingBtn">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>27</y>
-      <width>181</width>
+      <x>310</x>
+      <y>8</y>
+      <width>141</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>10</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -114,43 +122,21 @@
      <string>Remapping</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>1401</y>
-      <width>271</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: white;</string>
-    </property>
-    <property name="text">
-     <string notr="true">Robot Position</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="openMapBtn">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>27</y>
-      <width>161</width>
+      <x>550</x>
+      <y>10</y>
+      <width>141</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>10</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -164,16 +150,18 @@ color: white;</string>
    <widget class="QPushButton" name="relocateBtn">
     <property name="geometry">
      <rect>
-      <x>1620</x>
-      <y>29</y>
-      <width>161</width>
+      <x>1000</x>
+      <y>10</y>
+      <width>141</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>10</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -187,16 +175,18 @@ color: white;</string>
    <widget class="QPushButton" name="saveMapBtn">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>27</y>
-      <width>161</width>
+      <x>550</x>
+      <y>10</y>
+      <width>141</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>10</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -207,119 +197,27 @@ color: white;</string>
      <string>Save Map</string>
     </property>
    </widget>
-   <widget class="QLabel" name="xLabel">
-    <property name="geometry">
-     <rect>
-      <x>612</x>
-      <y>1461</y>
-      <width>129</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: white;</string>
-    </property>
-    <property name="text">
-     <string>x :</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="yLabel">
-    <property name="geometry">
-     <rect>
-      <x>790</x>
-      <y>1460</y>
-      <width>129</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: white;</string>
-    </property>
-    <property name="text">
-     <string>y :</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="yValueLabel">
-    <property name="geometry">
-     <rect>
-      <x>838</x>
-      <y>1460</y>
-      <width>91</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <weight>75</weight>
-      <italic>true</italic>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: orange;</string>
-    </property>
-    <property name="text">
-     <string>sync ...</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="xValueLabel">
-    <property name="geometry">
-     <rect>
-      <x>660</x>
-      <y>1461</y>
-      <width>91</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <weight>75</weight>
-      <italic>true</italic>
-      <bold>true</bold>
-      <underline>false</underline>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: orange;</string>
-    </property>
-    <property name="text">
-     <string>sync ...</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="statusLabel">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>1252</y>
-      <width>541</width>
-      <height>291</height>
+      <x>8</x>
+      <y>794</y>
+      <width>551</width>
+      <height>201</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>1050</height>
+     </size>
     </property>
     <property name="font">
      <font>
-      <family>Courier 10 Pitch</family>
+      <family>Ubuntu</family>
       <pointsize>9</pointsize>
       <weight>50</weight>
+      <italic>true</italic>
       <bold>false</bold>
      </font>
     </property>
@@ -340,11 +238,17 @@ padding-left: 20px;</string>
    <widget class="QPushButton" name="shutdownBtn">
     <property name="geometry">
      <rect>
-      <x>2827</x>
-      <y>1</y>
+      <x>1387</x>
+      <y>2</y>
       <width>51</width>
       <height>51</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>1680</width>
+      <height>1050</height>
+     </size>
     </property>
     <property name="font">
      <font>
@@ -373,16 +277,18 @@ font-size: 36px;</string>
    <widget class="QPushButton" name="serviceBtn">
     <property name="geometry">
      <rect>
-      <x>1301</x>
-      <y>1255</y>
-      <width>101</width>
-      <height>101</height>
+      <x>328</x>
+      <y>720</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>10</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -400,16 +306,18 @@ border: 2px solid #979ba1;</string>
    <widget class="QPushButton" name="btnStop">
     <property name="geometry">
      <rect>
-      <x>1440</x>
-      <y>1383</y>
-      <width>101</width>
-      <height>101</height>
+      <x>649</x>
+      <y>789</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -423,16 +331,18 @@ border: 2px solid #979ba1;</string>
    <widget class="QPushButton" name="btnForward">
     <property name="geometry">
      <rect>
-      <x>1440</x>
-      <y>1255</y>
-      <width>100</width>
-      <height>101</height>
+      <x>650</x>
+      <y>720</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -446,16 +356,18 @@ border: 2px solid #979ba1;</string>
    <widget class="QPushButton" name="btnLeft">
     <property name="geometry">
      <rect>
-      <x>1300</x>
-      <y>1383</y>
-      <width>101</width>
-      <height>101</height>
+      <x>730</x>
+      <y>790</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -469,16 +381,18 @@ border: 2px solid #979ba1;</string>
    <widget class="QPushButton" name="btnRight">
     <property name="geometry">
      <rect>
-      <x>1579</x>
-      <y>1383</y>
-      <width>101</width>
-      <height>101</height>
+      <x>569</x>
+      <y>790</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -489,196 +403,21 @@ border: 2px solid #979ba1;</string>
      <string>⟳</string>
     </property>
    </widget>
-   <widget class="QLabel" name="phiLabel">
-    <property name="geometry">
-     <rect>
-      <x>962</x>
-      <y>1460</y>
-      <width>129</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: white;</string>
-    </property>
-    <property name="text">
-     <string>ϕ :</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="phiValueLabel">
-    <property name="geometry">
-     <rect>
-      <x>1010</x>
-      <y>1460</y>
-      <width>101</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <weight>75</weight>
-      <italic>true</italic>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: orange;</string>
-    </property>
-    <property name="text">
-     <string>sync ...</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="goBtn">
-    <property name="geometry">
-     <rect>
-      <x>2330</x>
-      <y>1460</y>
-      <width>71</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-radius: 35px;
-border: 2px solid #1B1F4F;
-color: green;
-font-size: 35px;</string>
-    </property>
-    <property name="text">
-     <string>Go</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>16</width>
-      <height>16</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QLabel" name="xSendLabel">
-    <property name="geometry">
-     <rect>
-      <x>1820</x>
-      <y>1430</y>
-      <width>129</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>7</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: #e8e7e6;</string>
-    </property>
-    <property name="text">
-     <string>x ( feet )</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="ySendLabel">
-    <property name="geometry">
-     <rect>
-      <x>1980</x>
-      <y>1430</y>
-      <width>129</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>7</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: #e8e7e6;</string>
-    </property>
-    <property name="text">
-     <string>y ( feet )</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="zSendLabel">
-    <property name="geometry">
-     <rect>
-      <x>2140</x>
-      <y>1430</y>
-      <width>129</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>7</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: #e8e7e6;</string>
-    </property>
-    <property name="text">
-     <string>z ( degree )</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="sendGoalLabel">
-    <property name="geometry">
-     <rect>
-      <x>1818</x>
-      <y>1390</y>
-      <width>271</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>11</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: none;
-color: #e8e7e6;</string>
-    </property>
-    <property name="text">
-     <string notr="true">Goal</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="companyLabel">
     <property name="geometry">
      <rect>
-      <x>1170</x>
-      <y>1570</y>
-      <width>901</width>
+      <x>565</x>
+      <y>964</y>
+      <width>471</width>
       <height>34</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>7</pointsize>
+      <family>Ubuntu</family>
+      <pointsize>10</pointsize>
       <weight>50</weight>
+      <italic>true</italic>
       <bold>false</bold>
      </font>
     </property>
@@ -690,121 +429,13 @@ color: white;</string>
      <string notr="true">© 2015-2025 ROM Dynamics Robotics Company Limited. All rights reserved.</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="cancelBtn">
-    <property name="geometry">
-     <rect>
-      <x>2690</x>
-      <y>1413</y>
-      <width>141</width>
-      <height>141</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-radius: 70px;
-border: 2px solid #FF8C00;
-background-color: white;
-color: red;
-font-size: 26px;
-font-weight: bold;
-padding: 0px 6px 16px 0px;</string>
-    </property>
-    <property name="text">
-     <string>Save
- Waypoints</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>16</width>
-      <height>16</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="rthBtn">
-    <property name="geometry">
-     <rect>
-      <x>2520</x>
-      <y>1440</y>
-      <width>101</width>
-      <height>101</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-radius: 50px;
-border: 2px solid #3E8E41;
-background-color: white;
-color: #0f9ff2;
-font-size: 35px;</string>
-    </property>
-    <property name="text">
-     <string>RTH</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>16</width>
-      <height>16</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="xspinBox">
-    <property name="geometry">
-     <rect>
-      <x>1820</x>
-      <y>1470</y>
-      <width>101</width>
-      <height>49</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: white;</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="zspinBox">
-    <property name="geometry">
-     <rect>
-      <x>2150</x>
-      <y>1470</y>
-      <width>101</width>
-      <height>49</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: white;</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="yspinBox">
-    <property name="geometry">
-     <rect>
-      <x>1980</x>
-      <y>1470</y>
-      <width>101</width>
-      <height>49</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: white;</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>100</y>
-      <width>1651</width>
-      <height>1131</height>
+      <x>10</x>
+      <y>70</y>
+      <width>851</width>
+      <height>641</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="myVerticalLayout">
@@ -816,16 +447,24 @@ font-size: 35px;</string>
    <widget class="QPushButton" name="eraserBtn">
     <property name="geometry">
      <rect>
-      <x>886</x>
-      <y>1255</y>
-      <width>101</width>
-      <height>100</height>
+      <x>409</x>
+      <y>720</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>1050</height>
+     </size>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -843,16 +482,24 @@ border: 2px solid #979ba1;</string>
    <widget class="QPushButton" name="addWaypointBtn">
     <property name="geometry">
      <rect>
-      <x>606</x>
-      <y>1255</y>
-      <width>101</width>
-      <height>100</height>
+      <x>90</x>
+      <y>720</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>1050</height>
+     </size>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -870,16 +517,24 @@ border: 2px solid #979ba1;</string>
    <widget class="QPushButton" name="normalBtn">
     <property name="geometry">
      <rect>
-      <x>1166</x>
-      <y>1255</y>
-      <width>101</width>
-      <height>100</height>
+      <x>10</x>
+      <y>720</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>1050</height>
+     </size>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -897,16 +552,24 @@ border: 3px solid white;</string>
    <widget class="QPushButton" name="zoomBtn">
     <property name="geometry">
      <rect>
-      <x>1026</x>
-      <y>1255</y>
-      <width>101</width>
-      <height>100</height>
+      <x>170</x>
+      <y>720</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>1050</height>
+     </size>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -924,16 +587,24 @@ border: 2px solid #979ba1;</string>
    <widget class="QPushButton" name="addWallBtn">
     <property name="geometry">
      <rect>
-      <x>746</x>
-      <y>1255</y>
-      <width>101</width>
-      <height>100</height>
+      <x>249</x>
+      <y>720</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>1050</height>
+     </size>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
       <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -948,11 +619,94 @@ border: 2px solid #979ba1;</string>
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="grootBtn">
+    <property name="geometry">
+     <rect>
+      <x>1240</x>
+      <y>10</y>
+      <width>141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: white;</string>
+    </property>
+    <property name="text">
+     <string>Groot</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="generalBtn">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>720</y>
+      <width>71</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white;</string>
+    </property>
+    <property name="text">
+     <string>😊</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="rthBtn">
+    <property name="geometry">
+     <rect>
+      <x>1125</x>
+      <y>875</y>
+      <width>101</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radius: 50px;
+border: 2px solid #3E8E41;
+background-color: white;
+color: #0f9ff2;
+font-size: 33px;</string>
+    </property>
+    <property name="text">
+     <string>RTH</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>16</width>
+      <height>16</height>
+     </size>
+    </property>
+   </widget>
    <widget class="QPushButton" name="goAllBtn">
     <property name="geometry">
      <rect>
-      <x>2750</x>
-      <y>1300</y>
+      <x>1320</x>
+      <y>760</y>
       <width>71</width>
       <height>71</height>
      </rect>
@@ -965,7 +719,7 @@ border: 2px solid #979ba1;</string>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-radius: 35px;
+     <string notr="true">border-radius: 33px;
 border: 1px solid #FF8C00;
 color: red;
 font-size: 24px;</string>
@@ -983,15 +737,26 @@ font-size: 24px;</string>
    <widget class="QCheckBox" name="loopCheckBox">
     <property name="geometry">
      <rect>
-      <x>2619</x>
-      <y>1317</y>
-      <width>111</width>
-      <height>40</height>
+      <x>1239</x>
+      <y>778</y>
+      <width>71</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>1680</width>
+      <height>1050</height>
+     </size>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>-1</pointsize>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">color: green;
-font-size: 26px;
+font-size: 20px;
 padding: 1px 0px 8px p1x;
 background-color: black;</string>
     </property>
@@ -999,42 +764,487 @@ background-color: black;</string>
      <string>loop</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="grootBtn">
+   <widget class="QPushButton" name="cancelBtn">
     <property name="geometry">
      <rect>
-      <x>2120</x>
-      <y>26</y>
-      <width>161</width>
-      <height>51</height>
+      <x>1290</x>
+      <y>835</y>
+      <width>141</width>
+      <height>141</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>1680</width>
+      <height>1050</height>
+     </size>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: white;</string>
+     <string notr="true">border-radius: 70px;
+border: 2px solid #FF8C00;
+background-color: white;
+color: red;
+font-size: 24px;
+font-weight: bold;
+padding: 0px 6px 16px 0px;</string>
     </property>
     <property name="text">
-     <string>Groot</string>
+     <string>Save
+ Waypoints</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>16</width>
+      <height>16</height>
+     </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="generalBtn">
+   <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>1580</x>
-      <y>1256</y>
-      <width>100</width>
-      <height>100</height>
+      <x>810</x>
+      <y>720</y>
+      <width>271</width>
+      <height>34</height>
      </rect>
     </property>
     <property name="font">
      <font>
+      <family>Ubuntu</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: white;</string>
+    </property>
+    <property name="text">
+     <string notr="true">Robot Position</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="xLabel">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>748</y>
+      <width>129</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: white;</string>
+    </property>
+    <property name="text">
+     <string>x :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="yLabel">
+    <property name="geometry">
+     <rect>
+      <x>812</x>
+      <y>778</y>
+      <width>129</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: white;</string>
+    </property>
+    <property name="text">
+     <string>y :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="phiLabel">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>812</y>
+      <width>129</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: white;</string>
+    </property>
+    <property name="text">
+     <string>ϕ :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="xValueLabel">
+    <property name="geometry">
+     <rect>
+      <x>858</x>
+      <y>748</y>
+      <width>91</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: orange;</string>
+    </property>
+    <property name="text">
+     <string>sync ...</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="yValueLabel">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>778</y>
+      <width>91</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: orange;</string>
+    </property>
+    <property name="text">
+     <string>sync ...</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="phiValueLabel">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>812</y>
+      <width>101</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: orange;</string>
+    </property>
+    <property name="text">
+     <string>sync ...</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ySendLabel">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>884</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>true</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: #e8e7e6;</string>
+    </property>
+    <property name="text">
+     <string>y ( feet )</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="zspinBox">
+    <property name="geometry">
+     <rect>
+      <x>815</x>
+      <y>915</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white;</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="yspinBox">
+    <property name="geometry">
+     <rect>
+      <x>717</x>
+      <y>915</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="xSendLabel">
+    <property name="geometry">
+     <rect>
+      <x>638</x>
+      <y>885</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>true</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: #e8e7e6;</string>
+    </property>
+    <property name="text">
+     <string>x ( feet )</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="xspinBox">
+    <property name="geometry">
+     <rect>
+      <x>618</x>
+      <y>915</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="zSendLabel">
+    <property name="geometry">
+     <rect>
+      <x>833</x>
+      <y>884</y>
+      <width>91</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>true</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: #e8e7e6;</string>
+    </property>
+    <property name="text">
+     <string>z ( degree )</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="sendGoalLabel">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>857</y>
+      <width>41</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>11</pointsize>
+      <weight>50</weight>
+      <italic>true</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: none;
+color: #e8e7e6;</string>
+    </property>
+    <property name="text">
+     <string notr="true">Goal</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="goBtn">
+    <property name="geometry">
+     <rect>
+      <x>965</x>
+      <y>895</y>
+      <width>71</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radius: 35px;
+border: 2px solid #1B1F4F;
+color: green;
+font-size: 33px;</string>
+    </property>
+    <property name="text">
+     <string>Go</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>16</width>
+      <height>16</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="setChargingPointBtn">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>10</y>
+      <width>141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>setChargingPointBtn</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="setCurrentPointAsBtn">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>10</y>
+      <width>141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>setCurrentPointAsBtn</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="setProductionPointBtn">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>10</y>
+      <width>141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>setProductionPointBtn</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="freeBtn">
+    <property name="geometry">
+     <rect>
+      <x>569</x>
+      <y>720</y>
+      <width>71</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
       <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
@@ -1042,76 +1252,32 @@ background-color: black;</string>
      <string notr="true">color: white;</string>
     </property>
     <property name="text">
-     <string>😊</string>
+     <string>F1</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="setProductionPointBtn">
+   <widget class="QPushButton" name="freeBtn2">
     <property name="geometry">
      <rect>
-      <x>1000</x>
-      <y>28</y>
-      <width>291</width>
-      <height>51</height>
+      <x>730</x>
+      <y>720</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Ubuntu</family>
+      <pointsize>20</pointsize>
       <weight>75</weight>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: white;</string>
+     <string notr="true">color: white;</string>
     </property>
     <property name="text">
-     <string>Set Production Point</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="setChargingPointBtn">
-    <property name="geometry">
-     <rect>
-      <x>1620</x>
-      <y>29</y>
-      <width>291</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: white;</string>
-    </property>
-    <property name="text">
-     <string>Set Charging Point</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="setCurrentPointAsBtn">
-    <property name="geometry">
-     <rect>
-      <x>1310</x>
-      <y>27</y>
-      <width>291</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: white;</string>
-    </property>
-    <property name="text">
-     <string>Set Current Point as</string>
+     <string>F2</string>
     </property>
    </widget>
   </widget>
