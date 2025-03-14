@@ -46,6 +46,10 @@ add_executable(construct_yaml_server src/construct_yaml_server.cpp)
 target_link_libraries(construct_yaml_server yaml-cpp)
 ament_target_dependencies(construct_yaml_server rclcpp rclcpp_action nav2_msgs geometry_msgs visualization_msgs yaml-cpp ament_index_cpp rom_interfaces)
 
+add_executable(construct_xml_server_bt src/construct_xml_server_bt.cpp)
+target_link_libraries(construct_xml_server_bt yaml-cpp)
+ament_target_dependencies(construct_xml_server_bt rclcpp rclcpp_action nav2_msgs geometry_msgs visualization_msgs yaml-cpp ament_index_cpp rom_interfaces)
+
 add_executable(send_waypoints_server src/send_waypoints_server.cpp)
 target_link_libraries(send_waypoints_server yaml-cpp)
 ament_target_dependencies(send_waypoints_server rclcpp rclcpp_action nav2_msgs geometry_msgs visualization_msgs yaml-cpp ament_index_cpp rom_interfaces)
@@ -62,6 +66,7 @@ install(TARGETS
   robot_pose_publisher
   construct_yaml_server
   send_waypoints_server
+  construct_xml_server_bt
 DESTINATION lib/${PROJECT_NAME})
 
 install(
