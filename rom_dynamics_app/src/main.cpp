@@ -28,12 +28,12 @@ int main(int argc, char *argv[])
     std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> action_executor_mt = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
     std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> waypoint_executor_st = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
-    pose_subscriber = std::make_shared<Subscriber>("/robot_pose"); 
+    pose_subscriber = std::make_shared<Subscriber>("/rom_genearl_topic"); 
     mode_subscriber = std::make_shared<ModeSubscriber>("/which_nav"); 
     laser_subscriber = std::make_shared<LaserSubscriber>("/scan");
 
     cmd_service_client = std::make_shared<CmdServiceClient>("which_vel");
-    yaml_service_client = std::make_shared<ConstructYamlServiceClient>("/construct_yaml");
+    yaml_service_client = std::make_shared<ConstructYamlServiceClient>("/construct_yaml_or_bt");
     wp_subscriber = std::make_shared<WaypointListSubscriber>("/waypoints_list");
     send_wp_client = std::make_shared<SendWaypointsClient>("/waypoints_selected");
 
