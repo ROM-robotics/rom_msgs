@@ -17,7 +17,9 @@
 std::string package_path;
 
 std::string xml_path = "/home/mr_robot/data/tree/default.xml";
+std::string sourceFile = "/home/mr_robot/data/tree/tree_nodes_models.xml";
 std::string yaml_path = "/home/mr_robot/data/waypoints/default.yaml";
+ 
 
 // အခြား qt app များအတွက် waypoints list ကို transcient local နဲ့ ပို့ထားဖို့ပါ။
 rclcpp::Publisher<rom_interfaces::msg::ConstructYaml>::SharedPtr publisher_;
@@ -104,6 +106,16 @@ void construct_xml_file(const std::shared_ptr<rom_interfaces::srv::ConstructYaml
       file << "    </RecoveryNode>\n";
       file << "  </BehaviorTree>\n";
       /* ADD TREE MODEL HERE START */
+        std::ifstream src(sourceFile, std::ios::in);
+        if (!src.is_open()) 
+        {
+          #ifdef ROM_DEBUG
+            RCLCPP_INFO_STREAM(rclcpp::get_logger("xml constructor"), "Source file error!!");
+          #endif
+          return;
+        }
+        file << src.rdbuf(); // Copy content from source to destination
+        src.close();
 
       /* ADD TREE MODEL HERE END   */
       file << "</root>\n";
